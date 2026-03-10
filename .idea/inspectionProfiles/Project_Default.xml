@@ -1,0 +1,16 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="samplesite.samplesite.urls.bboard" />
+          <option value="samplesite.samplesite.urls.index" />
+          <option value="siite.siite.urls.ssiite" />
+          <option value="siite.siite.urls.my_site" />
+          <option value="siite.my_site.templatetags.man_templatetags.my_site" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
