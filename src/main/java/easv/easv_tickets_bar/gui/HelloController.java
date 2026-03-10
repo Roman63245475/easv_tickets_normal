@@ -1,4 +1,4 @@
-package easv.easv_tickets_bar;
+package easv.easv_tickets_bar.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

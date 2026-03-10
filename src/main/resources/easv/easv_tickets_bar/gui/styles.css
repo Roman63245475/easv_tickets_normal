@@ -1,0 +1,57 @@
+
+
+.welcome_text{
+    -fx-text-fill: white;
+}
+
+.main_vbox{
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 5);
+    -fx-background-radius: 0 0 30 30;
+    -fx-padding: 0;
+}
+
+.primary_vbox{
+    -fx-background-color: linear-gradient(to bottom right, #3B82F6, #A855F7, #EC4899);
+    -fx-background-radius: 30 30 30 30;
+}
+
+.fields{
+    -fx-background-color: #f1f1f1;
+    -fx-prompt-text-fill: #636161;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.login_button {
+    /* Основной цвет через MaterialFX */
+    -mfx-main: linear-gradient(to bottom right, #3B82F6, #A855F7, #EC4899);
+
+    /* Фон использует -mfx-main */
+    -fx-background-color: -mfx-main;
+
+    /* Скругление */
+    -fx-background-radius: 12;
+
+    /* Размеры и отступы */
+    -fx-pref-width: 200px;
+    -fx-pref-height: 45px;
+    -fx-cursor: hand;
+}
+
+/* Стилизация текста внутри кнопки */
+.login_button .text {
+    -fx-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Состояние при наведении */
+.login_button {
+    -fx-background-color: linear-gradient(to right, #3B82F6, #A855F7, #EC4899);
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+}
+
+.root_stack_pane{
+    -fx-background-radius: 30 30 30 30;
+}
