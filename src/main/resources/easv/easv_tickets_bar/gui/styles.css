@@ -7,13 +7,13 @@
 .main_vbox{
     -fx-background-color: white;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 5);
-    -fx-background-radius: 0 0 30 30;
-    -fx-padding: 0;
+    /*-fx-background-radius: 0 0 30 30;*/
+    /*-fx-padding: 0;*/
 }
 
 .primary_vbox{
     -fx-background-color: linear-gradient(to bottom right, #3B82F6, #A855F7, #EC4899);
-    -fx-background-radius: 30 30 30 30;
+    /*-fx-background-radius: 30 30 30 30;*/
 }
 
 .fields{
@@ -54,4 +54,18 @@
 
 .root_stack_pane{
     -fx-background-radius: 30 30 30 30;
+}
+
+.create_user_header{
+    -fx-background-color: linear-gradient(to right, #F97316, #F43F5E);
+}
+
+.create_user_button{
+    -fx-background-color: linear-gradient(to right, #F97316, #F43F5E);
+    -fx-text-fill: white;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.user_field{
+    -fx-border-radius: 6px;
 }
