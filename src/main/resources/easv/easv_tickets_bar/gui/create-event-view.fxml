@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="409.0" prefWidth="800.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+          <HBox alignment="CENTER_LEFT" minHeight="58" spacing="10.0" styleClass="gradient-light-indigo">
+              <padding>
+                  <Insets left="20.0" />
+              </padding>
+         <children>
+                  <Region id="calendar-icon" maxHeight="-Infinity" prefHeight="21.0" prefWidth="21.0" styleClass="white-c">
+                      <cursor>
+                          <Cursor fx:constant="HAND" />
+                      </cursor>
+                  </Region>
+            <Label styleClass="white-c-text" text="Create New Event">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <VBox prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Region id="calendar-icon" maxHeight="-Infinity" prefHeight="15.0" prefWidth="15.0" styleClass="light-blue-c" />
+                  <Label styleClass="light-blue-c-text" text="Basic Information">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="200.0" spacing="15.0">
+               <children>
+                  <TextField prefHeight="49.0" prefWidth="149.0" promptText="Event Name *" />
+                  <DatePicker prefHeight="49.0" promptText="Date *" />
+                  <TextField prefHeight="49.0" promptText="Time *" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+      </VBox>
+      <VBox layoutX="10.0" layoutY="68.0" prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Region id="pin-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="light-green-c" />
+                  <Label styleClass="light-green-c-text" text="Location Details">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="200.0" spacing="15.0">
+               <children>
+                  <TextField prefHeight="49.0" promptText="City/Location *" />
+                  <TextField prefHeight="49.0" promptText="Venue Name *" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+      </VBox>
+      <VBox layoutX="10.0" layoutY="168.0" prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Region id="docs-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="indigo-c" />
+                  <Label styleClass="indigo-c-text" text="Event Details">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="200.0" spacing="15.0">
+               <children>
+                  <TextField prefHeight="87.0" prefWidth="149.0" promptText="Description *" />
+                  <TextField prefHeight="49.0" promptText="Max Capacity *" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="15.0" />
+         </padding>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="CREATE EVENT">
+               <styleClass>
+                  <String fx:value="gradient-light-indigo" />
+                  <String fx:value="white-c-text" />
+               </styleClass>
+            </Button>
+         </children>
+         <padding>
+            <Insets right="20.0" />
+         </padding>
+      </HBox>
+    </children>
+</VBox>
