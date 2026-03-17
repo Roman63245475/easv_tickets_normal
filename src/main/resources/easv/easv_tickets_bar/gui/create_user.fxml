@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" stylesheets="@styles.css" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="470.0" stylesheets="@css/create_user.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER" prefHeight="143.0" prefWidth="470.0">
+      <VBox alignment="CENTER" prefHeight="143.0" prefWidth="470.0" styleClass="background_color_orange">
          <children>
-            <Label text="Create New User">
+            <Label styleClass="text" text="Create New User">
                <font>
                   <Font size="23.0" />
                </font>
@@ -18,13 +20,71 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <Label text="Set up a new account with username and permissions">
+            <Label styleClass="text" text="Set up a new account with username and permissions">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" />
+      <VBox prefHeight="423.0" prefWidth="470.0">
+         <children>
+            <Label text="Username">
+               <VBox.margin>
+                  <Insets top="60.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField maxWidth="410.0" prefHeight="31.0" prefWidth="410.0" promptText="Enter username" styleClass="fields">
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </TextField>
+            <Label layoutX="10.0" layoutY="70.0" text="Password">
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Label>
+            <TextField maxWidth="410.0" prefHeight="31.0" promptText="Enter password" styleClass="fields">
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </TextField>
+            <Label layoutX="10.0" layoutY="153.0" text="User Role">
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Label>
+            <ComboBox maxWidth="410.0" prefHeight="34.0" prefWidth="410.0" promptText="Select user role" styleClass="fields">
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Button maxWidth="410.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="410.0" styleClass="create_user_button" text="Create user">
+               <VBox.margin>
+                  <Insets left="30.0" top="50.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Button>
+         </children></VBox>
    </children>
 </VBox>

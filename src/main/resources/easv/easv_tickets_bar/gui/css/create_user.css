@@ -1,0 +1,25 @@
+.background_color_orange{
+    -fx-background-color: linear-gradient(to bottom right, #F97316, #F43F5E);
+}
+
+
+
+.background_color_white{
+    -fx-background-color: #FFFFFF;
+}
+
+.fields{
+    -fx-background-color: #e4e1e1;
+    -fx-prompt-text-fill: gray;
+    -fx-background-radius: 12 12 12 12;
+}
+
+.create_user_button{
+    -fx-background-color: linear-gradient(to right, #F97316, #F43F5E);
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+}
+
+.text{
+    -fx-text-fill: white;
+}
