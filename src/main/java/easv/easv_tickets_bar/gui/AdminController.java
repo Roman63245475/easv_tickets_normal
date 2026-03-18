@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.be.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,11 +12,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-public class AdminController {
+public class AdminController implements IUserPanel{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
-
     private boolean isMenuOpen = false;
+    private User user;
 
     public void menuSlide(){
         UIHelper.sideBarAnimation(isMenuOpen, sideBar, () -> isMenuOpen = !isMenuOpen);
@@ -38,4 +39,8 @@ public class AdminController {
     }
 
 
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

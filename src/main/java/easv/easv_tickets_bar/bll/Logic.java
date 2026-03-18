@@ -5,12 +5,15 @@ import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.dal.UserAccessObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.IOException;
+
 
 public class Logic {
     UserAccessObject uao = new UserAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User findUser(String username, String password) throws DataBaseConnectionException, LoginException {
+
+    public User login(String username, String password) throws DataBaseConnectionException, LoginException {
         User user = uao.findUser(username);
         if (passwordEncoder.matches(password, user.getPassword())){
             return user;

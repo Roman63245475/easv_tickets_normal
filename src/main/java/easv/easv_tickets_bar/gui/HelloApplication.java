@@ -17,9 +17,9 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login");
-        //scene.setFill(Color.TRANSPARENT);
-        //primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(scene);
         primaryStage.show();
+        //scene.setFill(Color.TRANSPARENT);
+        //primaryStage.initStyle(StageStyle.TRANSPARENT);
     }
 }

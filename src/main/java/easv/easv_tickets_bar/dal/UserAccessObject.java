@@ -4,6 +4,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.User;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,14 @@ import java.sql.SQLException;
 public class UserAccessObject {
 
     private ConnectionManager cm;
+
+    public UserAccessObject(){
+        try {
+            this.cm = new ConnectionManager();
+        } catch (IOException e) {
+            System.out.println("omg2");
+        }
+    }
 
     public User findUser(String username) throws DataBaseConnectionException {
         Connection con = null;
@@ -43,4 +52,37 @@ public class UserAccessObject {
             }
         }
     }
+
+//    public void createUser(String password) throws DataBaseConnectionException {
+//        Connection con = null;
+//        try {
+//            con = cm.getConnection();
+//            String sqlPrompt = "Insert Into users (username, password, role_id) values (?, ?, ?)";
+//            PreparedStatement ps = con.prepareStatement(sqlPrompt);
+//            ps.setString(1, "roman_admin");
+//            ps.setString(2, password);
+//            ps.setInt(3, 1);
+//            ps.execute();
+//        }
+//        catch (SQLException e){
+//            if (con == null){
+//                throw new DataBaseConnectionException();
+//            }
+//            else {
+//                throw new RuntimeException("sqlPrompt could be written wrong");
+//            }
+//        }
+//
+//        finally {
+//            if (con != null){
+//                try {
+//                    con.close();
+//                }
+//                catch (SQLException se){
+//                    System.out.println("omg");
+//                }
+//            }
+//        }
+//
+//    }
 }
