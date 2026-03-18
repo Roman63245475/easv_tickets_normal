@@ -10,6 +10,6 @@ public class LoginController {
 
     @FXML
     private void loginClick(){
-        return;
+        String username = this.emailField.getText();
     }
 }
