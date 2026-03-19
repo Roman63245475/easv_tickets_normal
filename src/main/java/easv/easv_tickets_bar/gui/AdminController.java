@@ -63,7 +63,7 @@ public class AdminController implements IUserPanel{
         String fileName = "create_user.fxml";
         String title = "Create new user";
         try {
-            openWindow.openNewWindow(fileName, title, this.user);
+            openWindow.openNewWindow(fileName, title, this.user, true);
         } catch (IOException e) {
             System.out.println("here needs to be an alert");
         }

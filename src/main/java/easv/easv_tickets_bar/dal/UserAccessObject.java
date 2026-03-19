@@ -2,6 +2,8 @@ package easv.easv_tickets_bar.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
+import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.User;
 
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class UserAccessObject {
         }
     }
 
-    public User findUser(String username) throws DataBaseConnectionException {
+    public User findUser(String username) throws DataBaseConnectionException, LoginException {
         Connection con = null;
         try {
             con = cm.getConnection();
@@ -30,17 +32,23 @@ public class UserAccessObject {
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            int id  = rs.getInt("id");
-            String usName = rs.getString("username");
-            String pass = rs.getString("password");
-            int roleID = rs.getInt("role_id");
+            if (rs.next()) {
+                int id  = rs.getInt("id");
+                String usName = rs.getString("username");
+                String pass = rs.getString("password");
+                int roleID = rs.getInt("role_id");
 
-            return new User(id, usName, pass, roleID);
+                return new User(id, usName, pass, roleID);
+            }
+            else{
+                throw new LoginException();
+            }
         }
-        catch (SQLServerException sse){
-            throw new DataBaseConnectionException();
-        } catch (SQLException e) {
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException();
+            }
+            else
             throw new RuntimeException(e);
         } finally {
             if (con != null) {
@@ -53,36 +61,39 @@ public class UserAccessObject {
         }
     }
 
-//    public void createUser(String password) throws DataBaseConnectionException {
-//        Connection con = null;
-//        try {
-//            con = cm.getConnection();
-//            String sqlPrompt = "Insert Into users (username, password, role_id) values (?, ?, ?)";
-//            PreparedStatement ps = con.prepareStatement(sqlPrompt);
-//            ps.setString(1, "roman_admin");
-//            ps.setString(2, password);
-//            ps.setInt(3, 1);
-//            ps.execute();
-//        }
-//        catch (SQLException e){
-//            if (con == null){
-//                throw new DataBaseConnectionException();
-//            }
-//            else {
-//                throw new RuntimeException("sqlPrompt could be written wrong");
-//            }
-//        }
-//
-//        finally {
-//            if (con != null){
-//                try {
-//                    con.close();
-//                }
-//                catch (SQLException se){
-//                    System.out.println("omg");
-//                }
-//            }
-//        }
-//
-//    }
+    public void createUser(String username, String hashed_password, int role_id) throws DataBaseConnectionException, DuplicateException {
+        Connection con = null;
+        try {
+            con = cm.getConnection();
+            String sqlPrompt = "Insert Into users (username, password, role_id) values (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(sqlPrompt);
+            ps.setString(1, username);
+            ps.setString(2, hashed_password);
+            ps.setInt(3, role_id);
+            ps.execute();
+        }
+        catch (SQLException e){
+            if (con == null){
+                throw new DataBaseConnectionException();
+            }
+            else if (e.getErrorCode() == 2627 || e.getErrorCode() == 2601) {
+                throw new DuplicateException();
+            }
+            else {
+                throw new RuntimeException();
+            }
+        }
+
+        finally {
+            if (con != null){
+                try {
+                    con.close();
+                }
+                catch (SQLException se){
+                    System.out.println("omg");
+                }
+            }
+        }
+
+    }
 }

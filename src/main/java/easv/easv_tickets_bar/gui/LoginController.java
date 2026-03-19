@@ -53,7 +53,7 @@ public class LoginController implements Initializable {
             int role_id = user.getRoleID();
             String fileName = (role_id == 1) ? "admin-view.fxml" : "coordinator-view.fxml";
             String title = (role_id == 1) ? "Admin panel" : "Event Coordinator panel";
-            openWindow.openNewWindow(fileName, title, user);
+            openWindow.openNewWindow(fileName, title, user, false);
             Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
             currentStage.close();
         }
