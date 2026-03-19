@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="331.0" prefWidth="511.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox alignment="CENTER_LEFT" minHeight="58" spacing="10.0" styleClass="gradient-indigo-purple">
+            <padding>
+                <Insets left="20.0" />
+            </padding>
+            <children>
+                <Region id="ticket-icon" maxHeight="-Infinity" prefHeight="21.0" prefWidth="29.0" styleClass="white-c">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Region>
+                <Label styleClass="white-c-text" text="Sell Ticket - {ticket_name}">
+                    <font>
+                        <Font name="System Bold" size="17.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox prefWidth="100.0">
+                    <children>
+                        <Label styleClass="gray-c-text" text="Customer's Full Name: *" />
+                  <TextField />
+                    </children>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </VBox>
+                <VBox prefWidth="100.0">
+                    <children>
+                        <Label styleClass="gray-c-text" text="Email Address: *" />
+                  <TextField />
+                    </children>
+                </VBox>
+                <VBox prefWidth="100.0">
+                    <children>
+                        <Label styleClass="gray-c-text" text="Quantity: *" />
+                        <Spinner editable="true" initialValue="1" max="10000" maxWidth="Infinity" min="1" prefHeight="40.0" prefWidth="481.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets left="15.0" right="15.0" />
+            </padding>
+        </VBox>
+        <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="20.0">
+            <children>
+                <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
+                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="PRINT TICKET">
+                    <styleClass>
+                        <String fx:value="gradient-indigo-purple" />
+                        <String fx:value="white-c-text" />
+                    </styleClass>
+                </Button>
+            </children>
+            <padding>
+                <Insets right="20.0" />
+            </padding>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" />
+    </padding>
+</VBox>

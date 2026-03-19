@@ -33,6 +33,18 @@ public class CoordinatorController implements IUserPanel{
         switchTab("ticketManagementBox");
     }
 
+    public void onCreateEvent(){
+        UIHelper.openNewWindow("create-event-view.fxml", "Create Event");
+    }
+
+    public void onAddTicket(){
+        UIHelper.openNewWindow("new-ticket-view.fxml", "Create New Ticket");
+    }
+
+    public void onSellTicket(){
+        UIHelper.openNewWindow("sell-ticket-view.fxml", "Sell Ticket");
+    }
+
     @Override
     public void setUser(User user) {
         this.user = user;

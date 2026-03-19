@@ -4,8 +4,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class UIHelper {
     @FXML
@@ -17,5 +23,20 @@ public class UIHelper {
 
         timeline.setOnFinished(e -> r1.run());
         timeline.play();
+    }
+
+    @FXML
+    public static void openNewWindow(String fxmlPath, String title){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(UIHelper.class.getResource(fxmlPath));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

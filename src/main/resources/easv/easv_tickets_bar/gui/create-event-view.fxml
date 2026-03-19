@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="409.0" prefWidth="800.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="800.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
     <children>
           <HBox alignment="CENTER_LEFT" minHeight="58" spacing="10.0" styleClass="gradient-light-indigo">
               <padding>
@@ -21,7 +21,7 @@
                   </Region>
             <Label styleClass="white-c-text" text="Create New Event">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="17.0" />
                </font>
             </Label>
          </children>
@@ -40,11 +40,24 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <HBox prefWidth="200.0" spacing="15.0">
+            <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
                <children>
                   <TextField prefHeight="49.0" prefWidth="149.0" promptText="Event Name *" />
-                  <DatePicker prefHeight="49.0" promptText="Date *" />
-                  <TextField prefHeight="49.0" promptText="Time *" />
+                  <VBox prefHeight="29.0" prefWidth="371.0" spacing="15.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="186.0" spacing="15.0">
+                           <children>
+                              <TextField prefHeight="49.0" promptText="Start Time *" />
+                              <DatePicker prefHeight="49.0" promptText="Start Date *" styleClass="date-picker" />
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="186.0" spacing="15.0">
+                           <children>
+                              <TextField prefHeight="49.0" promptText="End Time" />
+                              <DatePicker prefHeight="49.0" promptText="End Date" styleClass="date-picker" />
+                           </children>
+                        </HBox>
+                     </children></VBox>
                </children>
             </HBox>
          </children>
@@ -71,6 +84,11 @@
                <children>
                   <TextField prefHeight="49.0" promptText="City/Location *" />
                   <TextField prefHeight="49.0" promptText="Venue Name *" />
+               </children>
+            </HBox>
+            <HBox layoutX="25.0" layoutY="39.0" prefWidth="200.0" spacing="15.0">
+               <children>
+                  <TextField prefHeight="49.0" promptText="Location Guidance" />
                </children>
             </HBox>
          </children>

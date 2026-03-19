@@ -3,6 +3,40 @@
     -fx-background-color: transparent;
 }
 
+.text-field{
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+}
+
+.date-picker{
+    -fx-background-color: transparent;
+}
+
+.choice-box{
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+}
+
+.spinner{
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+}
+
+.spinner .text-field{
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}
+
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+
 .gradient-emerald{
     -fx-background-color: linear-gradient(to right, #10b981, #059669);
 }
@@ -13,6 +47,10 @@
 
 .gradient-indigo{
     -fx-background-color: linear-gradient(to right, #0284c7, #5558e3);
+}
+
+.gradient-indigo-purple{
+    -fx-background-color: linear-gradient(to right, #5558e3, #8b5cf6);
 }
 
 .gradient-light-indigo{
@@ -36,6 +74,10 @@
 
 .indigo-c{
     -fx-background-color: #5558e3;
+}
+
+.gray-c-text{
+    -fx-text-fill: #777785;
 }
 
 .light-blue-c-text{
