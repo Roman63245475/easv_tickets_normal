@@ -22,10 +22,13 @@ public class LoginController implements Initializable {
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
     @FXML private Label errorLabel;
+
     private Logic logic;
+    private OpenWindow openWindow;
 
     public LoginController(){
         this.logic = new Logic();
+        this.openWindow = new OpenWindow();
     }
 
     @Override
@@ -50,13 +53,9 @@ public class LoginController implements Initializable {
             int role_id = user.getRoleID();
             String fileName = (role_id == 1) ? "admin-view.fxml" : "coordinator-view.fxml";
             String title = (role_id == 1) ? "Admin panel" : "Event Coordinator panel";
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
-            IUserPanel controller = loader.getController();
-            Stage stage = new Stage();
-            Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
-            stage.setTitle(title);
-            stage.show();
+            openWindow.openNewWindow(fileName, title, user, false);
+            Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
+            currentStage.close();
         }
         catch (DataBaseConnectionException | LoginException dbce){
             if (dbce instanceof DataBaseConnectionException){
@@ -70,6 +69,7 @@ public class LoginController implements Initializable {
             this.errorLabel.setText("Page can't be rendered");
             this.errorLabel.setOpacity(1.0);
             return;
+            //or here needs to be an alert
         }
     }
 
