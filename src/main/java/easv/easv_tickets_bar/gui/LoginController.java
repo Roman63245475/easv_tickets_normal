@@ -48,6 +48,8 @@ public class LoginController implements Initializable {
             this.errorLabel.setOpacity(1.0);
             return;
         }
+
+
         try {
             User user = logic.login(username, password);
             int role_id = user.getRoleID();
