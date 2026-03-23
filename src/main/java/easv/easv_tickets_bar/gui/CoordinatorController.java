@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,6 +39,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private TableColumn<Event, Integer> ticketColumn;
     @FXML private TableColumn<Event, Integer> coordinatorsColumn;
     @FXML private TableColumn<Event, Void> actionsColumn;
+    @FXML private Label welcomeUserLabel;
 
 
     private boolean isMenuOpen = false;
@@ -147,6 +149,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @Override
     public void setUser(User user){
         this.user = user;
+        this.welcomeUserLabel.setText("Welcome " + user.getUsername());
         try {
             updateEventTable();
         }

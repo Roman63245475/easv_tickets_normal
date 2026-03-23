@@ -54,7 +54,7 @@
                   <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
                       <HBox alignment="CENTER" prefWidth="200.0" spacing="5.0">
                           <children>
-                              <Label minWidth="0.0" styleClass="white-c-text" text="Welcome, {user}!">
+                              <Label fx:id="welcomeUserLabel" minWidth="0.0" styleClass="white-c-text" text="Welcome, {user}!">
                                   <font>
                                       <Font size="14.0" />
                                   </font>

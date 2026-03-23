@@ -21,6 +21,7 @@ import java.io.IOException;
 public class AdminController implements IUserPanel, IRefreshable{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
+    @FXML private Label welcomeUserLabel;
 
     private boolean isMenuOpen = false;
     private User user;
@@ -56,6 +57,7 @@ public class AdminController implements IUserPanel, IRefreshable{
     @Override
     public void setUser(User user) {
         this.user = user;
+        welcomeUserLabel.setText("Welcome " + user.getUsername());
     }
 
     @FXML

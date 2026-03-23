@@ -11,8 +11,8 @@ import java.util.List;
 
 public class UserRepository {
     private UserAccessObject uao;
-    RoleAccessObject rao;
-    EventAccessObject eao;
+    private RoleAccessObject rao;
+    private EventAccessObject eao;
 
     public UserRepository() {
         this.uao = new UserAccessObject();

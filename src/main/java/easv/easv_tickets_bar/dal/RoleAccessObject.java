@@ -4,7 +4,6 @@ import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
-import easv.easv_tickets_bar.be.UserRole;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,7 +32,7 @@ public class RoleAccessObject {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String roleName =  rs.getString("role_name");
+                String roleName = rs.getString("role_name");
                 Role role = null;
                 try {
                     role = Role.valueOf(roleName);
