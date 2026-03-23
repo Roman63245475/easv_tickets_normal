@@ -1,6 +1,7 @@
 package easv.easv_tickets_bar.repo;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.*;
 import easv.easv_tickets_bar.dal.EventAccessObject;
@@ -35,5 +36,8 @@ public class UserRepository {
     }
 
 
-
+    public void createUser(String username, String hashedPassword, Role role) throws DuplicateException, DataBaseConnectionException {
+        int roleId = role.getId();
+        uao.createUser(username, hashedPassword, roleId);
+    }
 }

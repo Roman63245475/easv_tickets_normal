@@ -37,8 +37,7 @@ public class Logic {
 
     public void createUser(String username, String password, Role role) throws DataBaseConnectionException, DuplicateException {
         String hashed_password = passwordEncoder.encode(password);
-        int role_id = (role == Role.ADMIN) ? 1 : 2;
-        uao.createUser(username, hashed_password, role_id);
+        userRepo.createUser(username, hashed_password, role);
     }
 
     public boolean isInvalidString(String text){
