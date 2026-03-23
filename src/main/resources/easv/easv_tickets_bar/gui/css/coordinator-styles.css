@@ -37,6 +37,10 @@
     -fx-background-color: transparent;
 }
 
+.alignment-center{
+    -fx-alignment: center;
+}
+
 .gradient-emerald{
     -fx-background-color: linear-gradient(to right, #10b981, #059669);
 }

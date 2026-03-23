@@ -88,16 +88,16 @@
                                         </Button>
                                     </children>
                                 </HBox>
-                                <TableView prefHeight="200.0" prefWidth="200.0">
+                                <TableView fx:id="eventTable" prefHeight="200.0" prefWidth="200.0">
                                     <columns>
-                                        <TableColumn prefWidth="31.333311080932617" text="ID" />
-                                        <TableColumn prefWidth="159.33337020874023" text="Event Name" />
-                                        <TableColumn prefWidth="75.0" text="Date &amp; Time" />
-                                        <TableColumn prefWidth="75.0" text="Location" />
-                                        <TableColumn prefWidth="75.0" text="Status" />
-                                        <TableColumn prefWidth="75.0" text="Tickets" />
-                              <TableColumn prefWidth="75.0" text="Coordinators" />
-                              <TableColumn prefWidth="75.0" text="Actions" />
+                                        <TableColumn fx:id="idColumn" prefWidth="45.33334541320801" styleClass="alignment-center" text="ID" />
+                                        <TableColumn fx:id="nameColumn" prefWidth="145.33330535888672" styleClass="alignment-center" text="Event Name" />
+                                        <TableColumn fx:id="dateTimeColumn" prefWidth="75.0" styleClass="alignment-center" text="Date &amp; Time" />
+                                        <TableColumn fx:id="locationColumn" prefWidth="75.0" styleClass="alignment-center" text="Location" />
+                                        <TableColumn fx:id="statusColumn" prefWidth="75.0" styleClass="alignment-center" text="Status" />
+                                        <TableColumn fx:id="ticketColumn" prefWidth="75.0" styleClass="alignment-center" text="Tickets" />
+                              <TableColumn fx:id="coordinatorsColumn" prefWidth="75.0" styleClass="alignment-center" text="Coordinators" />
+                              <TableColumn fx:id="actionsColumn" prefWidth="75.0" styleClass="alignment-center" text="Actions" />
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

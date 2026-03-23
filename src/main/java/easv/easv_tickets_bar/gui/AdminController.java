@@ -18,7 +18,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-public class AdminController implements IUserPanel{
+public class AdminController implements IUserPanel, IRefreshable{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
 
@@ -63,11 +63,16 @@ public class AdminController implements IUserPanel{
         String fileName = "create_user.fxml";
         String title = "Create new user";
         try {
-            openWindow.openNewWindow(fileName, title, this.user, true);
+            openWindow.openNewWindow(fileName, title, this.user, true, this);
         } catch (IOException e) {
             System.out.println("here needs to be an alert");
         }
 
+
+    }
+
+    @Override
+    public void refreshTable() {
 
     }
 }

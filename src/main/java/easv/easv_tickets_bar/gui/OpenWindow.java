@@ -10,12 +10,17 @@ import java.io.IOException;
 
 public class OpenWindow {
 
-    public void openNewWindow(String fileName, String title, User user, Boolean mod) throws IOException {
+    public void openNewWindow(String fileName, String title, User user, Boolean mod, IRefreshable parent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load());
-        IUserPanel controller = loader.getController();
-        controller.setUser(user);
+        Object controller = loader.getController();
+        if (controller instanceof IUserPanel){
+            ((IUserPanel)controller).setUser(user);
+        }
+        if (controller instanceof IPanel && parent != null){
+            ((IPanel)controller).setController(parent);
+        }
         stage.setScene(scene);
         if (mod){
             stage.initModality(Modality.APPLICATION_MODAL);

@@ -15,6 +15,10 @@ public class User {
         this.roleID = roleID;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
