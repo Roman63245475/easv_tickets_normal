@@ -36,9 +36,7 @@ public class UserAccessObject {
                 int id  = rs.getInt("id");
                 String usName = rs.getString("username");
                 String pass = rs.getString("password");
-                int roleID = rs.getInt("role_id");
-
-                return new User(id, usName, pass, roleID);
+                return new User(id, usName, pass);
             }
             else{
                 throw new LoginException();
@@ -48,9 +46,11 @@ public class UserAccessObject {
             if (con == null) {
                 throw new DataBaseConnectionException();
             }
-            else
-            throw new RuntimeException(e);
-        } finally {
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
             if (con != null) {
                 try {
                     con.close();

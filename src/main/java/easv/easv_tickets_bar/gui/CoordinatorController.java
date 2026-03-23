@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
@@ -80,7 +81,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     @Override
-    public void refreshTable() {
+    public void refreshTable() throws DataBaseConnectionException {
         updateEventTable();
     }
 
@@ -100,7 +101,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
-    private void updateEventTable() {
+    private void updateEventTable() throws DataBaseConnectionException {
         List<Event> events = logic.getCorEvents(user.getId());
 
         ObservableList<Event> observableList = FXCollections.observableList(events);
@@ -108,7 +109,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         eventTable.setItems(observableList);
     }
 
-    public void onEventManClick(){
+    public void onEventManClick() throws DataBaseConnectionException {
         switchTab("eventManagementBox");
         updateEventTable();
     }
@@ -144,8 +145,14 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     @Override
-    public void setUser(User user) {
+    public void setUser(User user){
         this.user = user;
-        updateEventTable();
+        try {
+            updateEventTable();
+        }
+        catch (DataBaseConnectionException e) {
+            System.out.println("kapec");
+        }
+
     }
 }

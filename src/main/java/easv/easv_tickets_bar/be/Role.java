@@ -1,4 +1,4 @@
-package easv.easv_tickets_bar.gui;
+package easv.easv_tickets_bar.be;
 
 public enum Role {
     ADMIN("Admin"),

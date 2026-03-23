@@ -2,6 +2,8 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
+import easv.easv_tickets_bar.be.Admin;
+import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.fxml.FXML;
@@ -48,13 +50,10 @@ public class LoginController implements Initializable {
             this.errorLabel.setOpacity(1.0);
             return;
         }
-
-
         try {
             User user = logic.login(username, password);
-            int role_id = user.getRoleID();
-            String fileName = (role_id == 1) ? "admin-view.fxml" : "coordinator-view.fxml";
-            String title = (role_id == 1) ? "Admin panel" : "Event Coordinator panel";
+            String fileName = (user instanceof Admin) ? "admin-view.fxml" : "coordinator-view.fxml";
+            String title = (user instanceof Admin) ? "Admin panel" : "Event Coordinator panel";
             openWindow.openNewWindow(fileName, title, user, false, null);
             Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
             currentStage.close();

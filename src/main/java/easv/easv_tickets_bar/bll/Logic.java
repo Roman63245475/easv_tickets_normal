@@ -5,12 +5,12 @@ import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.dal.EventCoordinatorsDAO;
-import easv.easv_tickets_bar.dal.EventDAO;
+import easv.easv_tickets_bar.dal.EventAccessObject;
 import easv.easv_tickets_bar.dal.UserAccessObject;
-import easv.easv_tickets_bar.gui.Role;
+import easv.easv_tickets_bar.be.Role;
+import easv.easv_tickets_bar.repo.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,13 +19,14 @@ import java.util.List;
 
 public class Logic {
     UserAccessObject uao = new UserAccessObject();
-    EventDAO eventDAO = new EventDAO();
+    EventAccessObject eventDAO = new EventAccessObject();
     EventCoordinatorsDAO eventCorDAO = new EventCoordinatorsDAO();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    UserRepository userRepo = new UserRepository();
 
 
     public User login(String username, String password) throws DataBaseConnectionException, LoginException {
-        User user = uao.findUser(username);
+        User user = userRepo.getFullUser(username);
         if (passwordEncoder.matches(password, user.getPassword())){
             return user;
         }
@@ -76,7 +77,7 @@ public class Logic {
         eventCorDAO.assignCoordinator(userId, eventId);
     }
 
-    public List<Event> getCorEvents(int userId) {
+    public List<Event> getCorEvents(int userId) throws DataBaseConnectionException {
         return eventDAO.getEvents(userId);
     }
 }

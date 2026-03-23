@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
+import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.fxml.FXML;
