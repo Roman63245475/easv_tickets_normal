@@ -59,6 +59,7 @@ public class Logic {
         } catch (Exception e) {
             throw new Exception("Please fill out the time fields correctly (hh:mm)");
         }
+        //com
 
         int capacity;
         try{
