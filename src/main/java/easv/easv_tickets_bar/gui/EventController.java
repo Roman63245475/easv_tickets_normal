@@ -73,10 +73,11 @@ public class EventController implements Initializable, IUserPanel, IPanel {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                logic.createNewEvent(user.getId() ,name, startTime, endTime, startDate, endDate, location, venue, guidance, notes, capacity);
+                logic.createNewEvent(user.getId(), name, startTime, endTime, startDate, endDate, location, venue, guidance, notes, capacity);
                 return null;
             }
         };
+
         btn.disableProperty().bind(task.runningProperty());
 
         task.setOnSucceeded(e -> {
