@@ -3,16 +3,14 @@ package easv.easv_tickets_bar.be;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class User {
-    private int id;
-    private String username;
-    private String password;
-    private int roleID;
+    protected int id;
+    protected String username;
+    protected String password;
 
-    public User(int id, String username, String password, int roleID) {
+    public User(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.roleID = roleID;
     }
 
     public int getId() {
@@ -25,9 +23,5 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public int getRoleID() {
-        return roleID;
     }
 }

@@ -2,13 +2,18 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
+import easv.easv_tickets_bar.be.Admin;
+import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.LoadException;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -22,6 +27,7 @@ public class LoginController implements Initializable {
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
     @FXML private Label errorLabel;
+    @FXML private Button loginButton;
 
     private Logic logic;
     private OpenWindow openWindow;
@@ -48,29 +54,46 @@ public class LoginController implements Initializable {
             this.errorLabel.setOpacity(1.0);
             return;
         }
-        try {
-            User user = logic.login(username, password);
-            int role_id = user.getRoleID();
-            String fileName = (role_id == 1) ? "admin-view.fxml" : "coordinator-view.fxml";
-            String title = (role_id == 1) ? "Admin panel" : "Event Coordinator panel";
-            openWindow.openNewWindow(fileName, title, user, false, null);
-            Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
-            currentStage.close();
-        }
-        catch (DataBaseConnectionException | LoginException dbce){
-            if (dbce instanceof DataBaseConnectionException){
-                this.errorLabel.setText("Sorry something went wrong please try later");
+        loginButton.setDisable(true);
+        Task<User> loginTask = new Task<User>(){
+            @Override
+            protected User call() throws Exception {
+                return logic.login(username, password);
+            }
+        };
+        loginTask.setOnSucceeded(event -> {
+            User user = loginTask.getValue();
+            try {
+                String fileName = (user instanceof Admin) ? "admin-view.fxml" : "coordinator-view.fxml";
+                String title = (user instanceof Admin) ? "Admin panel" : "Event Coordinator panel";
+                openWindow.openNewWindow(fileName, title, user, false, null);
+                Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
+                currentStage.close();
+            }
+            catch (IOException e) {
+                loginButton.setDisable(false);
+                this.errorLabel.setText("Page can't be rendered");
                 this.errorLabel.setOpacity(1.0);
                 return;
+                //or here needs to be an alert
             }
-            this.errorLabel.setText("Username or Password is incorrect");
+        });
+
+        loginTask.setOnFailed(event -> {
+            Throwable cause = loginTask.getException();
+            loginButton.setDisable(false);
+            if (cause instanceof DataBaseConnectionException) {
+                this.errorLabel.setText("Sorry something went wrong please try later");
+            }
+            else if (cause instanceof LoginException) {
+                this.errorLabel.setText("Username or Password is incorrect");
+            }
+            else {
+                errorLabel.setText("Unknown error");
+            }
             this.errorLabel.setOpacity(1.0);
-        } catch (IOException e) {
-            this.errorLabel.setText("Page can't be rendered");
-            this.errorLabel.setOpacity(1.0);
-            return;
-            //or here needs to be an alert
-        }
+        });
+        new Thread(loginTask).start();
     }
 
 

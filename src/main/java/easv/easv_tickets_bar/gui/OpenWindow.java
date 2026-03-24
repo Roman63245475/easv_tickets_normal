@@ -14,13 +14,14 @@ public class OpenWindow {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load());
-        Object controller = loader.getController();
-        if (controller instanceof IUserPanel){
-            ((IUserPanel)controller).setUser(user);
-        }
-        if (controller instanceof IPanel && parent != null){
-            ((IPanel)controller).setController(parent);
-        }
+        IUserPanel controller = loader.getController();
+        controller.setUser(user);
+//        if (controller instanceof IUserPanel){
+//            ((IUserPanel)controller).setUser(user);
+//        }
+//        if (controller instanceof IPanel && parent != null){
+//            ((IPanel)controller).setController(parent);
+//        }
         stage.setScene(scene);
         if (mod){
             stage.initModality(Modality.APPLICATION_MODAL);

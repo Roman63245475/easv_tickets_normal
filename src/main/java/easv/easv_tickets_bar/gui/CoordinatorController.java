@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,6 +39,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private TableColumn<Event, Integer> ticketColumn;
     @FXML private TableColumn<Event, Integer> coordinatorsColumn;
     @FXML private TableColumn<Event, Void> actionsColumn;
+    @FXML private Label welcomeUserLabel;
 
 
     private boolean isMenuOpen = false;
@@ -80,7 +83,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     @Override
-    public void refreshTable() {
+    public void refreshTable() throws DataBaseConnectionException {
         updateEventTable();
     }
 
@@ -100,7 +103,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
-    private void updateEventTable() {
+    private void updateEventTable() throws DataBaseConnectionException {
         List<Event> events = logic.getCorEvents(user.getId());
 
         ObservableList<Event> observableList = FXCollections.observableList(events);
@@ -108,7 +111,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         eventTable.setItems(observableList);
     }
 
-    public void onEventManClick(){
+    public void onEventManClick() throws DataBaseConnectionException {
         switchTab("eventManagementBox");
         updateEventTable();
     }
@@ -144,8 +147,15 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     @Override
-    public void setUser(User user) {
+    public void setUser(User user){
         this.user = user;
-        updateEventTable();
+        this.welcomeUserLabel.setText("Welcome " + user.getUsername());
+        try {
+            updateEventTable();
+        }
+        catch (DataBaseConnectionException e) {
+            System.out.println("kapec");
+        }
+
     }
 }

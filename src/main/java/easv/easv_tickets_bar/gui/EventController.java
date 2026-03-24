@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.concurrent.Task;
@@ -82,7 +83,11 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
         task.setOnSucceeded(e -> {
             Stage stage = (Stage) btn.getScene().getWindow();
-            controller.refreshTable();
+            try {
+                controller.refreshTable();
+            } catch (DataBaseConnectionException ex) {
+                throw new RuntimeException(ex);
+            }
             stage.close();
         });
 

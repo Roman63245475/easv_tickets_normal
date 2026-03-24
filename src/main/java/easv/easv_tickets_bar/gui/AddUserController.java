@@ -2,26 +2,27 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
+import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AddUserController implements IUserPanel, Initializable {
 
 
-    @FXML TextField passwordField;
-    @FXML TextField userNameField;
-    @FXML ComboBox<Role> userRoleBox;
-    @FXML Label errorLabel;
+    @FXML private TextField passwordField;
+    @FXML private TextField userNameField;
+    @FXML private ComboBox<Role> userRoleBox;
+    @FXML private Label errorLabel;
+    @FXML private Button createUserButton;
 
     private Logic logic;
     private User user;
@@ -72,19 +73,48 @@ public class AddUserController implements IUserPanel, Initializable {
             this.errorLabel.setOpacity(1.0);
             return;
         }
-        try {
-            logic.createUser(username, password, role);
+
+
+        createUserButton.setDisable(true);
+        Task<Void> createUserTask = new Task() {
+            @Override
+            protected Void call() throws Exception {
+                logic.createUser(username, password, role);
+                return null;
+            }
+        };
+
+
+        createUserTask.setOnSucceeded(event -> {
             Stage st = (Stage) this.userNameField.getScene().getWindow();
             st.close();
-        } catch (DataBaseConnectionException | DuplicateException e) {
-            if (e instanceof DataBaseConnectionException){
-                showAlert(Alert.AlertType.ERROR, "Error", "Something went wrong", "An unexpected error occurred.");
+        });
+
+
+        createUserTask.setOnFailed(event -> {
+            Throwable cause = createUserTask.getException();
+            if (cause instanceof DataBaseConnectionException) {
+                this.errorLabel.setText("Database connection error");
+            }
+            else if (cause instanceof DuplicateException) {
+                this.errorLabel.setText("User with this username already exists");
             }
             else {
-                showAlert(Alert.AlertType.ERROR, "Error", "duplicate data", "User with the same username already exists");
+                this.errorLabel.setText("Unknown Error");
             }
-
-        }
+            this.errorLabel.setOpacity(1.0);
+            this.createUserButton.setDisable(false);
+        });
+        new Thread(createUserTask).start();
+//         catch (DataBaseConnectionException | DuplicateException e) {
+//            if (e instanceof DataBaseConnectionException){
+//                showAlert(Alert.AlertType.ERROR, "Error", "Something went wrong", "An unexpected error occurred.");
+//            }
+//            else {
+//                showAlert(Alert.AlertType.ERROR, "Error", "duplicate data", "User with the same username already exists");
+//            }
+//
+//        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String header, String content){

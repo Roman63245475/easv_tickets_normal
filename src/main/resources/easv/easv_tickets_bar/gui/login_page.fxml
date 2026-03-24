@@ -60,7 +60,7 @@
                   <Insets left="30.0" top="5.0" />
                </VBox.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#loginClick" prefHeight="46.0" prefWidth="427.0" styleClass="login_button" text="Log In">
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginClick" prefHeight="46.0" prefWidth="427.0" styleClass="login_button" text="Log In">
                <VBox.margin>
                   <Insets left="150.0" top="5.0" />
                </VBox.margin>
