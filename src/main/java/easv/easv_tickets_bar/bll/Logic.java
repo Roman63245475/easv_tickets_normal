@@ -79,4 +79,9 @@ public class Logic {
     public List<Event> getCorEvents(int userId) throws DataBaseConnectionException {
         return eventDAO.getEvents(userId);
     }
+
+    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
+        List<User> users = userRepo.getUsersWithoutCurrent(id);
+        return users;
+    }
 }

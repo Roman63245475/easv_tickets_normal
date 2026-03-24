@@ -40,4 +40,9 @@ public class UserRepository {
         int roleId = role.getId();
         uao.createUser(username, hashedPassword, roleId);
     }
+
+    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
+        List<User> users = uao.getUsersWithoutCurrent(id);
+        return users;
+    }
 }

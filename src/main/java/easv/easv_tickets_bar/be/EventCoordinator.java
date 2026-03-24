@@ -13,4 +13,8 @@ public class EventCoordinator extends User{
     public List<Event> getEvents() {
         return events;
     }
+
+    public Role getRole(){
+        return Role.EVENT_COORDINATOR;
+    }
 }
