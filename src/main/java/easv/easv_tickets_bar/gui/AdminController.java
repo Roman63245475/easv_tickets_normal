@@ -36,18 +36,28 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     @FXML private StackPane contentBox;
     @FXML private Label welcomeUserLabel;
 
-
+    //users table and it's columns
     @FXML private TableView<User> usersTable;
     @FXML private TableColumn<User, Integer> userIdColumn;
     @FXML private TableColumn<User, String> userUsernameColumn;
     @FXML private TableColumn<User, String> userStatusColumn;
     @FXML private TableColumn<User, String> userRoleColumn;
 
+    //events table and it's columns
+    @FXML private TableView<Event> eventsTable;
+    @FXML private TableColumn<Event, Integer> eventIdColumn;
+    @FXML private TableColumn<Event, String> eventNameColumn;
+    @FXML private TableColumn<Event, String> startDateTimeColumn;
+    @FXML private TableColumn<Event, String> endDateTimeColumn;
+    @FXML private TableColumn<Event, String> eventLocationColumn;
+    @FXML private TableColumn<Event, String> eventStatusColumn;
+
     private boolean isMenuOpen = false;
     private User user;
     private OpenWindow openWindow;
-    private ObservableList<Event> userList;
     private Logic logic;
+    private ObservableList<User> userList = FXCollections.observableArrayList();
+    private ObservableList<Event> eventList = FXCollections.observableArrayList();
 
 
 
@@ -59,7 +69,12 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        usersTable.setItems(userList);
+        eventsTable.setItems(eventList);
         setUpColumnsAlignment();
+        setupEventTableColumns();
+        fillEventTable();
+
         //setupUserTableColumns();
         //userTable.setItems(FXCollections.observableArrayList());
     }
@@ -76,10 +91,10 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         return users;
     }
 
-    private void setUserTable(List<User> users){
-        ObservableList<User> userList = FXCollections.observableArrayList(users);
-        usersTable.setItems(userList);
+    private void fillUserTable(List<User> users){
+        userList.setAll(users);
     }
+
 
     private void setupUserTableColumns() {
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -93,6 +108,26 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         userUsernameColumn.setStyle("-fx-alignment: CENTER;");
         userRoleColumn.setStyle("-fx-alignment: CENTER;");
         userStatusColumn.setStyle("-fx-alignment: CENTER;");
+    }
+
+    private void setupEventTableColumns() {
+        eventIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        eventNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        startDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        endDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+        eventLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        eventStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+    }
+
+    private void fillEventTable(){
+        List<Event> events = new ArrayList<>();
+        try {
+            events = logic.getAllEvents();
+        } catch (DataBaseConnectionException e) {
+            System.out.println("idk what to do here");
+        }
+
+        this.eventList.setAll(events);
     }
 
     public void menuSlide(){
@@ -120,8 +155,8 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     public void setUser(User user) {
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
-        setUserTable(getUsersWithoutCurrent());
         setupUserTableColumns();
+        fillUserTable(getUsersWithoutCurrent());
     }
 
     @FXML

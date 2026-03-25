@@ -119,14 +119,14 @@
                               </Label>
                            </children>
                         </HBox>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="eventsTable" prefHeight="200.0" prefWidth="200.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="ID" />
-                              <TableColumn prefWidth="75.0" text="Event Name" />
-                              <TableColumn prefWidth="75.0" text="Date" />
-                              <TableColumn prefWidth="75.0" text="Location" />
-                              <TableColumn prefWidth="75.0" text="Coordinator" />
-                              <TableColumn prefWidth="75.0" text="Status" />
+                              <TableColumn fx:id="eventIdColumn" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="eventNameColumn" prefWidth="75.0" text="Event Name" />
+                              <TableColumn fx:id="startDateTimeColumn" prefWidth="75.0" text="Start Date&amp;Time" />
+                              <TableColumn fx:id="endDateTimeColumn" prefWidth="75.0" text="End Date&amp;Time" />
+                              <TableColumn fx:id="eventLocationColumn" prefWidth="75.0" text="Location" />
+                              <TableColumn fx:id="eventStatusColumn" prefWidth="75.0" text="Status" />
                               <TableColumn prefWidth="75.0" text="Actions" />
                            </columns>
                            <columnResizePolicy>

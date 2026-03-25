@@ -28,6 +28,19 @@ public class Event {
         this.capacity = capacity;
     }
 
+    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String locationGuidance, String notes, int capacity) {
+        this.id = id;
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.location = location;
+        this.venue = venue;
+        this.locationGuidance = locationGuidance;
+        this.notes = notes;
+        this.coordinators = coordinators;
+        this.capacity = capacity;
+    }
+
     public int getId() {
         return id;
     }
@@ -66,5 +79,9 @@ public class Event {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public String getStatus(){
+        return "Active";
     }
 }
