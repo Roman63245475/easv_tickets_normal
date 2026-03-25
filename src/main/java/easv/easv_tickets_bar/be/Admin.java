@@ -9,4 +9,5 @@ public class Admin extends User
     {
         return Role.ADMIN;
     }
+
 }

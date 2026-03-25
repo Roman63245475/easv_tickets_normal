@@ -17,4 +17,5 @@ public class EventCoordinator extends User{
     public Role getRole(){
         return Role.EVENT_COORDINATOR;
     }
+
 }

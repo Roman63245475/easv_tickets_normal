@@ -27,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,7 +35,9 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
     @FXML private Label welcomeUserLabel;
-    @FXML private TableView<User> userTable;
+
+
+    @FXML private TableView<User> usersTable;
     @FXML private TableColumn<User, Integer> userIdColumn;
     @FXML private TableColumn<User, String> userUsernameColumn;
     @FXML private TableColumn<User, String> userStatusColumn;
@@ -56,20 +59,40 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<User> userList = FXCollections.observableArrayList();
-        List<User> users = null;
-        try {
-            users = logic.getUsersWithoutCurrent(user.getId());
-        } catch (DataBaseConnectionException e) {
-            throw new RuntimeException(e);
-            //mb message idk
-        }
-
-
+        setUpColumnsAlignment();
+        //setupUserTableColumns();
+        //userTable.setItems(FXCollections.observableArrayList());
     }
 
-    private void setUserTable(){
-        songDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
+
+    private List<User> getUsersWithoutCurrent() {
+        List<User> users = new ArrayList<>();
+        if (user == null) return users;
+        try {
+             users = logic.getUsersWithoutCurrent(user.getId());
+        } catch (DataBaseConnectionException e) {
+            System.out.println("idk what to do here");
+        }
+        return users;
+    }
+
+    private void setUserTable(List<User> users){
+        ObservableList<User> userList = FXCollections.observableArrayList(users);
+        usersTable.setItems(userList);
+    }
+
+    private void setupUserTableColumns() {
+        userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        userUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        userRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+        userStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+    }
+
+    private void setUpColumnsAlignment(){
+        userIdColumn.setStyle("-fx-alignment: CENTER;");
+        userUsernameColumn.setStyle("-fx-alignment: CENTER;");
+        userRoleColumn.setStyle("-fx-alignment: CENTER;");
+        userStatusColumn.setStyle("-fx-alignment: CENTER;");
     }
 
     public void menuSlide(){
@@ -97,6 +120,8 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     public void setUser(User user) {
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
+        setUserTable(getUsersWithoutCurrent());
+        setupUserTableColumns();
     }
 
     @FXML

@@ -25,4 +25,12 @@ public class User {
         return password;
     }
 
+    public Role getRole(){
+        return Role.ADMIN;
+    }
+
+
+    public String getStatus(){
+        return "Active";
+    }
 }
