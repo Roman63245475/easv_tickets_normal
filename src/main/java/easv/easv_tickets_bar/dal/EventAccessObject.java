@@ -134,4 +134,7 @@ public class EventAccessObject {
             }
         }
     }
+
+    public void deleteSelectedEvent(Event selectedEvent) {
+    }
 }

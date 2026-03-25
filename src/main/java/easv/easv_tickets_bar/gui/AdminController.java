@@ -172,6 +172,18 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
 
     }
 
+    @FXML
+    private void deleteEvent(){
+        Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null){
+            return;
+        }
+        try {
+            logic.deleteSelectedEvent(selectedEvent);
+        }
+
+    }
+
     @Override
     public void refreshTable() {
 

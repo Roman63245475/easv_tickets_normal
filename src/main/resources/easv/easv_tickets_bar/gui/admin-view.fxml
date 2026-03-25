@@ -94,7 +94,7 @@
                               </Button>
                            </children>
                         </HBox>
-                        <TableView fx:id="usersTable" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="usersTable" prefHeight="265.0" prefWidth="760.0">
                           <columns>
                             <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="ID" />
                             <TableColumn fx:id="userUsernameColumn" prefWidth="75.0" text="Username" />
@@ -119,20 +119,29 @@
                               </Label>
                            </children>
                         </HBox>
-                        <TableView fx:id="eventsTable" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="eventsTable" prefHeight="265.0" prefWidth="200.0">
                            <columns>
-                              <TableColumn fx:id="eventIdColumn" prefWidth="75.0" text="ID" />
-                              <TableColumn fx:id="eventNameColumn" prefWidth="75.0" text="Event Name" />
-                              <TableColumn fx:id="startDateTimeColumn" prefWidth="75.0" text="Start Date&amp;Time" />
-                              <TableColumn fx:id="endDateTimeColumn" prefWidth="75.0" text="End Date&amp;Time" />
+                              <TableColumn fx:id="eventIdColumn" prefWidth="109.0" text="ID" />
+                              <TableColumn fx:id="eventNameColumn" prefWidth="134.0" text="Event Name" />
+                              <TableColumn fx:id="startDateTimeColumn" prefWidth="126.0" text="Start Date&amp;Time" />
+                              <TableColumn fx:id="endDateTimeColumn" prefWidth="121.0" text="End Date&amp;Time" />
                               <TableColumn fx:id="eventLocationColumn" prefWidth="75.0" text="Location" />
-                              <TableColumn fx:id="eventStatusColumn" prefWidth="75.0" text="Status" />
-                              <TableColumn prefWidth="75.0" text="Actions" />
+                              <TableColumn fx:id="eventStatusColumn" prefWidth="67.0" text="Status" />
+                              <TableColumn prefWidth="95.0" text="Actions" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
+                        <Button mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
+                           <VBox.margin>
+                              <Insets left="580.0" />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="bg-top-bar-gradient" />
+                              <String fx:value="white-c-text" />
+                           </styleClass>
+                        </Button>
                      </children>
                   </VBox>
                </children>

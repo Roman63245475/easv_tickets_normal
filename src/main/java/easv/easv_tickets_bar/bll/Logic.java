@@ -90,4 +90,8 @@ public class Logic {
     public List<Event> getAllEvents() throws DataBaseConnectionException {
         return eventRepo.getAllEvents();
     }
+
+    public void deleteSelectedEvent(Event selectedEvent) {
+        eventRepo.deleteSelectedEvent(selectedEvent);
+    }
 }
