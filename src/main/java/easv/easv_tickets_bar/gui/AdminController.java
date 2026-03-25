@@ -9,16 +9,14 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -35,6 +33,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
     @FXML private Label welcomeUserLabel;
+    @FXML private Button deleteEventButton;
 
     //users table and it's columns
     @FXML private TableView<User> usersTable;
@@ -178,9 +177,26 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         if (selectedEvent == null){
             return;
         }
-        try {
-            logic.deleteSelectedEvent(selectedEvent);
-        }
+        this.deleteEventButton.setDisable(true);
+        Task<List<Event>> deleteTask = new Task<List<Event>>() {
+            @Override
+            protected List<Event> call() throws Exception {
+                logic.deleteSelectedEvent(selectedEvent);
+                return logic.getAllEvents();
+            }
+        };
+        deleteTask.setOnSucceeded(e -> {
+            this.deleteEventButton.setDisable(false);
+            eventList.setAll(deleteTask.getValue());
+        });
+        deleteTask.setOnFailed(e -> {
+            this.deleteEventButton.setDisable(false);
+            Throwable cause = deleteTask.getException();
+            if (cause instanceof DataBaseConnectionException) {
+                System.out.println("here needs to be an alert, or a error message");
+            }
+        });
+        new Thread(deleteTask).start();
 
     }
 

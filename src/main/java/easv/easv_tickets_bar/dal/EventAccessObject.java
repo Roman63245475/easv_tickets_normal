@@ -135,6 +135,30 @@ public class EventAccessObject {
         }
     }
 
-    public void deleteSelectedEvent(Event selectedEvent) {
+    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
+        Connection con = null;
+        try {
+            con = connectionManager.getConnection();
+            PreparedStatement ps = con.prepareStatement("Delete From Events Where id = ?");
+            ps.setInt(1, selectedEvent.getId());
+            ps.execute();
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException();
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("omg");
+                }
+            }
+        }
     }
 }

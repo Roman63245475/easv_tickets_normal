@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="800.0" stylesheets="@css/admin-styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.AdminController">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="800.0" stylesheets="@css/admin-styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.AdminController">
    <children>
       <VBox fx:id="sideBar" minWidth="0.0" prefHeight="479.0" prefWidth="0.0" styleClass="white-c">
          <children>
@@ -133,9 +133,9 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Button mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
+                        <Button fx:id="deleteEventButton" mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
                            <VBox.margin>
-                              <Insets left="580.0" />
+                              <Insets left="550.0" />
                            </VBox.margin>
                            <styleClass>
                               <String fx:value="bg-top-bar-gradient" />

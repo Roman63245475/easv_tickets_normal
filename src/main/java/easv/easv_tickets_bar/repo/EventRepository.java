@@ -17,7 +17,7 @@ public class EventRepository {
         return eao.getAllEvents();
     }
 
-    public void deleteSelectedEvent(Event selectedEvent) {
+    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
         eao.deleteSelectedEvent(selectedEvent);
     }
 }
