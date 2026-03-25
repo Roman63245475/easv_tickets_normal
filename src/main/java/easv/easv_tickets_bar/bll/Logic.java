@@ -6,6 +6,7 @@ import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.dal.EventCoordinatorsDAO;
 import easv.easv_tickets_bar.dal.EventAccessObject;
+import easv.easv_tickets_bar.dal.TicketAccessObject;
 import easv.easv_tickets_bar.dal.UserAccessObject;
 import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.repo.UserRepository;
@@ -21,6 +22,7 @@ public class Logic {
     UserAccessObject uao = new UserAccessObject();
     EventAccessObject eventDAO = new EventAccessObject();
     EventCoordinatorsDAO eventCorDAO = new EventCoordinatorsDAO();
+    TicketAccessObject ticketDAO = new TicketAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     UserRepository userRepo = new UserRepository();
 
@@ -78,5 +80,17 @@ public class Logic {
 
     public List<Event> getCorEvents(int userId) throws DataBaseConnectionException {
         return eventDAO.getEvents(userId);
+    }
+
+    public void createTicket(int id, String name, String price, String quantity) throws Exception {
+        int quantityInt = Integer.parseInt(quantity);
+        double priceDouble = Double.parseDouble(price);
+        if (isInvalidString(name) || isInvalidString(price) || isInvalidString(quantity)) {
+            throw new Exception("Make sure all the fields are filled out");
+        }
+        if (quantityInt <= 0) throw new Exception("Quantity must be a positive number");
+
+        ticketDAO.createTicket(id, name, priceDouble, quantityInt);
+
     }
 }

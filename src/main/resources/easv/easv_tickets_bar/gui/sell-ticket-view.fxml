@@ -31,7 +31,7 @@
                 <VBox prefWidth="100.0">
                     <children>
                         <Label styleClass="gray-c-text" text="Customer's Full Name: *" />
-                  <TextField />
+                  <TextField fx:id="nameInput" />
                     </children>
                     <VBox.margin>
                         <Insets />
@@ -40,15 +40,16 @@
                 <VBox prefWidth="100.0">
                     <children>
                         <Label styleClass="gray-c-text" text="Email Address: *" />
-                  <TextField />
+                  <TextField fx:id="emailInput" />
                     </children>
                 </VBox>
                 <VBox prefWidth="100.0">
                     <children>
                         <Label styleClass="gray-c-text" text="Quantity: *" />
-                        <Spinner editable="true" initialValue="1" max="10000" maxWidth="Infinity" min="1" prefHeight="40.0" prefWidth="481.0" VBox.vgrow="ALWAYS" />
+                        <Spinner fx:id="quantityInput" editable="true" initialValue="1" max="10000" maxWidth="Infinity" min="1" prefHeight="40.0" prefWidth="481.0" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
+            <Label fx:id="totalInput" managed="false" text="Total Cost:" />
             </children>
             <padding>
                 <Insets left="15.0" right="15.0" />
@@ -57,7 +58,7 @@
         <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="20.0">
             <children>
                 <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
-                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="PRINT TICKET">
+                <Button mnemonicParsing="false" onAction="#onSellTicket" prefHeight="25.0" prefWidth="129.0" text="SEND TICKET">
                     <styleClass>
                         <String fx:value="gradient-indigo-purple" />
                         <String fx:value="white-c-text" />

@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.collections.FXCollections;
@@ -30,8 +31,9 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
 
+    //Events Table
     @FXML private TableView<Event> eventTable;
-    @FXML private TableColumn<Event, Integer> idColumn;
+    @FXML private TableColumn<Event, Void> idColumn;
     @FXML private TableColumn<Event, String> nameColumn;
     @FXML private TableColumn<Event, LocalDateTime> dateTimeColumn;
     @FXML private TableColumn<Event, String> locationColumn;
@@ -39,8 +41,20 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private TableColumn<Event, Integer> ticketColumn;
     @FXML private TableColumn<Event, Integer> coordinatorsColumn;
     @FXML private TableColumn<Event, Void> actionsColumn;
-    @FXML private Label welcomeUserLabel;
 
+    //Tickets Table
+    @FXML private TableView<TicketEvent> idTColumn;
+    @FXML private TableColumn<TicketEvent, String> eventTName;
+    @FXML private TableColumn<TicketEvent, String> ticketName;
+    @FXML private TableColumn<TicketEvent, Double> priceColumn;
+    @FXML private TableColumn<TicketEvent, Integer> quantityTColumn;
+    @FXML private TableColumn<TicketEvent, Integer> soldColumn;
+    @FXML private TableColumn<TicketEvent, Integer> availableColumn;
+    @FXML private TableColumn<TicketEvent, String> statusTColumn;
+    @FXML private TableColumn<TicketEvent, Void> actionTColumn;
+
+
+    @FXML private Label welcomeUserLabel;
 
     private boolean isMenuOpen = false;
 
@@ -50,7 +64,17 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setCellFactory(column -> new TableCell<Event, Void>() {
+            @Override
+            protected void updateItem(Void item, boolean empty){
+                super.updateItem(item, empty);
+                if(empty){
+                    setText(null);
+                }else{
+                    setText(String.valueOf(getIndex() + 1));
+                }
+            }
+        });
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
@@ -124,7 +148,10 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     public void onCreateEvent(){
         try{
-            openWindow.openNewWindow("create-event-view.fxml", "Create Event", this.user, true, this);
+            Object obj = openWindow.openNewWindow("create-event-view.fxml", "Create Event", true);
+            EventController eController = (EventController) obj;
+            eController.setController(this);
+            eController.setUser(this.user);
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -132,7 +159,10 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     public void onAddTicket(){
         try{
-            openWindow.openNewWindow("new-ticket-view.fxml", "Create New Ticket", this.user, true, this);
+            Object obj = openWindow.openNewWindow("new-ticket-view.fxml", "Create New Ticket", true);
+            TicketController tController = (TicketController) obj;
+            tController.setController(this);
+            tController.setUser(this.user);
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -140,7 +170,10 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     public void onSellTicket(){
         try{
-            openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", this.user, true,this);
+            Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
+            SellTicketController stController = (SellTicketController) obj;
+            stController.setController(this);
+            //stController.setTicket()
         }catch (IOException e) {
             throw new RuntimeException(e);
         }

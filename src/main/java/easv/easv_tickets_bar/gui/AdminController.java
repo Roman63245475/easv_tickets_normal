@@ -65,7 +65,9 @@ public class AdminController implements IUserPanel, IRefreshable{
         String fileName = "create_user.fxml";
         String title = "Create new user";
         try {
-            openWindow.openNewWindow(fileName, title, this.user, true, this);
+            Object obj = openWindow.openNewWindow(fileName, title, true);
+            AddUserController adController = (AddUserController) obj;
+            adController.setUser(this.user);
         } catch (IOException e) {
             System.out.println("here needs to be an alert");
         }

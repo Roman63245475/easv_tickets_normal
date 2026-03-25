@@ -53,4 +53,28 @@ public class UIHelper {
         };
         input.setTextFormatter(new TextFormatter<>(filter));
     }
+
+    @FXML
+    public static void priceInputValidator(TextField input) {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
+            if (text.matches("^[0-9]*(\\.[0-9]{0,2})?$")) {
+                return change;
+            }
+            return null;
+        };
+        input.setTextFormatter(new TextFormatter<>(filter));
+    }
+
+    @FXML
+    public static void emailInputValidator(TextField input) {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
+            if (text.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9+_.-]+\\.[A-Za-z]{2,6}$")){
+                return change;
+            }
+            return null;
+        };
+        input.setTextFormatter(new TextFormatter<>(filter));
+    }
 }

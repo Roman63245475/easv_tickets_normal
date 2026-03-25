@@ -66,7 +66,10 @@ public class LoginController implements Initializable {
             try {
                 String fileName = (user instanceof Admin) ? "admin-view.fxml" : "coordinator-view.fxml";
                 String title = (user instanceof Admin) ? "Admin panel" : "Event Coordinator panel";
-                openWindow.openNewWindow(fileName, title, user, false, null);
+                Object obj = openWindow.openNewWindow(fileName, title, false);
+                if (obj instanceof IUserPanel){
+                    ((IUserPanel) obj).setUser(user);
+                }
                 Stage currentStage = (Stage) this.usernameField.getScene().getWindow();
                 currentStage.close();
             }
