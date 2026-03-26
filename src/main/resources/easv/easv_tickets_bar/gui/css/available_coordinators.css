@@ -1,0 +1,16 @@
+.mainPane{
+    -fx-background-color: linear-gradient(to bottom right, deeppink, lightblue);
+}
+
+.ok_button{
+    -fx-background-color: linear-gradient(to bottom right, deeppink, blue);
+    -fx-background-radius: 12;
+}
+
+.label_text{
+    -fx-text-fill: white;
+}
+
+.second_pane{
+    -fx-background-color: white;
+}

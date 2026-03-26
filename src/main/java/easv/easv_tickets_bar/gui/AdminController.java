@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.animation.KeyFrame;
@@ -20,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -207,7 +209,35 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         if (selectedEvent == null){
             return;
         }
+        showAvailableCoordinators(selectedEvent);
+    }
 
+    private void showAvailableCoordinators(Event selectedEvent){
+        Task<List<EventCoordinator>> getAvailableEventCoordinatorsTask = new Task<>() {
+            @Override
+            protected List<EventCoordinator> call() throws Exception {
+                return logic.getAvailableEventCoordinators(selectedEvent);
+            }
+        };
+        getAvailableEventCoordinatorsTask.setOnSucceeded(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("available_event_coordinators.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(loader.load());
+                IAssignCoordinator controller = loader.getController();
+                controller.setCoordinators(getAvailableEventCoordinatorsTask.getValue());
+                controller.setEvent(selectedEvent);
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException ex) {
+                System.out.println("blya ya v ahue");
+            }
+        });
+        getAvailableEventCoordinatorsTask.setOnFailed(e -> {
+            System.out.println("idk what to do here");
+        });
+        new Thread(getAvailableEventCoordinatorsTask).start();
     }
 
 

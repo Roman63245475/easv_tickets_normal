@@ -3,11 +3,13 @@ import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
-import easv.easv_tickets_bar.dal.EventCoordinatorsDAO;
+import easv.easv_tickets_bar.dal.EventCoordinatorAccessObject;
 import easv.easv_tickets_bar.dal.EventAccessObject;
 import easv.easv_tickets_bar.dal.UserAccessObject;
 import easv.easv_tickets_bar.be.Role;
+import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,10 +23,11 @@ import java.util.List;
 public class Logic {
     UserAccessObject uao = new UserAccessObject();
     EventAccessObject eventDAO = new EventAccessObject();
-    EventCoordinatorsDAO eventCorDAO = new EventCoordinatorsDAO();
+    EventCoordinatorAccessObject eventCorDAO = new EventCoordinatorAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     UserRepository userRepo = new UserRepository();
     EventRepository eventRepo = new EventRepository();
+    EventCoordinatorRepository eventCoordinatorRepo = new EventCoordinatorRepository();
 
 
     public User login(String username, String password) throws DataBaseConnectionException, LoginException {
@@ -93,5 +96,13 @@ public class Logic {
 
     public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
         eventRepo.deleteSelectedEvent(selectedEvent);
+    }
+
+    public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws DataBaseConnectionException {
+        return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
+    }
+
+    public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) {
+        eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
     }
 }
