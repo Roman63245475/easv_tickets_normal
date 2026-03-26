@@ -57,6 +57,8 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     private Logic logic;
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private ObservableList<Event> eventList = FXCollections.observableArrayList();
+    private User selectedUser;
+    private Event selectedEvent;
 
 
 
@@ -197,8 +199,18 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
             }
         });
         new Thread(deleteTask).start();
+    }
+
+    @FXML
+    private void assignCoordinator(){
+        Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null){
+            return;
+        }
 
     }
+
+
 
     @Override
     public void refreshTable() {
