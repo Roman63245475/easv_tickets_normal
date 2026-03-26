@@ -1,0 +1,113 @@
+/* Outer container */
+.root_stack_pane {
+    -fx-background-radius: 30;
+    -fx-padding: 10;
+}
+
+/* Card with shadow */
+.main_vbox {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 5);
+    -fx-background-radius: 24;
+}
+
+/* Header gradient */
+.primary_vbox {
+    -fx-background-color: linear-gradient(to bottom right, #3B82F6, #A855F7, #EC4899);
+    -fx-background-radius: 24 24 0 0;
+}
+
+/* Tear line */
+.tear-line-box {
+    -fx-background-color: white;
+}
+
+.tear-line-notch {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 14;
+}
+
+/* Body */
+.ticket-body {
+    -fx-background-color: white;
+}
+
+/* Header labels */
+.ticket-event-badge {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 11px;
+}
+
+.ticket-event-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+}
+
+.ticket-event-description {
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 12px;
+}
+
+/* Body labels */
+.ticket-section-label {
+    -fx-text-fill: #8d8ea1;
+    -fx-font-size: 10px;
+}
+
+.ticket-name-label {
+    -fx-text-fill: #1e1b4b;
+    -fx-font-size: 17px;
+}
+
+.ticket-value-label {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 13px;
+}
+
+/* Dividers */
+.ticket-divider {
+    -fx-background-color: #f1f1f1;
+}
+
+.ticket-divider-white {
+    -fx-background-color: rgba(255,255,255,0.4);
+}
+
+/* Location box */
+.location-box {
+    -fx-background-color: #f3f0fe;
+    -fx-border-color: #c4b5fd;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-border-width: 1;
+}
+
+.location-name-label {
+    -fx-text-fill: #1e1b4b;
+    -fx-font-size: 13px;
+}
+
+.location-guidance-label {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 12px;
+}
+
+/* QR code box */
+.qr-box {
+    -fx-background-color: #f9fafb;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+/* Footer */
+.bg-top-bar-gradient {
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #ec4899);
+    -fx-background-radius: 0 0 24 24;
+}
+
+.ticket-footer-label {
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 11px;
+}
