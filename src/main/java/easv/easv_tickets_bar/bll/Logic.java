@@ -9,6 +9,7 @@ import easv.easv_tickets_bar.dal.EventAccessObject;
 import easv.easv_tickets_bar.dal.TicketAccessObject;
 import easv.easv_tickets_bar.dal.UserAccessObject;
 import easv.easv_tickets_bar.be.Role;
+import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -25,6 +26,7 @@ public class Logic {
     TicketAccessObject ticketDAO = new TicketAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     UserRepository userRepo = new UserRepository();
+    EventRepository eventRepo = new EventRepository();
 
 
     public User login(String username, String password) throws DataBaseConnectionException, LoginException {
@@ -92,5 +94,18 @@ public class Logic {
 
         ticketDAO.createTicket(id, name, priceDouble, quantityInt);
 
+    }
+
+    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
+        List<User> users = userRepo.getUsersWithoutCurrent(id);
+        return users;
+    }
+
+    public List<Event> getAllEvents() throws DataBaseConnectionException {
+        return eventRepo.getAllEvents();
+    }
+
+    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
+        eventRepo.deleteSelectedEvent(selectedEvent);
     }
 }

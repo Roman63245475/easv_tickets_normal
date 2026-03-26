@@ -73,4 +73,8 @@ public class Event {
         return this.name;
     }
 
+
+    public String getStatus(){
+        return "Active";
+    }
 }

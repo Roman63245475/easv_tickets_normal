@@ -4,13 +4,15 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
-import easv.easv_tickets_bar.be.User;
+import easv.easv_tickets_bar.be.*;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserAccessObject {
 
@@ -95,5 +97,56 @@ public class UserAccessObject {
             }
         }
 
+    }
+
+    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
+        Connection con = null;
+        List<User> users = new ArrayList<>();
+        try {
+            con = cm.getConnection();
+            String sqlPrompt = "select users.id as user_id, users.username as user_username, users.password as user_password, role.name as role_name from dbo.users Inner Join role on users.role_id = role.id where users.id !=?";
+            PreparedStatement ps = con.prepareStatement(sqlPrompt);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int recordId  = rs.getInt("user_id");
+                String usName = rs.getString("user_username");
+                String pass = rs.getString("user_password");
+                String roleName = rs.getString("role_name");
+                Role role = null;
+                try {
+                    role = Role.valueOf(roleName);
+                }
+                catch (IllegalArgumentException e){
+                    System.out.println("dev is an idiot");
+                }
+                User addUser;
+                if (role == Role.ADMIN) {
+                    addUser = new Admin(recordId, usName, pass);
+                }
+                else {
+                    addUser = new EventCoordinator(recordId, usName, pass, null);
+                }
+                users.add(addUser);
+            }
+            return users;
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException();
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("omg");
+                }
+            }
+        }
     }
 }

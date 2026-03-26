@@ -92,4 +92,73 @@ public class EventAccessObject {
             }
         }
     }
+
+    public List<Event> getAllEvents() throws DataBaseConnectionException {
+        List<Event> events = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = connectionManager.getConnection();
+            PreparedStatement ps = con.prepareStatement("Select * From Events");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("Name");
+                    LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
+                    LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
+                    String location = rs.getString("Location");
+                    String venue = rs.getString("Venue");
+                    String guidance = rs.getString("LocationGuidance");
+                    String notes = rs.getString("Notes");
+                    int capacity = rs.getInt("Capacity");
+                    //int count = rs.getInt("CoordinatorCount");
+                    events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity));
+                }
+            }
+            return events;
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException();
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("omg");
+                }
+            }
+        }
+    }
+
+    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
+        Connection con = null;
+        try {
+            con = connectionManager.getConnection();
+            PreparedStatement ps = con.prepareStatement("Delete From Events Where id = ?");
+            ps.setInt(1, selectedEvent.getId());
+            ps.execute();
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException();
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("omg");
+                }
+            }
+        }
+    }
 }
