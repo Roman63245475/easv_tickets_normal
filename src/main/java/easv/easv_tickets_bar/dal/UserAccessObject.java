@@ -41,12 +41,12 @@ public class UserAccessObject {
                 return new User(id, usName, pass);
             }
             else{
-                throw new LoginException();
+                throw new LoginException("username not found");
             }
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);
@@ -76,10 +76,10 @@ public class UserAccessObject {
         }
         catch (SQLException e){
             if (con == null){
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else if (e.getErrorCode() == 2627 || e.getErrorCode() == 2601) {
-                throw new DuplicateException();
+                throw new DuplicateException("User with this username already exists");
             }
             else {
                 throw new RuntimeException();
@@ -133,7 +133,7 @@ public class UserAccessObject {
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);

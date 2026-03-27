@@ -35,30 +35,37 @@ public class Logic {
         User user = null;
         try {
             user = userRepo.getFullUser(username);
-        }
-        catch (DataBaseConnectionException | LoginException ex){
-            String message = "";
-            if (ex instanceof DataBaseConnectionException){
-                System.out.println("do some job");
-                message = "data base connection Exception";
+            if (passwordEncoder.matches(password, user.getPassword())){
+                return user;
             }
             else {
-                System.out.println("do some otehr job");
-                message = "Username or password is incorrect";
+                throw new LoginException("password doesn't match");
             }
-            throw new MyException(message);
         }
-        if (passwordEncoder.matches(password, user.getPassword())){
-            return user;
-        }
-        else {
-            throw new LoginException();
+        catch (DataBaseConnectionException | LoginException ex) {
+            if (ex instanceof DataBaseConnectionException) {
+                System.out.println("do some job");
+            } else {
+                System.out.println("do some otehr job");
+            }
+            throw new MyException(ex.getMessage());
         }
     }
 
-    public void createUser(String username, String password, Role role) throws DataBaseConnectionException, DuplicateException {
-        String hashed_password = passwordEncoder.encode(password);
-        userRepo.createUser(username, hashed_password, role);
+    public void createUser(String username, String password, Role role) throws MyException {
+        try {
+            String hashed_password = passwordEncoder.encode(password);
+            userRepo.createUser(username, hashed_password, role);
+        }
+        catch(DataBaseConnectionException | DuplicateException ex){
+            if (ex instanceof DataBaseConnectionException) {
+                System.out.println("do some job");
+            } else {
+                System.out.println("do some otehr job");
+            }
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public boolean isInvalidString(String text){
@@ -101,24 +108,52 @@ public class Logic {
         return eventDAO.getEvents(userId);
     }
 
-    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
-        List<User> users = userRepo.getUsersWithoutCurrent(id);
-        return users;
+    public List<User> getUsersWithoutCurrent(int id) throws MyException {
+        try {
+            List<User> users = userRepo.getUsersWithoutCurrent(id);
+            return users;
+        }
+        catch (DataBaseConnectionException ex){
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public List<Event> getAllEvents() throws DataBaseConnectionException {
         return eventRepo.getAllEvents();
     }
 
-    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
-        eventRepo.deleteSelectedEvent(selectedEvent);
+    public void deleteSelectedEvent(Event selectedEvent) throws MyException {
+        try {
+            eventRepo.deleteSelectedEvent(selectedEvent);
+        }
+        catch (DataBaseConnectionException ex){
+            System.out.println("simulating sone job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
-    public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws DataBaseConnectionException {
-        return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
+    public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws MyException {
+        try {
+            return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
+        }
+        catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
-    public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) {
-        eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
+    public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) throws MyException {
+        try {
+            eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
+        }
+        catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 }

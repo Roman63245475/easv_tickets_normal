@@ -23,16 +23,24 @@ public class EventCoordinatorAccessObject {
         }
     }
 
-    public void assignCoordinator(int userID, int eventID) {
-        try(Connection con = cm.getConnection()) {
-
+    public void assignCoordinator(int userID, int eventID) throws DataBaseConnectionException {
+        Connection con = null;
+        try {
+            con = cm.getConnection();
             try(PreparedStatement ps = con.prepareStatement("INSERT INTO event_to_coordinator (EventID, UserID) VALUES (?, ?)")) {
                 ps.setInt(1, eventID);
                 ps.setInt(2, userID);
                 ps.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException("Connection failed");
+            }
+            else {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 
@@ -55,7 +63,7 @@ public class EventCoordinatorAccessObject {
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);

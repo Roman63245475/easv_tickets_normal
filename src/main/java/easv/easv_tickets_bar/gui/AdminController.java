@@ -83,16 +83,12 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     }
 
 
-    private List<User> getUsersWithoutCurrent() {
-        List<User> users = new ArrayList<>();
-        if (user == null) return users;
-        try {
-             users = logic.getUsersWithoutCurrent(user.getId());
-        } catch (DataBaseConnectionException e) {
-            System.out.println("idk what to do here");
-        }
-        return users;
-    }
+//    private List<User> getUsersWithoutCurrent() {
+//        List<User> users = new ArrayList<>();
+//        if (user == null) return users;
+//        users = logic.getUsersWithoutCurrent(user.getId());
+//        return users;
+//    }
 
     private void fillUserTable(List<User> users){
         userList.setAll(users);
@@ -123,14 +119,21 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     }
 
     private void fillEventTable(){
-        List<Event> events = new ArrayList<>();
-        try {
-            events = logic.getAllEvents();
-        } catch (DataBaseConnectionException e) {
-            System.out.println("idk what to do here");
-        }
-
-        this.eventList.setAll(events);
+        Task<List<Event>> getEvents = new Task<List<Event>>() {
+            @Override
+            protected List<Event> call() throws Exception {
+                List<Event> events = logic.getAllEvents();
+                return events;
+            }
+        };
+        getEvents.setOnSucceeded(event -> {
+            this.eventList.setAll(getEvents.getValue());
+        });
+        getEvents.setOnFailed(event -> {
+            Throwable ex = getEvents.getException();
+            System.out.println(ex.getMessage());
+        });
+        new Thread(getEvents).start();
     }
 
     public void menuSlide(){
@@ -159,7 +162,21 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
         setupUserTableColumns();
-        fillUserTable(getUsersWithoutCurrent());
+        Task<List<User>> getUsers = new Task<List<User>>() {
+            @Override
+            protected List<User> call() throws Exception {
+                List<User> users = logic.getUsersWithoutCurrent(user.getId());
+                return users;
+            }
+        };
+        getUsers.setOnSucceeded(e -> {
+            fillUserTable(getUsers.getValue());
+        });
+        getUsers.setOnFailed(e -> {
+           Throwable cause = getUsers.getException();
+            System.out.println(cause.getMessage());
+        });
+        new Thread(getUsers).start();
     }
 
     @FXML
@@ -196,9 +213,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         deleteTask.setOnFailed(e -> {
             this.deleteEventButton.setDisable(false);
             Throwable cause = deleteTask.getException();
-            if (cause instanceof DataBaseConnectionException) {
-                System.out.println("here needs to be an alert, or a error message");
-            }
+            System.out.println(cause.getMessage());
         });
         new Thread(deleteTask).start();
     }
@@ -235,7 +250,9 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
             }
         });
         getAvailableEventCoordinatorsTask.setOnFailed(e -> {
-            System.out.println("idk what to do here");
+            Throwable cause = getAvailableEventCoordinatorsTask.getException();
+            System.out.println(cause.getMessage());
+            //pam param pam pam
         });
         new Thread(getAvailableEventCoordinatorsTask).start();
     }
