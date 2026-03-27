@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           prefWidth="420" prefHeight="820"
+           styleClass="root_stack_pane"
+           stylesheets="@css/ticket.css">
+
+    <VBox styleClass="main_vbox"
+          prefWidth="400"
+          spacing="0">
+
+        <!-- Header with event title and description -->
+        <VBox styleClass="primary_vbox"
+              prefWidth="400"
+              alignment="CENTER"
+              spacing="8">
+            <padding>
+                <Insets top="28" right="24" bottom="22" left="24"/>
+            </padding>
+            <Label text="EVENT TICKET"
+                   styleClass="ticket-event-badge">
+                <font><Font name="System Bold" size="11.0"/></font>
+            </Label>
+            <Label fx:id="eventName"
+                   text="Event Name"
+                   wrapText="true"
+                   alignment="CENTER"
+                   maxWidth="340"
+                   styleClass="ticket-event-title">
+                <font><Font name="System Bold" size="24.0"/></font>
+            </Label>
+            <Label fx:id="eventDescription"
+                   text="Event description goes here"
+                   wrapText="true"
+                   alignment="CENTER"
+                   maxWidth="320"
+                   styleClass="ticket-event-description">
+                <font><Font size="12.0"/></font>
+            </Label>
+            <Region prefHeight="1" prefWidth="60"
+                    styleClass="ticket-divider-white"/>
+        </VBox>
+
+        <!-- Tear line between header and body -->
+        <HBox prefWidth="400" prefHeight="28"
+              alignment="CENTER"
+              styleClass="tear-line-box">
+            <StackPane prefWidth="28" prefHeight="28"
+                       styleClass="tear-line-notch">
+                <StackPane.margin><Insets left="-14"/></StackPane.margin>
+            </StackPane>
+            <Region HBox.hgrow="ALWAYS" prefHeight="1"
+                    style="-fx-border-color: #d1d5db; -fx-border-width: 0 0 2 0; -fx-border-style: dashed;"/>
+            <StackPane prefWidth="28" prefHeight="28"
+                       styleClass="tear-line-notch">
+                <StackPane.margin><Insets right="-14"/></StackPane.margin>
+            </StackPane>
+        </HBox>
+
+        <!-- Ticket details -->
+        <VBox VBox.vgrow="ALWAYS"
+              styleClass="ticket-body"
+              spacing="14">
+            <padding>
+                <Insets top="20" right="24" bottom="20" left="24"/>
+            </padding>
+
+            <!-- Attendee name -->
+            <VBox spacing="4">
+                <Label text="ATTENDEE" styleClass="ticket-section-label">
+                    <font><Font name="System Bold" size="10.0"/></font>
+                </Label>
+                <Label fx:id="attendeeName"
+                       text="Full Name"
+                       styleClass="ticket-name-label">
+                    <font><Font name="System Bold" size="17.0"/></font>
+                </Label>
+            </VBox>
+
+            <Region prefHeight="1" styleClass="ticket-divider"/>
+
+            <!-- Email address -->
+            <VBox spacing="4">
+                <Label text="EMAIL" styleClass="ticket-section-label">
+                    <font><Font name="System Bold" size="10.0"/></font>
+                </Label>
+                <Label fx:id="attendeeEmail"
+                       text="email@example.com"
+                       styleClass="ticket-value-label">
+                    <font><Font size="13.0"/></font>
+                </Label>
+            </VBox>
+
+            <Region prefHeight="1" styleClass="ticket-divider"/>
+
+            <!-- Start and end date side by side -->
+            <HBox spacing="12">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="START DATE" styleClass="ticket-section-label">
+                        <font><Font name="System Bold" size="10.0"/></font>
+                    </Label>
+                    <Label fx:id="eventStartDate"
+                           text="Jan 1, 2025 18:00"
+                           styleClass="ticket-value-label">
+                        <font><Font size="13.0"/></font>
+                    </Label>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="END DATE" styleClass="ticket-section-label">
+                        <font><Font name="System Bold" size="10.0"/></font>
+                    </Label>
+                    <Label fx:id="eventEndDate"
+                           text="Jan 1, 2025 23:00"
+                           styleClass="ticket-value-label">
+                        <font><Font size="13.0"/></font>
+                    </Label>
+                </VBox>
+            </HBox>
+
+            <Region prefHeight="1" styleClass="ticket-divider"/>
+
+            <!-- Notes -->
+            <VBox spacing="4">
+                <Label text="NOTES" styleClass="ticket-section-label">
+                    <font><Font name="System Bold" size="10.0"/></font>
+                </Label>
+                <Label fx:id="eventNotes"
+                       text="Notes will appear here"
+                       wrapText="true"
+                       styleClass="ticket-value-label">
+                    <font><Font size="13.0"/></font>
+                </Label>
+            </VBox>
+
+            <Region prefHeight="1" styleClass="ticket-divider"/>
+
+            <!-- Location guidance box -->
+            <VBox spacing="8">
+                <Label text="LOCATION GUIDANCE" styleClass="ticket-section-label">
+                    <font><Font name="System Bold" size="10.0"/></font>
+                </Label>
+                <VBox styleClass="location-box" spacing="4">
+                    <padding>
+                        <Insets top="12" right="14" bottom="12" left="14"/>
+                    </padding>
+                    <Label fx:id="locationName"
+                           text="Venue Name, City"
+                           styleClass="location-name-label">
+                        <font><Font name="System Bold" size="13.0"/></font>
+                    </Label>
+                    <Label fx:id="locationGuidance"
+                           text="Entrance and directions will appear here"
+                           wrapText="true"
+                           styleClass="location-guidance-label">
+                        <font><Font size="12.0"/></font>
+                    </Label>
+                </VBox>
+            </VBox>
+
+            <Region prefHeight="1" styleClass="ticket-divider"/>
+
+            <!-- QR code for entry verification -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="SCAN TO VERIFY" styleClass="ticket-section-label">
+                    <font><Font name="System Bold" size="10.0"/></font>
+                </Label>
+                <StackPane prefWidth="120" prefHeight="120"
+                           maxWidth="120" maxHeight="120"
+                           alignment="CENTER"
+                           styleClass="qr-box">
+                    <ImageView fx:id="qrCode"
+                               fitWidth="100" fitHeight="100"
+                               preserveRatio="true"/>
+                    <Label text="QR Code"
+                           styleClass="qr-placeholder-label">
+                        <font><Font size="12.0"/></font>
+                    </Label>
+                </StackPane>
+            </VBox>
+
+        </VBox>
+        <!-- Footer -->
+        <HBox styleClass="bg-top-bar-gradient"
+              prefHeight="40" prefWidth="400"
+              alignment="CENTER">
+            <Label text="Valid for one-time entry only"
+                   styleClass="ticket-footer-label">
+                <font><Font name="System Bold" size="11.0"/></font>
+            </Label>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

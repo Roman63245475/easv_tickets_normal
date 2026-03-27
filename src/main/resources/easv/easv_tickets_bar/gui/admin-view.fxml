@@ -133,15 +133,28 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Button fx:id="deleteEventButton" mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
-                           <VBox.margin>
-                              <Insets left="550.0" />
-                           </VBox.margin>
-                           <styleClass>
-                              <String fx:value="bg-top-bar-gradient" />
-                              <String fx:value="white-c-text" />
-                           </styleClass>
-                        </Button>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="160.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#assignCoordinator" text="Assign a Coordinator">
+                                 <styleClass>
+                                    <String fx:value="bg-top-bar-gradient" />
+                                    <String fx:value="white-c-text" />
+                                 </styleClass>
+                              </Button>
+                              <Button mnemonicParsing="false" text="Edit selected Event">
+                                 <styleClass>
+                                    <String fx:value="bg-top-bar-gradient" />
+                                    <String fx:value="white-c-text" />
+                                 </styleClass>
+                              </Button>
+                              <Button fx:id="deleteEventButton" mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
+                                 <styleClass>
+                                    <String fx:value="bg-top-bar-gradient" />
+                                    <String fx:value="white-c-text" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
