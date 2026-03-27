@@ -25,7 +25,6 @@ import java.util.List;
 public class Logic {
     UserAccessObject uao = new UserAccessObject();
     EventAccessObject eventDAO = new EventAccessObject();
-    EventCoordinatorsDAO eventCorDAO = new EventCoordinatorsDAO();
     TicketAccessObject ticketDAO = new TicketAccessObject();
     EventCoordinatorAccessObject eventCorDAO = new EventCoordinatorAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

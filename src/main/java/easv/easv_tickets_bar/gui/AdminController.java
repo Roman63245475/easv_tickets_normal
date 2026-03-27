@@ -129,7 +129,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         } catch (DataBaseConnectionException e) {
             System.out.println("idk what to do here");
         }
-
+        System.out.println(events);
         this.eventList.setAll(events);
     }
 
