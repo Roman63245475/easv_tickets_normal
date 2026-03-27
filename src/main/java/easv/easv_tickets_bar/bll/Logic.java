@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.bll;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
+import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
@@ -30,8 +31,23 @@ public class Logic {
     EventCoordinatorRepository eventCoordinatorRepo = new EventCoordinatorRepository();
 
 
-    public User login(String username, String password) throws DataBaseConnectionException, LoginException {
-        User user = userRepo.getFullUser(username);
+    public User login(String username, String password) throws MyException {
+        User user = null;
+        try {
+            user = userRepo.getFullUser(username);
+        }
+        catch (DataBaseConnectionException | LoginException ex){
+            String message = "";
+            if (ex instanceof DataBaseConnectionException){
+                System.out.println("do some job");
+                message = "data base connection Exception";
+            }
+            else {
+                System.out.println("do some otehr job");
+                message = "Username or password is incorrect";
+            }
+            throw new MyException(message);
+        }
         if (passwordEncoder.matches(password, user.getPassword())){
             return user;
         }
