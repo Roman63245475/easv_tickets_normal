@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="331.0" prefWidth="511.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="331.0" prefWidth="511.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.SellTicketController">
     <children>
         <HBox alignment="CENTER_LEFT" minHeight="58" spacing="10.0" styleClass="gradient-indigo-purple">
             <padding>
@@ -19,7 +19,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Region>
-                <Label styleClass="white-c-text" text="Sell Ticket - {ticket_name}">
+                <Label fx:id="ticketTypeLabel" styleClass="white-c-text" text="Sell Ticket - {ticket_name}">
                     <font>
                         <Font name="System Bold" size="17.0" />
                     </font>
@@ -30,7 +30,7 @@
             <children>
                 <VBox prefWidth="100.0">
                     <children>
-                        <Label styleClass="gray-c-text" text="Customer's Full Name: *" />
+                        <Label styleClass="gray-c-text" text="First Name: *" />
                   <TextField fx:id="nameInput" />
                     </children>
                     <VBox.margin>
@@ -50,6 +50,7 @@
                     </children>
                 </VBox>
             <Label fx:id="totalInput" managed="false" text="Total Cost:" />
+            <Label fx:id="errorLabel" managed="false" text="Label" />
             </children>
             <padding>
                 <Insets left="15.0" right="15.0" />

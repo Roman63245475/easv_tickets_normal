@@ -126,6 +126,10 @@
     -fx-text-fill: #333333;
 }
 
+.table-cell{
+    -fx-alignment: center;
+}
+
 .table-row-cell{
     -fx-cell-size: 50px;
     -fx-background-color: white;
@@ -137,7 +141,11 @@
 }
 
 .table-row-cell:selected{
-    -fx-background-color: #f0f8ff;
+    -fx-background-color: #ece6e6;
+}
+
+.table-row-cell:selected .text{
+    -fx-fill: #000000;
 }
 
 #coordinator-icon{

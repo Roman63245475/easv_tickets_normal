@@ -17,8 +17,39 @@ public class TicketEvent {
         this.soldQuantity = soldQuantity;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public String getTicketType() {
+        return ticketType;
+    }
+
+    public String getPrice() {
+        return String.valueOf(price) + " kr.";
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public int getSoldQuantity() {
+        return soldQuantity;
+    }
+
     public int getAvailable(){
         return totalQuantity - soldQuantity;
+    }
+
+    public String getStatus(){
+        if (getAvailable() == 0){
+            return "Sold out";
+        }
+        return "Available";
     }
 
 }

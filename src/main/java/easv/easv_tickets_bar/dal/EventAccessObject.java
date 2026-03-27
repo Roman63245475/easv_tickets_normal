@@ -111,7 +111,7 @@ public class EventAccessObject {
                     String notes = rs.getString("Notes");
                     int capacity = rs.getInt("Capacity");
                     //int count = rs.getInt("CoordinatorCount");
-                    events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity));
+                    //events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity));
                 }
             }
             return events;

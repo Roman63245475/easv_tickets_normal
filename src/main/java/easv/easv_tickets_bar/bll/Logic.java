@@ -3,6 +3,7 @@ import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.dal.EventCoordinatorsDAO;
 import easv.easv_tickets_bar.dal.EventAccessObject;
@@ -107,5 +108,17 @@ public class Logic {
 
     public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
         eventRepo.deleteSelectedEvent(selectedEvent);
+    }
+
+    public List<TicketEvent> getEventTickets(int id) throws DataBaseConnectionException {
+        return ticketDAO.getEventTickets(id);
+    }
+
+    public void sellTicket(int id, String name, String email, int quantity, int available) throws Exception {
+        if (isInvalidString(name) || isInvalidString(email)) {
+            throw new Exception("Make sure fields are filled out.");
+        }
+        if  (quantity <= 0) throw new Exception("Quantity must be a positive number");
+        ticketDAO.sellTicket(id, name, email, quantity, available);
     }
 }

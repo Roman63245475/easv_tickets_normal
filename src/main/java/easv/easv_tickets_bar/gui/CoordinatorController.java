@@ -43,10 +43,11 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private TableColumn<Event, Void> actionsColumn;
 
     //Tickets Table
-    @FXML private TableView<TicketEvent> idTColumn;
+    @FXML private TableView<TicketEvent> ticketsTable;
+    @FXML private TableColumn<TicketEvent, Void> idTColumn;
     @FXML private TableColumn<TicketEvent, String> eventTName;
     @FXML private TableColumn<TicketEvent, String> ticketName;
-    @FXML private TableColumn<TicketEvent, Double> priceColumn;
+    @FXML private TableColumn<TicketEvent, String> priceColumn;
     @FXML private TableColumn<TicketEvent, Integer> quantityTColumn;
     @FXML private TableColumn<TicketEvent, Integer> soldColumn;
     @FXML private TableColumn<TicketEvent, Integer> availableColumn;
@@ -64,6 +65,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //Events
         idColumn.setCellFactory(column -> new TableCell<Event, Void>() {
             @Override
             protected void updateItem(Void item, boolean empty){
@@ -104,11 +106,65 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
                 }
             }
         });
+
+        //Tickets
+        idTColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                }else{
+                    setText(String.valueOf(getIndex() + 1));
+                }
+            }
+        });
+
+        eventTName.setCellValueFactory(new PropertyValueFactory<>("eventName"));
+        ticketName.setCellValueFactory(new PropertyValueFactory<>("ticketType"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quantityTColumn.setCellValueFactory(new PropertyValueFactory<>("totalQuantity"));
+        soldColumn.setCellValueFactory(new PropertyValueFactory<>("soldQuantity"));
+        availableColumn.setCellValueFactory(new PropertyValueFactory<>("available"));
+        statusTColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        actionTColumn.setCellFactory(column -> new TableCell<TicketEvent, Void>() {
+            private final Region sellIcon = new Region();
+            private final Region deleteIcon = new Region();
+
+            private final HBox actionButtons =  new HBox(15, sellIcon, deleteIcon);
+
+            {
+                actionButtons.setAlignment(Pos.CENTER);
+                sellIcon.setStyle("-fx-pref-width: 20px; -fx-min-width: 20px; -fx-max-height: 20px; -fx-background-color: #7470dc; -fx-shape: 'M856-390 570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z'");
+                deleteIcon.setStyle("-fx-pref-width: 20px; -fx-min-width: 20px; -fx-max-height: 20px; -fx-background-color: #cc4747; -fx-shape: 'M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z'");
+
+                sellIcon.setOnMouseClicked(event -> {
+                    TicketEvent chosenTicket = getTableRow().getItem();
+                    if (chosenTicket != null) {
+                        onSellTicket(chosenTicket);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                }else{
+                    setGraphic(actionButtons);
+                }
+            }
+
+        });
+
     }
 
     @Override
     public void refreshTable() throws DataBaseConnectionException {
         updateEventTable();
+        updateTicketTable();
     }
 
     public CoordinatorController(){
@@ -135,15 +191,22 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         eventTable.setItems(observableList);
     }
 
+    private void updateTicketTable() throws DataBaseConnectionException {
+        List<TicketEvent> tickets = logic.getEventTickets(user.getId());
+
+        ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
+
+        ticketsTable.setItems(observableList);
+    }
+
     public void onEventManClick() throws DataBaseConnectionException {
         switchTab("eventManagementBox");
         updateEventTable();
     }
 
-
-
-    public void onTicketManClick(){
+    public void onTicketManClick() throws DataBaseConnectionException {
         switchTab("ticketManagementBox");
+        updateTicketTable();
     }
 
     public void onCreateEvent(){
@@ -168,12 +231,12 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
-    public void onSellTicket(){
+    public void onSellTicket(TicketEvent ticket){
         try{
             Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
             SellTicketController stController = (SellTicketController) obj;
             stController.setController(this);
-            //stController.setTicket()
+            stController.setTicket(ticket);
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -184,7 +247,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         this.user = user;
         this.welcomeUserLabel.setText("Welcome " + user.getUsername());
         try {
-            updateEventTable();
+            refreshTable();
         }
         catch (DataBaseConnectionException e) {
             System.out.println("kapec");
