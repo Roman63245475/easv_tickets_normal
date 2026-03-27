@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.bll;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
+import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.be.EventCoordinator;
@@ -33,19 +34,41 @@ public class Logic {
     EventCoordinatorRepository eventCoordinatorRepo = new EventCoordinatorRepository();
 
 
-    public User login(String username, String password) throws DataBaseConnectionException, LoginException {
-        User user = userRepo.getFullUser(username);
-        if (passwordEncoder.matches(password, user.getPassword())){
-            return user;
+    public User login(String username, String password) throws MyException {
+        User user = null;
+        try {
+            user = userRepo.getFullUser(username);
+            if (passwordEncoder.matches(password, user.getPassword())){
+                return user;
+            }
+            else {
+                throw new LoginException("password doesn't match");
+            }
         }
-        else {
-            throw new LoginException();
+        catch (DataBaseConnectionException | LoginException ex) {
+            if (ex instanceof DataBaseConnectionException) {
+                System.out.println("do some job");
+            } else {
+                System.out.println("do some otehr job");
+            }
+            throw new MyException(ex.getMessage());
         }
     }
 
-    public void createUser(String username, String password, Role role) throws DataBaseConnectionException, DuplicateException {
-        String hashed_password = passwordEncoder.encode(password);
-        userRepo.createUser(username, hashed_password, role);
+    public void createUser(String username, String password, Role role) throws MyException {
+        try {
+            String hashed_password = passwordEncoder.encode(password);
+            userRepo.createUser(username, hashed_password, role);
+        }
+        catch(DataBaseConnectionException | DuplicateException ex){
+            if (ex instanceof DataBaseConnectionException) {
+                System.out.println("do some job");
+            } else {
+                System.out.println("do some otehr job");
+            }
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public boolean isInvalidString(String text){
@@ -100,25 +123,53 @@ public class Logic {
 
     }
 
-    public List<User> getUsersWithoutCurrent(int id) throws DataBaseConnectionException {
-        List<User> users = userRepo.getUsersWithoutCurrent(id);
-        return users;
+    public List<User> getUsersWithoutCurrent(int id) throws MyException {
+        try {
+            List<User> users = userRepo.getUsersWithoutCurrent(id);
+            return users;
+        }
+        catch (DataBaseConnectionException ex){
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public List<Event> getAllEvents() throws DataBaseConnectionException {
         return eventRepo.getAllEvents();
     }
 
-    public void deleteSelectedEvent(Event selectedEvent) throws DataBaseConnectionException {
-        eventRepo.deleteSelectedEvent(selectedEvent);
+    public void deleteSelectedEvent(Event selectedEvent) throws MyException {
+        try {
+            eventRepo.deleteSelectedEvent(selectedEvent);
+        }
+        catch (DataBaseConnectionException ex){
+            System.out.println("simulating sone job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
-    public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws DataBaseConnectionException {
-        return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
+    public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws MyException {
+        try {
+            return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
+        }
+        catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
-    public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) {
-        eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
+    public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) throws MyException {
+        try {
+            eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
+        }
+        catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public List<TicketEvent> getEventTickets(int id) throws DataBaseConnectionException {

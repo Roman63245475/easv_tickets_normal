@@ -24,9 +24,11 @@ public class EventAccessObject {
     }
 
 
-    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) {
+    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
         int id = -1;
-        try(Connection con = connectionManager.getConnection()) {
+        Connection con = null;
+        try {
+            con = connectionManager.getConnection();
             try(PreparedStatement ps = con.prepareStatement("INSERT INTO Events(Name, StartTime, EndTime, Location, Venue, LocationGuidance, Notes, Capacity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)){
                 ps.setString(1, name);
                 ps.setObject(2, startDateTime);
@@ -43,8 +45,23 @@ public class EventAccessObject {
                     }
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException("Connection failed");
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("o moy bog");
+                }
+            }
         }
         return id;
     }
@@ -76,7 +93,7 @@ public class EventAccessObject {
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);
@@ -118,7 +135,7 @@ public class EventAccessObject {
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);
@@ -145,7 +162,7 @@ public class EventAccessObject {
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else{
                 throw new RuntimeException(e);

@@ -85,15 +85,7 @@ public class LoginController implements Initializable {
         loginTask.setOnFailed(event -> {
             Throwable cause = loginTask.getException();
             loginButton.setDisable(false);
-            if (cause instanceof DataBaseConnectionException) {
-                this.errorLabel.setText("Sorry something went wrong please try later");
-            }
-            else if (cause instanceof LoginException) {
-                this.errorLabel.setText("Username or Password is incorrect");
-            }
-            else {
-                errorLabel.setText("Unknown error");
-            }
+            this.errorLabel.setText(cause.getMessage());
             this.errorLabel.setOpacity(1.0);
         });
         new Thread(loginTask).start();

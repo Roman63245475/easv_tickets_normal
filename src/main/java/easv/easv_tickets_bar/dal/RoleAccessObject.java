@@ -43,12 +43,12 @@ public class RoleAccessObject {
                 return role;
             }
             else{
-                throw new LoginException();
+                throw new LoginException("this is unreal");
             }
         }
         catch (SQLException e) {
             if (con == null) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Connection failed");
             }
             else
                 throw new RuntimeException(e);

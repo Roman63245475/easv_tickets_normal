@@ -19,7 +19,7 @@ public class EventCoordinatorRepository {
         return ecao.getAvailableEventCoordinators(selectedEvent);
     }
 
-    public void assignCoordinator(Event event, EventCoordinator selectedCoordinator) {
+    public void assignCoordinator(Event event, EventCoordinator selectedCoordinator) throws DataBaseConnectionException {
         ecao.assignCoordinator(selectedCoordinator.getId(), event.getId());
     }
 }
