@@ -1,7 +1,7 @@
 package easv.easv_tickets_bar.be;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Event {
     private int id;
@@ -28,6 +28,14 @@ public class Event {
         this.capacity = capacity;
     }
 
+    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location) {
+        this.id = id;
+        this.name = name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.location = location;
+    }
+
     public int getId() {
         return id;
     }
@@ -36,12 +44,16 @@ public class Event {
         return name;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public String getStartDateTime() {
+        if (startDateTime == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm");
+        return startDateTime.format(formatter);
     }
 
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
+    public String getEndDateTime() {
+        if (endDateTime == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm");
+        return endDateTime.format(formatter);
     }
 
     public String getLocation() {

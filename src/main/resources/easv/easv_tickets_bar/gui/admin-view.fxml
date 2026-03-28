@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="800.0" stylesheets="@css/admin-styles.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.AdminController">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="800.0" stylesheets="@css/admin-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.AdminController">
    <children>
       <VBox fx:id="sideBar" minWidth="0.0" prefHeight="479.0" prefWidth="0.0" styleClass="white-c">
          <children>
@@ -76,7 +70,7 @@
                </padding></HBox>
             <StackPane fx:id="contentBox" prefHeight="479.0" prefWidth="571.0">
                <children>
-                  <VBox fx:id="userManagementBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+                  <VBox fx:id="userManagementBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" visible="false">
                      <children>
                         <HBox alignment="CENTER" prefWidth="200.0">
                            <children>
@@ -108,7 +102,7 @@
                         </TableView>
                      </children>
                   </VBox>
-                  <VBox fx:id="eventManagementBox" alignment="TOP_CENTER" layoutX="30.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" visible="false">
+                  <VBox fx:id="eventManagementBox" alignment="TOP_CENTER" layoutX="30.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
                      <children>
                         <HBox prefWidth="200.0">
                            <children>
@@ -133,21 +127,23 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="160.0">
+                        <HBox alignment="CENTER" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#assignCoordinator" text="Assign a Coordinator">
+                              <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#assignCoordinator" prefHeight="25.0" prefWidth="150.0" text="Assign a Coordinator">
                                  <styleClass>
                                     <String fx:value="bg-top-bar-gradient" />
                                     <String fx:value="white-c-text" />
                                  </styleClass>
                               </Button>
-                              <Button mnemonicParsing="false" text="Edit selected Event">
+                              <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                              <Button minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="Edit selected Event">
                                  <styleClass>
                                     <String fx:value="bg-top-bar-gradient" />
                                     <String fx:value="white-c-text" />
                                  </styleClass>
                               </Button>
-                              <Button fx:id="deleteEventButton" mnemonicParsing="false" onAction="#deleteEvent" prefHeight="35.0" prefWidth="160.0" text="Delete selected event">
+                              <Region prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="deleteEventButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteEvent" prefHeight="25.0" prefWidth="156.0" text="Delete selected event">
                                  <styleClass>
                                     <String fx:value="bg-top-bar-gradient" />
                                     <String fx:value="white-c-text" />

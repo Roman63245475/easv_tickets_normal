@@ -17,6 +17,13 @@ public class TicketEvent {
         this.soldQuantity = soldQuantity;
     }
 
+    public TicketEvent(int id, String ticketType, double price, int totalQuantity) {
+        this.id = id;
+        this.ticketType = ticketType;
+        this.price = price;
+        this.totalQuantity = totalQuantity;
+    }
+
     public int getId() {
         return id;
     }

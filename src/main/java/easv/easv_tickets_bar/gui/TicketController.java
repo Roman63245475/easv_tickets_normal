@@ -76,7 +76,7 @@ public class TicketController implements IPanel, IUserPanel, Initializable {
         Task<Void> task = new Task<>(){
             @Override
             protected Void call() throws Exception {
-                logic.createTicket(chosenEvent.getId(), name, price, quantity);
+                logic.createTicket(chosenEvent.getId(), chosenEvent.getCapacity(), name, price, quantity);
                 return null;
             }
         };

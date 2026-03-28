@@ -22,4 +22,8 @@ public class EventCoordinatorRepository {
     public void assignCoordinator(Event event, EventCoordinator selectedCoordinator) throws DataBaseConnectionException {
         ecao.assignCoordinator(selectedCoordinator.getId(), event.getId());
     }
+
+    public void assignSelf(int userId, int eventId) throws DataBaseConnectionException {
+        ecao.assignCoordinator(userId, eventId);
+    }
 }

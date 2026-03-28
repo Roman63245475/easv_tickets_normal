@@ -192,7 +192,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     private void updateTicketTable() throws DataBaseConnectionException {
-        List<TicketEvent> tickets = logic.getEventTickets(user.getId());
+        List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
 
         ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
 

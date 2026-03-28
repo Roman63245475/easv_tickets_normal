@@ -14,6 +14,7 @@ import easv.easv_tickets_bar.dal.UserAccessObject;
 import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
+import easv.easv_tickets_bar.repo.TicketRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -24,14 +25,11 @@ import java.util.List;
 
 
 public class Logic {
-    UserAccessObject uao = new UserAccessObject();
-    EventAccessObject eventDAO = new EventAccessObject();
-    TicketAccessObject ticketDAO = new TicketAccessObject();
-    EventCoordinatorAccessObject eventCorDAO = new EventCoordinatorAccessObject();
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     UserRepository userRepo = new UserRepository();
     EventRepository eventRepo = new EventRepository();
     EventCoordinatorRepository eventCoordinatorRepo = new EventCoordinatorRepository();
+    TicketRepository ticketRepo = new TicketRepository();
 
 
     public User login(String username, String password) throws MyException {
@@ -103,15 +101,15 @@ public class Logic {
         LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
-        int eventId = eventDAO.createNewEvent(name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
-        eventCorDAO.assignCoordinator(userId, eventId);
+        int eventId = eventRepo.createNewEvent(name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+        eventCoordinatorRepo.assignSelf(userId, eventId);
     }
 
     public List<Event> getCorEvents(int userId) throws DataBaseConnectionException {
-        return eventDAO.getEvents(userId);
+        return eventRepo.getEvents(userId);
     }
 
-    public void createTicket(int id, String name, String price, String quantity) throws Exception {
+    public void createTicket(int id, int maxCapacity, String name, String price, String quantity) throws Exception {
         int quantityInt = Integer.parseInt(quantity);
         double priceDouble = Double.parseDouble(price);
         if (isInvalidString(name) || isInvalidString(price) || isInvalidString(quantity)) {
@@ -119,7 +117,18 @@ public class Logic {
         }
         if (quantityInt <= 0) throw new Exception("Quantity must be a positive number");
 
-        ticketDAO.createTicket(id, name, priceDouble, quantityInt);
+        int totalTickets = 0;
+        List<TicketEvent> tickets = ticketRepo.getTicketsOfEvent(id);
+        for (TicketEvent ticket : tickets) {
+            totalTickets += ticket.getTotalQuantity();
+            //System.out.println(totalTickets);
+        }
+
+        if (totalTickets + quantityInt > maxCapacity) {
+            throw new Exception("Ticket Capacity Exceeded. You can add: " + (maxCapacity - totalTickets) + " tickets.");
+        }
+
+        ticketRepo.createTicket(id, name, priceDouble, quantityInt);
 
     }
 
@@ -172,8 +181,8 @@ public class Logic {
 
     }
 
-    public List<TicketEvent> getEventTickets(int id) throws DataBaseConnectionException {
-        return ticketDAO.getEventTickets(id);
+    public List<TicketEvent> getTicketsByCoordinator(int id) throws DataBaseConnectionException {
+        return ticketRepo.getTicketsByCoordinator(id);
     }
 
     public void sellTicket(int id, String name, String email, int quantity, int available) throws Exception {
@@ -181,6 +190,6 @@ public class Logic {
             throw new Exception("Make sure fields are filled out.");
         }
         if  (quantity <= 0) throw new Exception("Quantity must be a positive number");
-        ticketDAO.sellTicket(id, name, email, quantity, available);
+        ticketRepo.sellTicket(id, name, email, quantity, available);
     }
 }

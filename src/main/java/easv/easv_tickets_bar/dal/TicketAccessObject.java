@@ -38,14 +38,14 @@ public class TicketAccessObject {
 
         } catch (SQLException e) {
             if (e.getSQLState().startsWith("08")) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Error");
             }else{
                 throw new RuntimeException(e.getMessage());
             }
         }
     }
 
-    public List<TicketEvent> getEventTickets(int user_id) throws DataBaseConnectionException {
+    public List<TicketEvent> getTicketsByCoordinator(int user_id) throws DataBaseConnectionException {
         List<TicketEvent> ticketEvents = new ArrayList<>();
         try (Connection con = connectionManager.getConnection()){
             try(PreparedStatement ps = con.prepareStatement("SELECT event_ticket.*, Events.Name AS EventName, (SELECT COUNT(*) FROM tickets WHERE tickets.typeId = event_ticket.id) AS SoldQuantity FROM event_ticket INNER JOIN Events ON Events.id = event_ticket.event_id INNER JOIN event_to_coordinator ON event_to_coordinator.EventID = Events.id WHERE event_to_coordinator.UserID = ?")){
@@ -65,7 +65,32 @@ public class TicketAccessObject {
 
         } catch (SQLException e) {
             if (e.getSQLState().startsWith("08")) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Error");
+            }else{
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+    }
+
+    public List<TicketEvent> getTicketsOfEvent(int event_id) throws DataBaseConnectionException {
+        List<TicketEvent> ticketEvents = new ArrayList<>();
+        try (Connection con = connectionManager.getConnection()){
+            try(PreparedStatement ps = con.prepareStatement("SELECT * FROM event_ticket WHERE event_id = ?")){
+                ps.setInt(1, event_id);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    double price = rs.getDouble("price");
+                    int quantity = rs.getInt("quantity");
+                    ticketEvents.add(new TicketEvent(id, name, price, quantity));
+                }
+            }
+            return ticketEvents;
+
+        } catch (SQLException e) {
+            if (e.getSQLState().startsWith("08")) {
+                throw new DataBaseConnectionException("Error");
             }else{
                 throw new RuntimeException(e.getMessage());
             }
@@ -95,7 +120,7 @@ public class TicketAccessObject {
 
         } catch (SQLException e) {
             if (e.getSQLState().startsWith("08")) {
-                throw new DataBaseConnectionException();
+                throw new DataBaseConnectionException("Error");
             }else{
                 throw new RuntimeException(e.getMessage());
             }

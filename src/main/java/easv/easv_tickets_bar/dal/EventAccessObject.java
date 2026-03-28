@@ -123,12 +123,7 @@ public class EventAccessObject {
                     LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
                     LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
                     String location = rs.getString("Location");
-                    String venue = rs.getString("Venue");
-                    String guidance = rs.getString("LocationGuidance");
-                    String notes = rs.getString("Notes");
-                    int capacity = rs.getInt("Capacity");
-                    //int count = rs.getInt("CoordinatorCount");
-                    //events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity));
+                    events.add(new Event(id, name,  startDateTime, endDateTime, location));
                 }
             }
             return events;
