@@ -1,17 +1,10 @@
 package easv.easv_tickets_bar.bll;
+
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.CustomExceptions.MyException;
-import easv.easv_tickets_bar.be.Event;
-import easv.easv_tickets_bar.be.TicketEvent;
-import easv.easv_tickets_bar.be.EventCoordinator;
-import easv.easv_tickets_bar.be.User;
-import easv.easv_tickets_bar.dal.EventCoordinatorAccessObject;
-import easv.easv_tickets_bar.dal.EventAccessObject;
-import easv.easv_tickets_bar.dal.TicketAccessObject;
-import easv.easv_tickets_bar.dal.UserAccessObject;
-import easv.easv_tickets_bar.be.Role;
+import easv.easv_tickets_bar.be.*;
 import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.TicketRepository;
@@ -23,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-
 public class Logic {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     UserRepository userRepo = new UserRepository();
@@ -32,18 +24,17 @@ public class Logic {
     TicketRepository ticketRepo = new TicketRepository();
 
 
+
     public User login(String username, String password) throws MyException {
         User user = null;
         try {
             user = userRepo.getFullUser(username);
-            if (passwordEncoder.matches(password, user.getPassword())){
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 return user;
-            }
-            else {
+            } else {
                 throw new LoginException("password doesn't match");
             }
-        }
-        catch (DataBaseConnectionException | LoginException ex) {
+        } catch (DataBaseConnectionException | LoginException ex) {
             if (ex instanceof DataBaseConnectionException) {
                 System.out.println("do some job");
             } else {
@@ -51,25 +42,31 @@ public class Logic {
             }
             throw new MyException(ex.getMessage());
         }
+    }
+    private boolean checkRole(Role role) throws MyException {
+        if (role != null) {
+            return true;
+        }
+        throw new MyException("Role needs to be selected");
     }
 
     public void createUser(String username, String password, Role role) throws MyException {
-        try {
-            String hashed_password = passwordEncoder.encode(password);
-            userRepo.createUser(username, hashed_password, role);
-        }
-        catch(DataBaseConnectionException | DuplicateException ex){
-            if (ex instanceof DataBaseConnectionException) {
-                System.out.println("do some job");
-            } else {
-                System.out.println("do some otehr job");
+        if (checkPassword(password) && checkUsername(username, password) && checkRole(role)) {
+            try {
+                String hashed_password = passwordEncoder.encode(password);
+                userRepo.createUser(username, hashed_password, role);
+            } catch (DataBaseConnectionException | DuplicateException ex) {
+                if (ex instanceof DataBaseConnectionException) {
+                    System.out.println("do some job");
+                } else {
+                    System.out.println("do some otehr job");
+                }
+                throw new MyException(ex.getMessage());
             }
-            throw new MyException(ex.getMessage());
         }
-
     }
 
-    public boolean isInvalidString(String text){
+    public boolean isInvalidString(String text) {
         return text == null || text.trim().isEmpty();
     }
 
@@ -82,7 +79,7 @@ public class Logic {
             throw new Exception("Please select a valid Start Date and End Date");
         }
         LocalTime startTime, endTime;
-        try{
+        try {
             startTime = LocalTime.parse(startTimeStr);
             endTime = LocalTime.parse(endTimeStr);
         } catch (Exception e) {
@@ -91,10 +88,10 @@ public class Logic {
         //com
 
         int capacity;
-        try{
+        try {
             capacity = Integer.parseInt(capacityStr);
             if (capacity <= 0) throw new Exception();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("Capacity must be a positive number");
         }
 
@@ -105,8 +102,14 @@ public class Logic {
         eventCoordinatorRepo.assignSelf(userId, eventId);
     }
 
-    public List<Event> getCorEvents(int userId) throws DataBaseConnectionException {
-        return eventRepo.getEvents(userId);
+    public List<Event> getCorEvents(int userId) throws MyException {
+        try {
+            return eventRepo.getEvents(userId);
+        } catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
+
     }
 
     public void createTicket(int id, int maxCapacity, String name, String price, String quantity) throws Exception {
@@ -136,8 +139,7 @@ public class Logic {
         try {
             List<User> users = userRepo.getUsersWithoutCurrent(id);
             return users;
-        }
-        catch (DataBaseConnectionException ex){
+        } catch (DataBaseConnectionException ex) {
             System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
@@ -151,8 +153,7 @@ public class Logic {
     public void deleteSelectedEvent(Event selectedEvent) throws MyException {
         try {
             eventRepo.deleteSelectedEvent(selectedEvent);
-        }
-        catch (DataBaseConnectionException ex){
+        } catch (DataBaseConnectionException ex) {
             System.out.println("simulating sone job");
             throw new MyException(ex.getMessage());
         }
@@ -162,8 +163,7 @@ public class Logic {
     public List<EventCoordinator> getAvailableEventCoordinators(Event selectedEvent) throws MyException {
         try {
             return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
-        }
-        catch (DataBaseConnectionException ex) {
+        } catch (DataBaseConnectionException ex) {
             System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
@@ -173,23 +173,78 @@ public class Logic {
     public void assingCoordinator(Event event, EventCoordinator selectedCoordinator) throws MyException {
         try {
             eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
-        }
-        catch (DataBaseConnectionException ex) {
+        } catch (DataBaseConnectionException ex) {
             System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
 
     }
 
-    public List<TicketEvent> getTicketsByCoordinator(int id) throws DataBaseConnectionException {
-        return ticketRepo.getTicketsByCoordinator(id);
+    public List<TicketEvent> getTicketsByCoordinator(int id) throws MyException {
+        try {
+            return ticketRepo.getTicketsByCoordinator(id);
+        } catch (DataBaseConnectionException ex) {
+            System.out.println("do some job");
+            throw new MyException(ex.getMessage());
+        }
     }
 
     public void sellTicket(int id, String name, String email, int quantity, int available) throws Exception {
         if (isInvalidString(name) || isInvalidString(email)) {
             throw new Exception("Make sure fields are filled out.");
         }
-        if  (quantity <= 0) throw new Exception("Quantity must be a positive number");
+        if (quantity <= 0) throw new Exception("Quantity must be a positive number");
         ticketRepo.sellTicket(id, name, email, quantity, available);
+    }
+
+    public void editUser(User user, String changedUsername, String changedPassword, Role changedRole) throws MyException {
+        if (checkUsername(changedUsername, changedPassword)) {
+            String hashed_password = "";
+            if (!changedPassword.isEmpty()) {
+                if (checkPassword(changedPassword)){
+                    hashed_password = passwordEncoder.encode(changedPassword);
+                }
+            }
+            else {
+                hashed_password = user.getPassword();
+            }
+            try {
+                userRepo.editUser(user, changedUsername, hashed_password, changedRole);
+                if (changedRole == Role.ADMIN) {
+                    userRepo.eraseAllAssignedEvents(user.getId());
+                }
+            } catch (DataBaseConnectionException e) {
+                System.out.println("simulating some job");
+                throw new MyException("Connection failed");
+            }
+        }
+
+
+    }
+
+    private boolean checkPassword(String password) throws MyException {
+        if (password.contains(" ")) {
+            throw new MyException("Password shall not contain any spaces");
+        }
+        if (password.length() < 8) {
+            throw new MyException("Password must contain at least 8 characters");
+        }
+        return true;
+    }
+
+    private boolean checkUsername(String username, String password) throws MyException {
+        if (username.isEmpty()) {
+            throw new MyException("Please fill all fields");
+        }
+        if (username.contains(" ")) {
+            throw new MyException("Username shall not contain spaces");
+        }
+        if (username.length() < 8) {
+            throw new MyException("Username must have at least 8 characters");
+        }
+        if (username.equals(password)) {
+            throw new MyException("Password can't be equal to username");
+        }
+        return true;
     }
 }

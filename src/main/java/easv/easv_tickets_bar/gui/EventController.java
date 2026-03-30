@@ -83,11 +83,7 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
         task.setOnSucceeded(e -> {
             Stage stage = (Stage) btn.getScene().getWindow();
-            try {
-                controller.refreshTable();
-            } catch (DataBaseConnectionException ex) {
-                throw new RuntimeException(ex);
-            }
+            controller.refreshTable();
             stage.close();
         });
 

@@ -62,11 +62,7 @@ public class SellTicketController implements Initializable {
 
         task.setOnSucceeded(event -> {
             Stage stage = (Stage) btn.getScene().getWindow();
-            try{
-                cController.refreshTable();
-            } catch (DataBaseConnectionException e) {
-                throw new RuntimeException(e);
-            }
+            cController.refreshTable();
             stage.close();
         });
 

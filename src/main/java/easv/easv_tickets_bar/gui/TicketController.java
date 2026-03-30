@@ -85,11 +85,7 @@ public class TicketController implements IPanel, IUserPanel, Initializable {
 
         task.setOnSucceeded(event -> {
             Stage stage =  (Stage) btn.getScene().getWindow();
-            try{
-                controller.refreshTable();
-            } catch (DataBaseConnectionException e) {
-                throw new RuntimeException(e);
-            }
+            controller.refreshTable();
             stage.close();
         });
 

@@ -47,4 +47,11 @@ public class UserRepository {
     }
 
 
+    public void editUser(User user, String changedUsername, String changedPassword, Role changedRole) throws DataBaseConnectionException {
+        uao.editUser(user.getId(), changedUsername, changedPassword, changedRole.getId());
+    }
+
+    public void eraseAllAssignedEvents(int id) throws DataBaseConnectionException {
+        uao.eraseAllAssignedEvents(id);
+    }
 }

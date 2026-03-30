@@ -11,11 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AddUserController implements IUserPanel, Initializable {
+public class AddEditUserController implements IUserPanel, Initializable, IPanel {
 
 
     @FXML private TextField passwordField;
@@ -26,9 +25,10 @@ public class AddUserController implements IUserPanel, Initializable {
 
     private Logic logic;
     private User user;
+    private IRefreshable controller;
 
 
-    public AddUserController() {
+    public AddEditUserController() {
         this.logic = new Logic();
     }
 
@@ -36,6 +36,9 @@ public class AddUserController implements IUserPanel, Initializable {
     @Override
     public void setUser(User user) {
         this.user = user;
+        createUserButton.setText("Edit User");
+        createUserButton.setOnAction(e -> {editUser();});
+        fillFields();
     }
 
     @FXML
@@ -43,36 +46,7 @@ public class AddUserController implements IUserPanel, Initializable {
         String username = userNameField.getText();
         String password = passwordField.getText();
         Role role = userRoleBox.getValue();
-        if (username.isEmpty() || password.isEmpty() || role == null){
-            this.errorLabel.setText("Please fill all the fields");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
-        if (username.contains(" ")){
-            this.errorLabel.setText("Username can't contain spaces");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
-        if (username.length() < 8){
-            this.errorLabel.setText("Username must contain at least 8 characters");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
-        if (username.equals(password)){
-            this.errorLabel.setText("Password can't be equal to username");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
-        if (password.contains(" ")){
-            this.errorLabel.setText("Password can't contain spaces");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
-        if (password.length() < 8){
-            this.errorLabel.setText("Password must contain at least 8 characters");
-            this.errorLabel.setOpacity(1.0);
-            return;
-        }
+
 
 
         createUserButton.setDisable(true);
@@ -86,6 +60,7 @@ public class AddUserController implements IUserPanel, Initializable {
 
 
         createUserTask.setOnSucceeded(event -> {
+            controller.refreshTable();
             Stage st = (Stage) this.userNameField.getScene().getWindow();
             st.close();
         });
@@ -93,15 +68,7 @@ public class AddUserController implements IUserPanel, Initializable {
 
         createUserTask.setOnFailed(event -> {
             Throwable cause = createUserTask.getException();
-            if (cause instanceof DataBaseConnectionException) {
-                this.errorLabel.setText("Database connection error");
-            }
-            else if (cause instanceof DuplicateException) {
-                this.errorLabel.setText("User with this username already exists");
-            }
-            else {
-                this.errorLabel.setText("Unknown Error");
-            }
+            this.errorLabel.setText(cause.getMessage());
             this.errorLabel.setOpacity(1.0);
             this.createUserButton.setDisable(false);
         });
@@ -115,6 +82,9 @@ public class AddUserController implements IUserPanel, Initializable {
 //            }
 //
 //        }
+    }
+    public void setController(IRefreshable controller) {
+        this.controller = controller;
     }
 
     private void showAlert(Alert.AlertType type, String title, String header, String content){
@@ -131,5 +101,41 @@ public class AddUserController implements IUserPanel, Initializable {
         this.userRoleBox.getItems().setAll(Role.values());
         this.errorLabel.setStyle("-fx-text-fill: red");
         this.errorLabel.setOpacity(0.0);
+    }
+
+    private void fillFields(){
+        this.userNameField.setText(this.user.getUsername());
+        this.userRoleBox.setValue(this.user.getRole());
+    }
+
+    @FXML
+    private void editUser(){
+        String changed_username = userNameField.getText();
+        String changed_password = passwordField.getText();
+        Role changed_role = userRoleBox.getValue();
+//        if (changed_username.equals(this.user.getUsername()) && changed_role == this.user.getRole()){
+//            this.errorLabel.setText("Data hasn't been changed!");
+//            errorLabel.setOpacity(1.0);
+//            return;
+//        }
+
+        Task<Void> editUserTask = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                logic.editUser(user, changed_username, changed_password, changed_role);
+                return null;
+            }
+        };
+        editUserTask.setOnSucceeded(event -> {
+            controller.refreshTable();
+            Stage st = (Stage) this.userNameField.getScene().getWindow();
+            st.close();
+        });
+        editUserTask.setOnFailed(event -> {
+            Throwable cause = editUserTask.getException();
+            this.errorLabel.setText(cause.getMessage());
+            this.errorLabel.setOpacity(1.0);
+        });
+        new Thread(editUserTask).start();
     }
 }

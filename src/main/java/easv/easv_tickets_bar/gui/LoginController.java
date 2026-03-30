@@ -46,7 +46,7 @@ public class LoginController implements Initializable {
 
 
     @FXML
-    private void loginClick() throws DataBaseConnectionException {
+    private void loginClick() {
         String username = this.usernameField.getText();
         String password = this.passwordField.getText();
         if (password.isEmpty() || username.isEmpty()){

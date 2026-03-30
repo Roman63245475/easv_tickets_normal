@@ -19,6 +19,7 @@ public class OpenWindow {
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
+        //loader.getController()
         if (mod){
             stage.initModality(Modality.APPLICATION_MODAL);
         }

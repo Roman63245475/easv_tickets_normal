@@ -1,33 +1,22 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -185,8 +174,8 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         String title = "Create new user";
         try {
             Object obj = openWindow.openNewWindow(fileName, title, true);
-            AddUserController adController = (AddUserController) obj;
-            adController.setUser(this.user);
+            AddEditUserController adController = (AddEditUserController) obj;
+            adController.setController(this);
         } catch (IOException e) {
             System.out.println("here needs to be an alert");
         }
@@ -242,11 +231,32 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         new Thread(getAvailableEventCoordinatorsTask).start();
     }
 
+    @FXML
+    private void editUser(){
+        User selectedUser = usersTable.getSelectionModel().getSelectedItem();
+        if (selectedUser == null){
+            return;
+        }
+        String fileName = "create_user.fxml";
+        String title = "Edit User";
+        try {
+            Object obj = openWindow.openNewWindow(fileName, title, true);
+            AddEditUserController adController = (AddEditUserController) obj;
+            adController.setController(this);
+            adController.setUser(selectedUser);
+        }
+        catch (IOException e) {
+            System.out.println("here needs to be an alert");
+        }
+
+    }
+
 
 
     @Override
     public void refreshTable() {
-
+        fillEventTable();
+        setUser(this.user);
     }
 
 

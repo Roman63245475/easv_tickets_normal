@@ -1,6 +1,7 @@
 package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.TicketEvent;
@@ -164,7 +165,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     }
 
     @Override
-    public void refreshTable() throws DataBaseConnectionException {
+    public void refreshTable() {
         updateEventTable();
         updateTicketTable();
     }
@@ -185,20 +186,30 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
-    private void updateEventTable() throws DataBaseConnectionException {
-        List<Event> events = logic.getCorEvents(user.getId());
+    private void updateEventTable() {
+        try {
+            List<Event> events = logic.getCorEvents(user.getId());
 
-        ObservableList<Event> observableList = FXCollections.observableList(events);
+            ObservableList<Event> observableList = FXCollections.observableList(events);
 
-        eventTable.setItems(observableList);
+            eventTable.setItems(observableList);
+        }
+        catch (MyException ex){
+            System.out.println("error label needs to be filled with this: " + ex.getMessage());
+        }
     }
 
-    private void updateTicketTable() throws DataBaseConnectionException {
-        List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
+    private void updateTicketTable(){
+        try {
+            List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
 
-        ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
+            ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
 
-        ticketsTable.setItems(observableList);
+            ticketsTable.setItems(observableList);
+        }
+        catch (MyException ex){
+            System.out.println("error label needs to be filled with this: " + ex.getMessage());
+        }
     }
 
     public void onEventManClick() throws DataBaseConnectionException {
@@ -248,13 +259,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     public void setUser(User user){
         this.user = user;
         this.welcomeUserLabel.setText("Welcome " + user.getUsername());
-        try {
-            refreshTable();
-        }
-        catch (DataBaseConnectionException e) {
-            System.out.println("kapec");
-        }
-
+        refreshTable();
     }
 
     @FXML
