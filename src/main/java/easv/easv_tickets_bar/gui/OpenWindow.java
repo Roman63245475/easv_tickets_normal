@@ -1,12 +1,16 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class OpenWindow {
 
@@ -21,5 +25,21 @@ public class OpenWindow {
         stage.setTitle(title);
         stage.show();
         return loader.getController();
+    }
+
+    public void openAssignCoordinatorView(Event selectedEvent, List<EventCoordinator> eventCoordinators){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("available_event_coordinators.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(loader.load());
+            IAssignCoordinator controller = loader.getController();
+            controller.setCoordinators(eventCoordinators);
+            controller.setEvent(selectedEvent);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException ex) {
+            System.out.println("blya ya v ahue");
+        }
     }
 }

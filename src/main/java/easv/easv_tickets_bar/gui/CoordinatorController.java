@@ -2,11 +2,13 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -253,5 +255,27 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
             System.out.println("kapec");
         }
 
+    }
+
+    @FXML
+    private void assignCoordinator(){
+        Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null){
+            return;
+        }
+        Task<List<EventCoordinator>> getAvailableEventCoordinatorsTask = new Task<>() {
+            @Override
+            protected List<EventCoordinator> call() throws Exception {
+                return logic.getAvailableEventCoordinators(selectedEvent);
+            }
+        };
+        getAvailableEventCoordinatorsTask.setOnSucceeded(e -> {
+            openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
+        });
+        getAvailableEventCoordinatorsTask.setOnFailed(e -> {
+            Throwable ex = getAvailableEventCoordinatorsTask.getException();
+            System.out.println(ex.getMessage());
+        });
+        new Thread(getAvailableEventCoordinatorsTask).start();
     }
 }

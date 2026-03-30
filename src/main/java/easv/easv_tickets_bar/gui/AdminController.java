@@ -226,10 +226,6 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
         if (selectedEvent == null){
             return;
         }
-        showAvailableCoordinators(selectedEvent);
-    }
-
-    private void showAvailableCoordinators(Event selectedEvent){
         Task<List<EventCoordinator>> getAvailableEventCoordinatorsTask = new Task<>() {
             @Override
             protected List<EventCoordinator> call() throws Exception {
@@ -237,24 +233,11 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
             }
         };
         getAvailableEventCoordinatorsTask.setOnSucceeded(e -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("available_event_coordinators.fxml"));
-                Stage stage = new Stage();
-                Scene scene = new Scene(loader.load());
-                IAssignCoordinator controller = loader.getController();
-                controller.setCoordinators(getAvailableEventCoordinatorsTask.getValue());
-                controller.setEvent(selectedEvent);
-                stage.setScene(scene);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.show();
-            } catch (IOException ex) {
-                System.out.println("blya ya v ahue");
-            }
+            openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
         });
         getAvailableEventCoordinatorsTask.setOnFailed(e -> {
-            Throwable cause = getAvailableEventCoordinatorsTask.getException();
-            System.out.println(cause.getMessage());
-            //pam param pam pam
+            Throwable ex = getAvailableEventCoordinatorsTask.getException();
+            System.out.println(ex.getMessage());
         });
         new Thread(getAvailableEventCoordinatorsTask).start();
     }
