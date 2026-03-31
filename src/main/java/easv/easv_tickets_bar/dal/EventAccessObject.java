@@ -174,4 +174,40 @@ public class EventAccessObject {
             }
         }
     }
+
+    public void updateEvent(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
+        Connection con = null;
+        try {
+            con = connectionManager.getConnection();
+            try(PreparedStatement ps = con.prepareStatement("UPDATE Events SET Name = ?, StartTime = ?, EndTime = ?, Location = ?, Venue = ?, LocationGuidance = ?, Notes = ?, Capacity = ? WHERE id = ?")) {
+                ps.setString(1, name);
+                ps.setObject(2, startDateTime);
+                ps.setObject(3, endDateTime);
+                ps.setString(4, location);
+                ps.setString(5, venue);
+                ps.setString(6, guidance);
+                ps.setString(7, notes);
+                ps.setInt(8, capacity);
+                ps.setInt(9, id);
+                ps.execute();
+            }
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException("Connection failed");
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("o moy bog");
+                }
+            }
+        }
+    }
 }

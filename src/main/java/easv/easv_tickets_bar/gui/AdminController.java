@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import easv.easv_tickets_bar.be.Admin;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
@@ -20,7 +21,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AdminController implements Initializable, IUserPanel, IRefreshable{
+public class AdminController implements Initializable, IRefreshable{
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
     @FXML private Label welcomeUserLabel;
@@ -45,7 +46,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
 
 
     private boolean isMenuOpen = false;
-    private User user;
+    private Admin user;
     private OpenWindow openWindow;
     private Logic logic;
     private ObservableList<User> userList = FXCollections.observableArrayList();
@@ -149,8 +150,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     }
 
 
-    @Override
-    public void setUser(User user) {
+    public void setUser(Admin user) {
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
         Task<List<User>> getUsers = new Task<List<User>>() {

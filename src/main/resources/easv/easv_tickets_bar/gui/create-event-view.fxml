@@ -19,7 +19,7 @@
                           <Cursor fx:constant="HAND" />
                       </cursor>
                   </Region>
-            <Label styleClass="white-c-text" text="Create New Event">
+            <Label fx:id="titleLabel" styleClass="white-c-text" text="Create New Event">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font>
@@ -126,7 +126,7 @@
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
-            <Button mnemonicParsing="false" onAction="#onCreateEvent" prefHeight="25.0" prefWidth="129.0" text="CREATE EVENT">
+            <Button fx:id="finishBtn" mnemonicParsing="false" onAction="#onCreateEvent" prefHeight="25.0" prefWidth="129.0" text="CREATE EVENT">
                <styleClass>
                   <String fx:value="gradient-light-indigo" />
                   <String fx:value="white-c-text" />

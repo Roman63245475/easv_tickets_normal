@@ -50,13 +50,13 @@ public class Event {
 
     public String getStartDateTime() {
         if (startDateTime == null) return "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return startDateTime.format(formatter);
     }
 
     public String getEndDateTime() {
         if (endDateTime == null) return "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\nHH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return endDateTime.format(formatter);
     }
 

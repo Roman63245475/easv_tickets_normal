@@ -2,8 +2,11 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +18,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class TicketController implements IPanel, IUserPanel, Initializable {
+public class TicketController implements IPanel, Initializable {
 
     @FXML private Label errorLabel;
 
@@ -24,7 +27,7 @@ public class TicketController implements IPanel, IUserPanel, Initializable {
     @FXML private TextField priceInput;
     @FXML private Spinner quantityInput;
 
-    private User user;
+    private EventCoordinator user;
     private Logic logic = new Logic();
     IRefreshable controller;
 
@@ -39,30 +42,14 @@ public class TicketController implements IPanel, IUserPanel, Initializable {
         this.controller = controller;
     }
 
-    @Override
-    public void setUser(User user) {
+    public void setUser(EventCoordinator user) {
         this.user = user;
         updateChoices();
     }
 
     public void updateChoices(){
-        Task<List<Event>> task = new Task<>(){
-            @Override
-            protected List<Event> call() throws Exception {
-                return logic.getCorEvents(user.getId());
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            eventChoice.getItems().setAll(task.getValue());
-        });
-
-        task.setOnFailed(event -> {
-            System.out.println(task.getException().getMessage());
-        });
-
-        Thread thread = new Thread(task);
-        thread.start();
+        ObservableList<Event> events = FXCollections.observableArrayList(user.getEvents());
+        eventChoice.setItems(events);
     }
 
     public void createNewTicket(ActionEvent actionEvent) {

@@ -29,4 +29,8 @@ public class EventRepository {
     public List<Event> getEvents(int userId) throws DataBaseConnectionException {
         return eao.getEvents(userId);
     }
+
+    public void updateEvent(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
+        eao.updateEvent(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+    }
 }

@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class CoordinatorController implements IUserPanel, IRefreshable, Initializable {
+public class CoordinatorController implements IRefreshable, Initializable {
     @FXML private VBox sideBar;
     @FXML private StackPane contentBox;
 
@@ -62,7 +62,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
 
     private boolean isMenuOpen = false;
 
-    private User user;
+    private EventCoordinator user;
     private OpenWindow openWindow;
     private Logic logic =  new Logic();
     private ObservableList<Event> eventsObservableList = FXCollections.observableArrayList();
@@ -206,12 +206,16 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
             }
         };
         getEvents.setOnSucceeded(event -> {
-            eventsObservableList.setAll(getEvents.getValue());
+            List<Event> events = (List<Event>) getEvents.getValue();
+            eventsObservableList.setAll(events);
+            this.user.setEvents(events);
+            System.out.println(this.user.getEvents());
         });
         getEvents.setOnFailed(event -> {
             Throwable cause = getEvents.getException();
             System.out.println(cause.getMessage());
         });
+
         new Thread(getEvents).start();
     }
 
@@ -249,6 +253,19 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
+    public void editEvent(){
+        Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) return;
+        try{
+            Object obj = openWindow.openNewWindow("create-event-view.fxml", "Edit Event", true);
+            EventController eController = (EventController) obj;
+            eController.setController(this);
+            eController.setEvent(selectedEvent);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void onAddTicket(){
         try{
             Object obj = openWindow.openNewWindow("new-ticket-view.fxml", "Create New Ticket", true);
@@ -272,8 +289,7 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         System.out.println("hello");
     }
 
-    @Override
-    public void setUser(User user){
+    public void setUser(EventCoordinator user){
         this.user = user;
         this.welcomeUserLabel.setText("Welcome " + user.getUsername());
         refreshTable();

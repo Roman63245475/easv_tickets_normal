@@ -1,6 +1,7 @@
 package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.concurrent.Task;
@@ -17,10 +18,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class EventController implements Initializable, IUserPanel, IPanel {
 
+    @FXML private Label titleLabel;
     @FXML private Label errorLabel;
 
     @FXML private TextField nameInput;
@@ -34,8 +37,11 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @FXML private TextField notesInput;
     @FXML private TextField capacityInput;
 
+    @FXML private Button finishBtn;
+
     private IRefreshable controller;
     private Logic logic = new Logic();
+    private Event event;
     private User user;
 
     @Override
@@ -53,6 +59,37 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @Override
     public void setController(IRefreshable controller) {
         this.controller = controller;
+    }
+
+    public void setEvent(Event selectedEvent) {
+        this.event = selectedEvent;
+        titleLabel.setText("Edit Event");
+        finishBtn.setText("Save Changes");
+
+        nameInput.setText(selectedEvent.getName());
+
+        String[] parts = selectedEvent.getStartDateTime().split(" ");
+        String startDate = parts[0];
+        String startTime = parts[1];
+        startTimeInput.setText(startTime);
+        startDateInput.setValue(LocalDate.parse(startDate));
+
+        parts = selectedEvent.getEndDateTime().split(" ");
+        String endDate = parts[0];
+        String endTime = parts[1];
+        endTimeInput.setText(endTime);
+        endDateInput.setValue(LocalDate.parse(endDate));
+
+        endTimeInput.setText(selectedEvent.getEndDateTime());
+        locationInput.setText(selectedEvent.getLocation());
+        venueInput.setText(selectedEvent.getVenue());
+        guidanceInput.setText(selectedEvent.getLocationGuidance());
+        notesInput.setText(selectedEvent.getNotes());
+        capacityInput.setText(selectedEvent.getCapacity() + "");
+
+        finishBtn.setOnAction(e -> {
+            editEvent();
+        });
     }
 
     public void onCreateEvent(ActionEvent event) {
@@ -94,5 +131,43 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
         Thread thread = new Thread(task);
         thread.start();
+    }
+
+    public void editEvent() {
+        String name = nameInput.getText();
+
+        String startTime = startTimeInput.getText();
+        String endTime = endTimeInput.getText();
+        LocalDate startDate = startDateInput.getValue();
+        LocalDate endDate = endDateInput.getValue();
+
+        String location = locationInput.getText();
+        String venue = venueInput.getText();
+        String guidance = guidanceInput.getText();
+        String notes = notesInput.getText();
+        String capacity = capacityInput.getText();
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                logic.updateEvent(event.getId(), name, startTime, endTime, startDate, endDate, location, venue, guidance, notes, capacity);
+                return null;
+            }
+        };
+        finishBtn.disableProperty().bind(task.runningProperty());
+        task.setOnSucceeded(e -> {
+            controller.refreshTable();
+            Stage stage = (Stage) finishBtn.getScene().getWindow();
+            stage.close();
+        });
+
+        task.setOnFailed(e -> {
+            errorLabel.setManaged(true);
+            errorLabel.setText(task.getException().getMessage());
+        });
+
+        Thread thread = new Thread(task);
+        thread.start();
+
     }
 }
