@@ -247,4 +247,15 @@ public class Logic {
         }
         return true;
     }
+
+    public void deleteSelectedUser(User selectedUser) throws MyException {
+        try {
+            userRepo.deleteSelectedUser(selectedUser);
+        }
+        catch (DataBaseConnectionException ex) {
+            System.out.println("simulating some job");
+            throw new MyException(ex.getMessage());
+        }
+
+    }
 }

@@ -46,16 +46,16 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     @FXML private TableColumn<Event, Void> actionsColumn;
 
     //Tickets Table
-    @FXML private TableView<TicketEvent> ticketsTable;
-    @FXML private TableColumn<TicketEvent, Void> idTColumn;
-    @FXML private TableColumn<TicketEvent, String> eventTName;
-    @FXML private TableColumn<TicketEvent, String> ticketName;
-    @FXML private TableColumn<TicketEvent, String> priceColumn;
-    @FXML private TableColumn<TicketEvent, Integer> quantityTColumn;
-    @FXML private TableColumn<TicketEvent, Integer> soldColumn;
-    @FXML private TableColumn<TicketEvent, Integer> availableColumn;
-    @FXML private TableColumn<TicketEvent, String> statusTColumn;
-    @FXML private TableColumn<TicketEvent, Void> actionTColumn;
+    @FXML private TableView<Event> ticketsTable;
+    @FXML private TableColumn<Event, Void> idTColumn;
+    @FXML private TableColumn<Event, String> eventTName;
+    @FXML private TableColumn<Event, String> ticketName;
+    //@FXML private TableColumn<Event, String> priceColumn;
+    @FXML private TableColumn<Event, Integer> quantityTColumn;
+    @FXML private TableColumn<Event, Integer> soldColumn;
+    @FXML private TableColumn<Event, Integer> availableColumn;
+    @FXML private TableColumn<Event, String> statusTColumn;
+    @FXML private TableColumn<Event, Void> actionTColumn;
 
 
     @FXML private Label welcomeUserLabel;
@@ -65,10 +65,21 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
     private User user;
     private OpenWindow openWindow;
     private Logic logic =  new Logic();
+    private ObservableList<Event> eventsObservableList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Events
+        setUpEventManagementTableView();
+        setUpTicketsManagementTable();
+
+        //Tickets
+
+
+    }
+
+    private void setUpEventManagementTableView(){
+        eventTable.setItems(eventsObservableList);
         idColumn.setCellFactory(column -> new TableCell<Event, Void>() {
             @Override
             protected void updateItem(Void item, boolean empty){
@@ -109,8 +120,10 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
                 }
             }
         });
+    }
 
-        //Tickets
+    private void setUpTicketsManagementTable(){
+        ticketsTable.setItems(eventsObservableList);
         idTColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -123,15 +136,15 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
             }
         });
 
-        eventTName.setCellValueFactory(new PropertyValueFactory<>("eventName"));
-        ticketName.setCellValueFactory(new PropertyValueFactory<>("ticketType"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        quantityTColumn.setCellValueFactory(new PropertyValueFactory<>("totalQuantity"));
-        soldColumn.setCellValueFactory(new PropertyValueFactory<>("soldQuantity"));
-        availableColumn.setCellValueFactory(new PropertyValueFactory<>("available"));
+        eventTName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        //ticketName.setCellValueFactory(new PropertyValueFactory<>("ticketType"));
+        //priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quantityTColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+        soldColumn.setCellValueFactory(new PropertyValueFactory<>("soldAmount"));
+        availableColumn.setCellValueFactory(new PropertyValueFactory<>("availableTickets"));
         statusTColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        actionTColumn.setCellFactory(column -> new TableCell<TicketEvent, Void>() {
+        actionTColumn.setCellFactory(column -> new TableCell<Event, Void>() {
             private final Region sellIcon = new Region();
             private final Region deleteIcon = new Region();
 
@@ -143,9 +156,9 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
                 deleteIcon.setStyle("-fx-pref-width: 20px; -fx-min-width: 20px; -fx-max-height: 20px; -fx-background-color: #cc4747; -fx-shape: 'M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z'");
 
                 sellIcon.setOnMouseClicked(event -> {
-                    TicketEvent chosenTicket = getTableRow().getItem();
-                    if (chosenTicket != null) {
-                        onSellTicket(chosenTicket);
+                    Event chosenEvent = getTableRow().getItem();
+                    if (chosenEvent != null) {
+                        onSellTicket(chosenEvent);
                     }
                 });
             }
@@ -161,13 +174,12 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
             }
 
         });
-
     }
 
     @Override
     public void refreshTable() {
-        updateEventTable();
-        updateTicketTable();
+        updateAllTables();
+        //updateTicketTable();
     }
 
     public CoordinatorController(){
@@ -185,41 +197,45 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
             else n.setVisible(false);
         }
     }
-
-    private void updateEventTable() {
-        try {
-            List<Event> events = logic.getCorEvents(user.getId());
-
-            ObservableList<Event> observableList = FXCollections.observableList(events);
-
-            eventTable.setItems(observableList);
-        }
-        catch (MyException ex){
-            System.out.println("error label needs to be filled with this: " + ex.getMessage());
-        }
+    //comment
+    private void updateAllTables() {
+        Task<List<Event>> getEvents = new Task<List<Event>>() {
+            @Override
+            protected List<Event> call() throws Exception {
+                return logic.getCorEvents(user.getId());
+            }
+        };
+        getEvents.setOnSucceeded(event -> {
+            eventsObservableList.setAll(getEvents.getValue());
+        });
+        getEvents.setOnFailed(event -> {
+            Throwable cause = getEvents.getException();
+            System.out.println(cause.getMessage());
+        });
+        new Thread(getEvents).start();
     }
 
-    private void updateTicketTable(){
-        try {
-            List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
+//    private void updateTicketTable(){
+//        try {
+//            List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
+//
+//            ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
+//
+//            ticketsTable.setItems(observableList);
+//        }
+//        catch (MyException ex){
+//            System.out.println("error label needs to be filled with this: " + ex.getMessage());
+//        }
+//    }
 
-            ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
-
-            ticketsTable.setItems(observableList);
-        }
-        catch (MyException ex){
-            System.out.println("error label needs to be filled with this: " + ex.getMessage());
-        }
-    }
-
-    public void onEventManClick() throws DataBaseConnectionException {
+    public void onEventManClick() {
         switchTab("eventManagementBox");
-        updateEventTable();
+        //updateEventTable();
     }
 
-    public void onTicketManClick() throws DataBaseConnectionException {
+    public void onTicketManClick() {
         switchTab("ticketManagementBox");
-        updateTicketTable();
+        //updateTicketTable();
     }
 
     public void onCreateEvent(){
@@ -244,15 +260,16 @@ public class CoordinatorController implements IUserPanel, IRefreshable, Initiali
         }
     }
 
-    public void onSellTicket(TicketEvent ticket){
-        try{
-            Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
-            SellTicketController stController = (SellTicketController) obj;
-            stController.setController(this);
-            stController.setTicket(ticket);
-        }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void onSellTicket(Event ticket){
+//        try{
+//            Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
+//            SellTicketController stController = (SellTicketController) obj;
+//            stController.setController(this);
+//            stController.setTicket(ticket);
+//        }catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        System.out.println("hello");
     }
 
     @Override

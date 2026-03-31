@@ -54,4 +54,8 @@ public class UserRepository {
     public void eraseAllAssignedEvents(int id) throws DataBaseConnectionException {
         uao.eraseAllAssignedEvents(id);
     }
+
+    public void deleteSelectedUser(User selectedUser) throws DataBaseConnectionException {
+        uao.deleteSelectedUser(selectedUser.getId());
+    }
 }

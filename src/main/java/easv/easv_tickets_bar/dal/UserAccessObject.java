@@ -208,4 +208,32 @@ public class UserAccessObject {
             }
         }
     }
+
+    public void deleteSelectedUser(int id) throws DataBaseConnectionException {
+        Connection con = null;
+        try {
+            con = cm.getConnection();
+            String sqlPrompt = "Delete from users where id = ?";
+            PreparedStatement ps = con.prepareStatement(sqlPrompt);
+            ps.setInt(1, id);
+            ps.execute();
+        }
+        catch (SQLException e) {
+            if (con == null) {
+                throw new DataBaseConnectionException("Connection failed");
+            }
+            else{
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.out.println("omg");
+                }
+            }
+        }
+    }
 }

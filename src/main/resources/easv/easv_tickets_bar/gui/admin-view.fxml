@@ -106,12 +106,25 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Button mnemonicParsing="false" onAction="#editUser" prefHeight="36.0" prefWidth="142.0" text="Edit selected user">
-                           <styleClass>
-                              <String fx:value="bg-top-bar-gradient" />
-                              <String fx:value="white-c-text" />
-                           </styleClass>
-                        </Button>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#editUser" prefHeight="36.0" prefWidth="142.0" text="Edit selected user">
+                                 <styleClass>
+                                    <String fx:value="bg-top-bar-gradient" />
+                                    <String fx:value="white-c-text" />
+                                 </styleClass>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteUser" prefHeight="36.0" prefWidth="142.0" text="Delete selected user">
+                                 <styleClass>
+                                    <String fx:value="bg-top-bar-gradient" />
+                                    <String fx:value="white-c-text" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox fx:id="eventManagementBox" alignment="TOP_CENTER" layoutX="30.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" visible="false">

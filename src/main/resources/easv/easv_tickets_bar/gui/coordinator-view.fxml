@@ -141,8 +141,6 @@
                                     <columns>
                                         <TableColumn fx:id="idTColumn" prefWidth="75.0" text="ID" />
                                         <TableColumn fx:id="eventTName" prefWidth="75.0" text="Event" />
-                                        <TableColumn fx:id="ticketName" prefWidth="75.0" text="Ticket Type" />
-                                        <TableColumn fx:id="priceColumn" prefWidth="75.0" text="Price" />
                                         <TableColumn fx:id="quantityTColumn" prefWidth="75.0" text="Quantity" />
                                         <TableColumn fx:id="soldColumn" prefWidth="75.0" text="Sold" />
                                         <TableColumn fx:id="availableColumn" prefWidth="75.0" text="Available" />

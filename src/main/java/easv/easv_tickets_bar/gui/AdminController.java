@@ -25,6 +25,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     @FXML private StackPane contentBox;
     @FXML private Label welcomeUserLabel;
     @FXML private Button deleteEventButton;
+    @FXML private Button deleteButton;
 
     //users table and it's columns
     @FXML private TableView<User> usersTable;
@@ -41,6 +42,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     @FXML private TableColumn<Event, String> endDateTimeColumn;
     @FXML private TableColumn<Event, String> eventLocationColumn;
     @FXML private TableColumn<Event, String> eventStatusColumn;
+
 
     private boolean isMenuOpen = false;
     private User user;
@@ -63,6 +65,7 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     public void initialize(URL location, ResourceBundle resources) {
         usersTable.setItems(userList);
         eventsTable.setItems(eventList);
+        setupUserTableColumns();
         setUpColumnsAlignment();
         setupEventTableColumns();
         fillEventTable();
@@ -150,7 +153,6 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
     public void setUser(User user) {
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
-        setupUserTableColumns();
         Task<List<User>> getUsers = new Task<List<User>>() {
             @Override
             protected List<User> call() throws Exception {
@@ -249,6 +251,34 @@ public class AdminController implements Initializable, IUserPanel, IRefreshable{
             System.out.println("here needs to be an alert");
         }
 
+    }
+
+    @FXML
+    private void deleteUser(){
+        User selectedUser = usersTable.getSelectionModel().getSelectedItem();
+        if (selectedUser == null){
+            return;
+        }
+        this.deleteButton.setDisable(true);
+        Task<Void> deleteUserTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                logic.deleteSelectedUser(selectedUser);
+                return null;
+            }
+        };
+        deleteUserTask.setOnSucceeded(e -> {
+            this.deleteButton.setDisable(false);
+            refreshTable();
+        });
+        deleteUserTask.setOnFailed(e -> {
+            Throwable ex = deleteUserTask.getException();
+            System.out.println(ex.getMessage());
+            //need to use a label or alert
+            this.deleteButton.setDisable(false);
+        });
+
+        new Thread(deleteUserTask).start();
     }
 
 

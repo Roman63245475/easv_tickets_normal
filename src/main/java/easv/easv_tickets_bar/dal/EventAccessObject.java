@@ -72,7 +72,7 @@ public class EventAccessObject {
         Connection con = null;
         try {
             con = connectionManager.getConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT *, (SELECT COUNT(*) FROM event_to_coordinator WHERE EventID = Events.id) AS CoordinatorCount FROM Events INNER JOIN event_to_coordinator ON Events.id = event_to_coordinator.EventID WHERE event_to_coordinator.UserID = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT *, (SELECT COUNT(*) FROM event_to_coordinator WHERE EventID = Events.id) AS CoordinatorCount, (SELECT COUNT(*) from tickets inner join event_ticket on tickets.typeId = event_ticket.id where event_ticket.event_id = Events.id) as sold_amount FROM Events INNER JOIN event_to_coordinator ON Events.id = event_to_coordinator.EventID WHERE event_to_coordinator.UserID = ?");
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -86,7 +86,8 @@ public class EventAccessObject {
                     String notes = rs.getString("Notes");
                     int capacity = rs.getInt("Capacity");
                     int count = rs.getInt("CoordinatorCount");
-                    events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, count, capacity));
+                    int sold_amount = rs.getInt("sold_amount");
+                    events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, count, capacity, sold_amount));
                 }
             }
             return events;

@@ -14,8 +14,10 @@ public class Event {
     private String notes;
     private int coordinators;
     private int capacity;
+    private int soldAmount;
+    private int availableTickets;
 
-    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String locationGuidance, String notes, int coordinators, int capacity) {
+    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String locationGuidance, String notes, int coordinators, int capacity, int soldAmount) {
         this.id = id;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -26,6 +28,8 @@ public class Event {
         this.notes = notes;
         this.coordinators = coordinators;
         this.capacity = capacity;
+        this.soldAmount = soldAmount;
+        this.availableTickets = this.capacity - this.soldAmount;
     }
 
     public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location) {
@@ -88,5 +92,13 @@ public class Event {
 
     public String getStatus(){
         return "Active";
+    }
+
+    public int getSoldAmount(){
+        return this.soldAmount;
+    }
+
+    public int getAvailableTickets(){
+        return this.availableTickets;
     }
 }
