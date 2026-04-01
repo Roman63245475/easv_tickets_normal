@@ -2,6 +2,7 @@ package easv.easv_tickets_bar.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.be.TicketEvent;
 
 import java.io.IOException;
@@ -25,23 +26,27 @@ public class TicketAccessObject {
         }
     }
 
-    public void createTicket(int id, String name, double priceDouble, int quantityInt) throws DataBaseConnectionException {
+    public void createTicket(int id, String name, double priceDouble, String description) throws DataBaseConnectionException, DuplicateException {
         try (Connection con = connectionManager.getConnection()){
 
-            try(PreparedStatement ps = con.prepareStatement("INSERT INTO event_ticket(event_id, name, price, quantity) VALUES (?, ?, ?, ?)")){
+            try(PreparedStatement ps = con.prepareStatement("INSERT INTO event_ticket(event_id, name, price, description) VALUES (?, ?, ?, ?)")){
                 ps.setInt(1, id);
                 ps.setString(2, name);
                 ps.setDouble(3, priceDouble);
-                ps.setInt(4, quantityInt);
+                ps.setString(4, description);
                 ps.executeUpdate();
             }
 
         } catch (SQLException e) {
             if (e.getSQLState().startsWith("08")) {
-                throw new DataBaseConnectionException("Error");
-            }else{
+                throw new DataBaseConnectionException("Connection Failed");
+            } else if (e.getSQLState().startsWith("23")) {
+                throw new DuplicateException("Insertion of duplicate");
+            }
+            else{
                 throw new RuntimeException(e.getMessage());
             }
+
         }
     }
 

@@ -1,6 +1,7 @@
 package easv.easv_tickets_bar.repo;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.dal.TicketAccessObject;
 
@@ -13,8 +14,8 @@ public class TicketRepository {
         this.ticketDAO = new TicketAccessObject();
     }
 
-    public void createTicket(int id, String name, double priceDouble, int quantityInt) throws DataBaseConnectionException {
-        ticketDAO.createTicket(id, name, priceDouble, quantityInt);
+    public void createTicket(int id, String name, double priceDouble, String description) throws DataBaseConnectionException, DuplicateException {
+        ticketDAO.createTicket(id, name, priceDouble, description);
     }
 
     public List<TicketEvent> getTicketsByCoordinator(int id) throws DataBaseConnectionException {

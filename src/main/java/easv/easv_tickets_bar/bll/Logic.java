@@ -112,26 +112,26 @@ public class Logic {
 
     }
 
-    public void createTicket(int id, int maxCapacity, String name, String price, String quantity) throws Exception {
-        int quantityInt = Integer.parseInt(quantity);
+    public void createTicket(int id, int maxCapacity, String name, String price, String description) throws Exception {
+        if (isInvalidString(name) || isInvalidString(price) || isInvalidString(description)) {
+            throw new MyException("Make sure all the fields are filled out");
+        }
+        //first we need to check and only then parse, otherwise value of an empty string can't be parsed
         double priceDouble = Double.parseDouble(price);
-        if (isInvalidString(name) || isInvalidString(price) || isInvalidString(quantity)) {
-            throw new Exception("Make sure all the fields are filled out");
+        name = name.strip();
+        String lowercaseName = name.toLowerCase();
+        try {
+            ticketRepo.createTicket(id, lowercaseName, priceDouble, description);
         }
-        if (quantityInt <= 0) throw new Exception("Quantity must be a positive number");
-
-        int totalTickets = 0;
-        List<TicketEvent> tickets = ticketRepo.getTicketsOfEvent(id);
-        for (TicketEvent ticket : tickets) {
-            totalTickets += ticket.getTotalQuantity();
-            //System.out.println(totalTickets);
-        }
-
-        if (totalTickets + quantityInt > maxCapacity) {
-            throw new Exception("Ticket Capacity Exceeded. You can add: " + (maxCapacity - totalTickets) + " tickets.");
+        catch (DataBaseConnectionException | DuplicateException ex) {
+            if (ex instanceof DataBaseConnectionException) {
+                System.out.println("do some certain job");
+                throw new MyException(ex.getMessage());
+            }
+            System.out.println("do some other job");
+            throw new MyException(ex.getMessage());
         }
 
-        ticketRepo.createTicket(id, name, priceDouble, quantityInt);
 
     }
 

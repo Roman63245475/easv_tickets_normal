@@ -25,7 +25,8 @@ public class TicketController implements IPanel, Initializable {
     @FXML private ChoiceBox<Event> eventChoice;
     @FXML private TextField nameInput;
     @FXML private TextField priceInput;
-    @FXML private Spinner quantityInput;
+    @FXML private TextField descriptionTextfield;
+    //@FXML private Spinner quantityInput;
 
     private EventCoordinator user;
     private Logic logic = new Logic();
@@ -33,8 +34,9 @@ public class TicketController implements IPanel, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        errorLabel.setStyle("-fx-text-fill: red");
         UIHelper.priceInputValidator(priceInput);
-        UIHelper.numberInputValidator(quantityInput.getEditor());
+        //UIHelper.numberInputValidator(quantityInput.getEditor());
     }
 
     @Override
@@ -56,14 +58,16 @@ public class TicketController implements IPanel, Initializable {
         Event chosenEvent = eventChoice.getValue();
         String name = nameInput.getText();
         String price = priceInput.getText();
-        String quantity = quantityInput.getEditor().getText();
-
+        String description = descriptionTextfield.getText();
+        if (chosenEvent == null) {//we do this because otherwise chosenEvent.getId() won't work out
+            return;
+        }
         Button btn = (Button) actionEvent.getSource();
 
         Task<Void> task = new Task<>(){
             @Override
             protected Void call() throws Exception {
-                logic.createTicket(chosenEvent.getId(), chosenEvent.getCapacity(), name, price, quantity);
+                logic.createTicket(chosenEvent.getId(), chosenEvent.getCapacity(), name, price, description);
                 return null;
             }
         };
@@ -77,8 +81,8 @@ public class TicketController implements IPanel, Initializable {
         });
 
         task.setOnFailed(event -> {
-            errorLabel.setManaged(true);
             errorLabel.setText(task.getException().getMessage());
+            errorLabel.setOpacity(1);
         });
 
         Thread thread = new Thread(task);
