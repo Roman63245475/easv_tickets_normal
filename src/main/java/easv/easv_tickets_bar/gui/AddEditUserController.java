@@ -86,6 +86,10 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
     }
     public void setController(IRefreshable controller) {
         this.controller = controller;
+        Stage stage = (Stage) this.userNameField.getScene().getWindow();
+        stage.setOnCloseRequest(event -> {
+            controller.restoreTimeLine();
+        });
     }
 
     @Override

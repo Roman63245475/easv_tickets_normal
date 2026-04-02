@@ -49,8 +49,6 @@ public class EventController implements Initializable, IUserPanel, IPanel {
         UIHelper.timeInputValidator(startTimeInput);
         UIHelper.timeInputValidator(endTimeInput);
         UIHelper.numberInputValidator(capacityInput);
-        Stage stage = (Stage) finishBtn.getScene().getWindow();
-        stage.setOnCloseRequest((event) -> {onClose();});
     }
 
     @Override
@@ -61,6 +59,8 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @Override
     public void setController(IRefreshable controller) {
         this.controller = controller;
+        Stage stage = (Stage) finishBtn.getScene().getWindow();
+        stage.setOnCloseRequest((event) -> {onClose();});
     }
 
     @Override

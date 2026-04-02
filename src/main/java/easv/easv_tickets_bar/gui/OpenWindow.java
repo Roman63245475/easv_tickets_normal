@@ -28,19 +28,16 @@ public class OpenWindow {
         return loader.getController();
     }
 
-    public void openAssignCoordinatorView(Event selectedEvent, List<EventCoordinator> eventCoordinators){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("available_event_coordinators.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(loader.load());
-            IAssignCoordinator controller = loader.getController();
-            controller.setCoordinators(eventCoordinators);
-            controller.setEvent(selectedEvent);
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException ex) {
-            System.out.println("blya ya v ahue");
-        }
+    public Object openAssignCoordinatorView(Event selectedEvent, List<EventCoordinator> eventCoordinators) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("available_event_coordinators.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(loader.load());
+        IAssignCoordinator controller = loader.getController();
+        controller.setCoordinators(eventCoordinators);
+        controller.setEvent(selectedEvent);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+        return loader.getController();
     }
 }

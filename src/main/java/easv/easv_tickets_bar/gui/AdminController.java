@@ -239,7 +239,14 @@ public class AdminController implements Initializable, IRefreshable{
             }
         };
         getAvailableEventCoordinatorsTask.setOnSucceeded(e -> {
-            openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
+            stopAutoRefresh();
+            try {
+                AssignEventCoordinatorController ctr = (AssignEventCoordinatorController) openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
+                ctr.setController(this);
+            } catch (IOException ex) {
+                restoreTimeLine();
+            }
+
         });
         getAvailableEventCoordinatorsTask.setOnFailed(e -> {
             Throwable ex = getAvailableEventCoordinatorsTask.getException();

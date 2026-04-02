@@ -15,12 +15,14 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AssignEventCoordinatorController implements Initializable, IAssignCoordinator {
+
+public class AssignEventCoordinatorController implements Initializable, IAssignCoordinator, IPanel {
 
     @FXML private ListView<EventCoordinator> eventCoordinatorListView;
     private ObservableList<EventCoordinator> eventCoordinators = FXCollections.observableArrayList();
     private Event event;
     private Logic logic = new Logic();
+    private IRefreshable controller;
 
 
 
@@ -51,6 +53,8 @@ public class AssignEventCoordinatorController implements Initializable, IAssignC
             }
         };
         assignCoordinatorTask.setOnSucceeded(event -> {
+            controller.refreshTable();
+            controller.restoreTimeLine();
            Stage st = (Stage) eventCoordinatorListView.getScene().getWindow();
            st.close();
         });
@@ -63,7 +67,20 @@ public class AssignEventCoordinatorController implements Initializable, IAssignC
 
     @FXML
     private void escapeClick() {
+        onClose();
         Stage stage = (Stage) eventCoordinatorListView.getScene().getWindow();
         stage.close();
+    }
+
+    @Override
+    public void setController(IRefreshable controller) {
+        this.controller = controller;
+        Stage stage = (Stage) eventCoordinatorListView.getScene().getWindow();
+        stage.setOnCloseRequest(event -> {onClose();});
+    }
+
+    @Override
+    public void onClose() {
+        controller.restoreTimeLine();
     }
 }

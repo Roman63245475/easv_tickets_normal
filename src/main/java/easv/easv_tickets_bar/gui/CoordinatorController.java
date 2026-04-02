@@ -78,8 +78,8 @@ public class CoordinatorController implements IRefreshable, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Events
-        Stage stage = (Stage) welcomeUserLabel.getScene().getWindow();
-        stage.setOnCloseRequest(event -> stopAutoRefresh());
+        //Stage stage = (Stage) welcomeUserLabel.getScene().getWindow();
+        //stage.setOnCloseRequest(event -> stopAutoRefresh());
         setUpEventManagementTableView();
         setUpTicketsManagementTable();
         this.timeLine = new Timeline(new KeyFrame(Duration.seconds(14), e -> refreshTable()));
@@ -330,7 +330,14 @@ public class CoordinatorController implements IRefreshable, Initializable {
             }
         };
         getAvailableEventCoordinatorsTask.setOnSucceeded(e -> {
-            openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
+            try {
+                stopAutoRefresh();
+                AssignEventCoordinatorController ctr = (AssignEventCoordinatorController) openWindow.openAssignCoordinatorView(selectedEvent, getAvailableEventCoordinatorsTask.getValue());
+                ctr.setController(this);
+            } catch (Exception ex) {
+                restoreTimeLine();
+            }
+
         });
         getAvailableEventCoordinatorsTask.setOnFailed(e -> {
             Throwable ex = getAvailableEventCoordinatorsTask.getException();
