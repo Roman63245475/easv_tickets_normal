@@ -7,6 +7,8 @@ import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.TicketEvent;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -26,6 +28,10 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+
+import javafx.stage.Stage;
+import javafx.util.Duration;
+//import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,16 +72,26 @@ public class CoordinatorController implements IRefreshable, Initializable {
     private OpenWindow openWindow;
     private Logic logic =  new Logic();
     private ObservableList<Event> eventsObservableList = FXCollections.observableArrayList();
+    private Timeline timeLine;
+    private int eventsUpdateCounter = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Events
+        Stage stage = (Stage) welcomeUserLabel.getScene().getWindow();
+        stage.setOnCloseRequest(event -> stopAutoRefresh());
         setUpEventManagementTableView();
         setUpTicketsManagementTable();
-
+        this.timeLine = new Timeline(new KeyFrame(Duration.seconds(14), e -> refreshTable()));
+        this.timeLine.setCycleCount(Timeline.INDEFINITE);
+        restoreTimeLine();
         //Tickets
 
 
+    }
+
+    private void stopAutoRefresh() {
+        this.timeLine.stop();
     }
 
     private void setUpEventManagementTableView(){
@@ -199,6 +215,7 @@ public class CoordinatorController implements IRefreshable, Initializable {
     }
     //comment
     private void updateAllTables() {
+        int localCounter = ++this.eventsUpdateCounter;
         Task<List<Event>> getEvents = new Task<List<Event>>() {
             @Override
             protected List<Event> call() throws Exception {
@@ -206,6 +223,9 @@ public class CoordinatorController implements IRefreshable, Initializable {
             }
         };
         getEvents.setOnSucceeded(event -> {
+            if(localCounter < eventsUpdateCounter){
+                return;
+            }
             List<Event> events = (List<Event>) getEvents.getValue();
             eventsObservableList.setAll(events);
             this.user.setEvents(events);
@@ -244,6 +264,7 @@ public class CoordinatorController implements IRefreshable, Initializable {
 
     public void onCreateEvent(){
         try{
+            stopAutoRefresh();
             Object obj = openWindow.openNewWindow("create-event-view.fxml", "Create Event", true);
             EventController eController = (EventController) obj;
             eController.setController(this);
@@ -257,6 +278,7 @@ public class CoordinatorController implements IRefreshable, Initializable {
         Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) return;
         try{
+            stopAutoRefresh();
             Object obj = openWindow.openNewWindow("create-event-view.fxml", "Edit Event", true);
             EventController eController = (EventController) obj;
             eController.setController(this);
@@ -315,5 +337,9 @@ public class CoordinatorController implements IRefreshable, Initializable {
             System.out.println(ex.getMessage());
         });
         new Thread(getAvailableEventCoordinatorsTask).start();
+    }
+
+    public void restoreTimeLine(){
+        this.timeLine.play();
     }
 }

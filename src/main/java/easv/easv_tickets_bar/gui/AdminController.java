@@ -5,6 +5,8 @@ import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -15,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +56,7 @@ public class AdminController implements Initializable, IRefreshable{
     private ObservableList<Event> eventList = FXCollections.observableArrayList();
     private User selectedUser;
     private Event selectedEvent;
+    private Timeline timeline;
 
 
 
@@ -64,15 +68,20 @@ public class AdminController implements Initializable, IRefreshable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        usersTable.setItems(userList);
-        eventsTable.setItems(eventList);
+
+        this.timeline = new Timeline(new KeyFrame(Duration.seconds(14), e -> refreshTable()));
+        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.timeline.play();
         setupUserTableColumns();
-        setUpColumnsAlignment();
         setupEventTableColumns();
+        setUpColumnsAlignment();
         fillEventTable();
 
         //setupUserTableColumns();
         //userTable.setItems(FXCollections.observableArrayList());
+    }
+
+    private void updateAllTables() {
     }
 
 
@@ -89,6 +98,7 @@ public class AdminController implements Initializable, IRefreshable{
 
 
     private void setupUserTableColumns() {
+        usersTable.setItems(userList);
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         userUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         userRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
@@ -103,6 +113,7 @@ public class AdminController implements Initializable, IRefreshable{
     }
 
     private void setupEventTableColumns() {
+        eventsTable.setItems(eventList);
         eventIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         eventNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         startDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
@@ -153,6 +164,9 @@ public class AdminController implements Initializable, IRefreshable{
     public void setUser(Admin user) {
         this.user = user;
         welcomeUserLabel.setText("Welcome " + user.getUsername());
+        loadUsers();
+    }
+    private void loadUsers(){
         Task<List<User>> getUsers = new Task<List<User>>() {
             @Override
             protected List<User> call() throws Exception {
@@ -164,7 +178,7 @@ public class AdminController implements Initializable, IRefreshable{
             fillUserTable(getUsers.getValue());
         });
         getUsers.setOnFailed(e -> {
-           Throwable cause = getUsers.getException();
+            Throwable cause = getUsers.getException();
             System.out.println(cause.getMessage());
         });
         new Thread(getUsers).start();
@@ -175,6 +189,7 @@ public class AdminController implements Initializable, IRefreshable{
         String fileName = "create_user.fxml";
         String title = "Create new user";
         try {
+            stopAutoRefresh();
             Object obj = openWindow.openNewWindow(fileName, title, true);
             AddEditUserController adController = (AddEditUserController) obj;
             adController.setController(this);
@@ -242,6 +257,7 @@ public class AdminController implements Initializable, IRefreshable{
         String fileName = "create_user.fxml";
         String title = "Edit User";
         try {
+            stopAutoRefresh();
             Object obj = openWindow.openNewWindow(fileName, title, true);
             AddEditUserController adController = (AddEditUserController) obj;
             adController.setController(this);
@@ -286,8 +302,18 @@ public class AdminController implements Initializable, IRefreshable{
     @Override
     public void refreshTable() {
         fillEventTable();
-        setUser(this.user);
+        loadUsers();
     }
+
+    @Override
+    public void restoreTimeLine() {
+        timeline.play();
+    }
+
+    private void stopAutoRefresh(){
+        timeline.stop();
+    }
+
 
 
 }

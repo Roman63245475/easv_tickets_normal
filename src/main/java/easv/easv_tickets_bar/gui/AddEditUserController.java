@@ -61,6 +61,7 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
 
         createUserTask.setOnSucceeded(event -> {
             controller.refreshTable();
+            controller.restoreTimeLine();
             Stage st = (Stage) this.userNameField.getScene().getWindow();
             st.close();
         });
@@ -85,6 +86,11 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
     }
     public void setController(IRefreshable controller) {
         this.controller = controller;
+    }
+
+    @Override
+    public void onClose() {
+        controller.refreshTable();
     }
 
     private void showAlert(Alert.AlertType type, String title, String header, String content){
@@ -128,6 +134,7 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
         };
         editUserTask.setOnSucceeded(event -> {
             controller.refreshTable();
+            controller.restoreTimeLine();
             Stage st = (Stage) this.userNameField.getScene().getWindow();
             st.close();
         });

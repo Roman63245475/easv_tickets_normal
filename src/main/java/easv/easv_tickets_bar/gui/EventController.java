@@ -49,6 +49,8 @@ public class EventController implements Initializable, IUserPanel, IPanel {
         UIHelper.timeInputValidator(startTimeInput);
         UIHelper.timeInputValidator(endTimeInput);
         UIHelper.numberInputValidator(capacityInput);
+        Stage stage = (Stage) finishBtn.getScene().getWindow();
+        stage.setOnCloseRequest((event) -> {onClose();});
     }
 
     @Override
@@ -59,6 +61,11 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @Override
     public void setController(IRefreshable controller) {
         this.controller = controller;
+    }
+
+    @Override
+    public void onClose() {
+        controller.restoreTimeLine();
     }
 
     public void setEvent(Event selectedEvent) {
@@ -121,6 +128,7 @@ public class EventController implements Initializable, IUserPanel, IPanel {
         task.setOnSucceeded(e -> {
             Stage stage = (Stage) btn.getScene().getWindow();
             controller.refreshTable();
+            controller.restoreTimeLine();
             stage.close();
         });
 
@@ -157,6 +165,7 @@ public class EventController implements Initializable, IUserPanel, IPanel {
         finishBtn.disableProperty().bind(task.runningProperty());
         task.setOnSucceeded(e -> {
             controller.refreshTable();
+            controller.restoreTimeLine();
             Stage stage = (Stage) finishBtn.getScene().getWindow();
             stage.close();
         });
