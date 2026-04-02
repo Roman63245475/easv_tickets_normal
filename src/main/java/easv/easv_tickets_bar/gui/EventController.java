@@ -46,6 +46,8 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        startDateInput.getEditor().setDisable(true);
+        endDateInput.getEditor().setDisable(true);
         UIHelper.timeInputValidator(startTimeInput);
         UIHelper.timeInputValidator(endTimeInput);
         UIHelper.numberInputValidator(capacityInput);

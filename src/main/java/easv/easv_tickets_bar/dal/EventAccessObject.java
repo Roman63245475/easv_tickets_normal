@@ -1,6 +1,7 @@
 package easv.easv_tickets_bar.dal;
 
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
+import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.be.Event;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class EventAccessObject {
     }
 
 
-    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
+    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException, DuplicateException {
         int id = -1;
         Connection con = null;
         try {
@@ -47,11 +48,13 @@ public class EventAccessObject {
             }
         }
         catch (SQLException e) {
-            if (con == null) {
-                throw new DataBaseConnectionException("Connection failed");
+            if (e.getSQLState().startsWith("08")) {
+                throw new DataBaseConnectionException("Connection Failed");
+            } else if (e.getSQLState().startsWith("23")) {
+                throw new DuplicateException("Insertion of duplicate");
             }
             else{
-                throw new RuntimeException(e);
+                throw new RuntimeException(e.getMessage());
             }
         }
         finally {

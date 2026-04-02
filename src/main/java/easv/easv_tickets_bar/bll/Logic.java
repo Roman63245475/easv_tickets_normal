@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class Logic {
@@ -67,36 +68,46 @@ public class Logic {
     }
 
     public boolean isInvalidString(String text) {
-        return text == null || text.trim().isEmpty();
+        return text == null || text.isBlank();
     }
 
-
-    public void createNewEvent(int userId, String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws Exception {
+    public void validateEventData(String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws MyException {
         if (isInvalidString(name) || isInvalidString(location) || isInvalidString(venue)) {
-            throw new Exception("Make sure Name, Start Time, Location, Venue and Capacity fields are filled out!");
+            throw new MyException("Make sure Name, Start Time, Location, Venue and Capacity fields are filled out!");
         }
         if (startDate == null || endDate == null) {
-            throw new Exception("Please select a valid Start Date and End Date");
+            throw new MyException("Please select a valid Start Date and End Date");
         }
         LocalTime startTime, endTime;
         try {
             startTime = LocalTime.parse(startTimeStr);
             endTime = LocalTime.parse(endTimeStr);
-        } catch (Exception e) {
-            throw new Exception("Please fill out the time fields correctly (hh:mm)");
+        } catch (DateTimeParseException ex) {
+            throw new MyException("Please fill out the time fields correctly (hh:mm)");
         }
-        //com
 
         int capacity;
         try {
             capacity = Integer.parseInt(capacityStr);
-            if (capacity <= 0) throw new Exception();
-        } catch (Exception e) {
-            throw new Exception("Capacity must be a positive number");
+        } catch (NumberFormatException e) {
+            throw new MyException("Capacity must be a valid number");
         }
+
+        if (capacity <= 0) throw new MyException("Capacity must be a positive number");
+    }
+
+    public void createNewEvent(int userId, String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws MyException {
+
+        validateEventData(name, startTimeStr, endTimeStr, startDate, endDate, location, venue, guidance, notes, capacityStr);
+        LocalTime startTime, endTime;
+        startTime = LocalTime.parse(startTimeStr);
+        endTime = LocalTime.parse(endTimeStr);
 
         LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+        int capacity;
+        capacity = Integer.parseInt(capacityStr);
 
         int eventId = eventRepo.createNewEvent(name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
         eventCoordinatorRepo.assignSelf(userId, eventId);
