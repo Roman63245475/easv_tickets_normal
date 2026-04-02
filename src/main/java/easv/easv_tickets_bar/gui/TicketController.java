@@ -44,6 +44,11 @@ public class TicketController implements IPanel, Initializable {
         this.controller = controller;
     }
 
+    @Override
+    public void onClose() {
+        controller.refreshTable();
+    }
+
     public void setUser(EventCoordinator user) {
         this.user = user;
         updateChoices();
@@ -77,6 +82,7 @@ public class TicketController implements IPanel, Initializable {
         task.setOnSucceeded(event -> {
             Stage stage =  (Stage) btn.getScene().getWindow();
             controller.refreshTable();
+            controller.restoreTimeLine();
             stage.close();
         });
 
