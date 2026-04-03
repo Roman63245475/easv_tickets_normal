@@ -1,11 +1,7 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
-import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
-import easv.easv_tickets_bar.be.TicketEvent;
-import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,22 +10,17 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.stage.Stage;
 import javafx.util.Duration;
 //import java.time.Duration;
 import java.time.LocalDateTime;
@@ -210,6 +201,7 @@ public class CoordinatorController implements IRefreshable, Initializable {
 
     public void onAddTicket(){
         try{
+            stopAutoRefresh();
             Object obj = openWindow.openNewWindow("new-ticket-view.fxml", "Create New Ticket", true);
             TicketController tController = (TicketController) obj;
             tController.setController(this);
@@ -219,15 +211,18 @@ public class CoordinatorController implements IRefreshable, Initializable {
         }
     }
 
-    public void onSellTicket(Event ticket){
-//        try{
-//            Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
-//            SellTicketController stController = (SellTicketController) obj;
-//            stController.setController(this);
-//            stController.setTicket(ticket);
-//        }catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+    public void onSellTicket(){
+        Event selectedEvent = ticketsTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) return;
+        try{
+            stopAutoRefresh();
+            Object obj = openWindow.openNewWindow("sell-ticket-view.fxml", "Sell Ticket", true);
+            SellTicketController stController = (SellTicketController) obj;
+            stController.setController(this);
+            stController.setEvent(selectedEvent);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("hello");
     }
 

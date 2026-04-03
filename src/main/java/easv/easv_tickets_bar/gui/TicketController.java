@@ -42,11 +42,14 @@ public class TicketController implements IPanel, Initializable {
     @Override
     public void setController(IRefreshable controller) {
         this.controller = controller;
+        Stage st = (Stage) this.descriptionTextfield.getScene().getWindow();
+        st.setOnCloseRequest(e->{onClose();});
     }
 
     @Override
     public void onClose() {
         controller.refreshTable();
+        controller.restoreTimeLine();
     }
 
     public void setUser(EventCoordinator user) {

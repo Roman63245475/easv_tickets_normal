@@ -191,21 +191,41 @@ public class Logic {
 
     }
 
-    public List<TicketEvent> getTicketsByCoordinator(int id) throws MyException {
+//    public List<Ticket> getTicketsByCoordinator(int id) throws MyException {
+//        try {
+//            return ticketRepo.getTicketsByCoordinator(id);
+//        } catch (DataBaseConnectionException ex) {
+//            System.out.println("do some job");
+//            throw new MyException(ex.getMessage());
+//        }
+//    }
+
+
+    private int validateQuantity(String quantity) throws MyException {
         try {
-            return ticketRepo.getTicketsByCoordinator(id);
-        } catch (DataBaseConnectionException ex) {
-            System.out.println("do some job");
-            throw new MyException(ex.getMessage());
+            int quantityInt = Integer.parseInt(quantity);
+            if (quantityInt <= 0) throw new MyException("Quantity must be a positive number");
+            else {
+                return quantityInt;
+            }
+        }
+        catch (NumberFormatException ex) {
+            throw new MyException("Quantity must be a positive number and ");
         }
     }
 
-    public void sellTicket(int id, String name, String email, int quantity, int available) throws Exception {
-        if (isInvalidString(name) || isInvalidString(email)) {
-            throw new Exception("Make sure fields are filled out.");
+    public void sellTicket(Event event, Ticket ticketType, String name, String secondName, String email, String quantity) throws Exception {
+        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
+            throw new MyException("Make sure fields are filled out.");
         }
-        if (quantity <= 0) throw new Exception("Quantity must be a positive number");
-        ticketRepo.sellTicket(id, name, email, quantity, available);
+        int id = event.getId();
+        int ticketTypeId = ticketType.getId();
+        int validatedQuantity = validateQuantity(quantity);
+        ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, validatedQuantity);
+    }
+
+    public boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9+_.-]+\\.[A-Za-z]{2,6}$");
     }
 
     public void editUser(User user, String changedUsername, String changedPassword, Role changedRole) throws MyException {
@@ -297,5 +317,9 @@ public class Logic {
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
         eventRepo.updateEvent(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+    }
+
+    public List<Ticket> getAllTicketsByEvent(Event event) throws DataBaseConnectionException {
+        return ticketRepo.getTicketsOfEvent(event.getId());
     }
 }

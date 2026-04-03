@@ -1,87 +1,121 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
-import easv.easv_tickets_bar.be.TicketEvent;
+import easv.easv_tickets_bar.be.Event;
+import easv.easv_tickets_bar.be.Ticket;
 import easv.easv_tickets_bar.bll.Logic;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class SellTicketController implements Initializable {
+public class SellTicketController implements Initializable, IPanel {
 
     @FXML private Label errorLabel;
-    @FXML private Label ticketTypeLabel;
+    @FXML private Label EventLabel;
 
-    @FXML private TextField nameInput;
-    @FXML private TextField emailInput;
-    @FXML private Spinner<Integer> quantityInput;
-
-    @FXML private Label totalInput;
+    @FXML private TextField firstNameField;
+    @FXML private TextField secondNameField;
+    @FXML private TextField emailField;
+    @FXML private TextField amountField;
+    @FXML private ComboBox<Ticket> ticketTypeBox;
+    @FXML private Label totalSum;
 
     private Logic logic = new Logic();
-    private CoordinatorController cController;
-    private TicketEvent ticket;
+    private IRefreshable cController;
+    private ObservableList<Ticket> tickets =  FXCollections.observableArrayList();
+    private Event event;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        UIHelper.numberInputValidator(amountField);
+        ticketTypeBox.setItems(tickets);
     }
 
-    public boolean isValidEmail(){
-        return emailInput.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9+_.-]+\\.[A-Za-z]{2,6}$");
-    }
+
+
 
     public void onSellTicket(ActionEvent actionEvent) {
-        if (!isValidEmail()){
-            errorLabel.setManaged(true);
-            errorLabel.setText("Invalid Email.");
-            return;
-        }
-        String name = nameInput.getText();
-        String email = emailInput.getText();
-        int quantity = quantityInput.getValue();
-
+        String name = firstNameField.getText();
+        String secondName = secondNameField.getText();
+        String email = emailField.getText();
+        String quantity = amountField.getText();
+        Ticket ticketType = ticketTypeBox.getSelectionModel().getSelectedItem();
         Button btn = (Button) actionEvent.getSource();
 
-        Task<Void> task = new Task<>() {
+        Task<Void> sellTicketTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                logic.sellTicket(ticket.getId(), name, email, quantity, ticket.getAvailable());
+                logic.sellTicket(event, ticketType, name, secondName, email, quantity);
                 return null;
             }
         };
 
-        task.setOnSucceeded(event -> {
+        sellTicketTask.setOnSucceeded(event -> {
             Stage stage = (Stage) btn.getScene().getWindow();
             cController.refreshTable();
+            cController.restoreTimeLine();
             stage.close();
         });
 
-        task.setOnFailed(event -> {
-            errorLabel.setManaged(true);
-            errorLabel.setText(task.getException().getMessage());
+        sellTicketTask.setOnFailed(event -> {
+            errorLabel.setOpacity(1);
+            errorLabel.setText(sellTicketTask.getException().getMessage());
         });
 
-        Thread thread = new Thread(task);
-        thread.start();
-
+        new Thread(sellTicketTask).start();
     }
 
-    public void setTicket(TicketEvent ticket) {
-        this.ticket = ticket;
-        ticketTypeLabel.setText("Sell Ticket - " + ticket.getTicketType());
+//    public void setTicket(TicketEvent ticket) {
+//        this.ticket = ticket;
+//        EventLabel.setText("Sell Ticket - " + ticket.getTicketType());
+//    }
+
+
+    public void setEvent(Event event){
+        Task<List<Ticket>> getTickets = new Task<List<Ticket>>() {
+
+            @Override
+            protected List<Ticket> call() throws Exception {
+                return logic.getAllTicketsByEvent(event);
+            }
+        };
+        getTickets.setOnSucceeded(e -> {
+            if (getTickets.getValue().isEmpty()){
+                errorLabel.setOpacity(1);
+                errorLabel.setText("No tickets are added yet");
+            }
+            else {
+                tickets.setAll(getTickets.getValue());
+            }
+
+        });
+        getTickets.setOnFailed(e -> {
+            Throwable cause = getTickets.getException();
+            cause.printStackTrace();
+            errorLabel.setOpacity(1);
+            errorLabel.setText(cause.getMessage());
+        });
+        this.event = event;
+        new Thread(getTickets).start();
     }
 
-    public void setController(CoordinatorController cController) {
-        this.cController = cController;
+    @Override
+    public void setController(IRefreshable controller) {
+        this.cController = controller;
+        Stage stage = (Stage) firstNameField.getScene().getWindow();
+        stage.setOnCloseRequest(e->onClose());
+    }
+
+    @Override
+    public void onClose() {
+        cController.restoreTimeLine();
     }
 }
