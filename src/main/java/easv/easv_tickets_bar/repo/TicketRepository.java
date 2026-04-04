@@ -26,8 +26,8 @@ public class TicketRepository {
         return ticketDAO.getTicketsOfEvent(id);
     }
 
-    public void sellTicket(int id, int ticketTypeId, String name, String secondName, String email, int quantity) throws Exception {
-        ticketDAO.sellTicket(id, ticketTypeId, name, secondName, email, quantity);
+    public boolean sellTicket(int id, int ticketTypeId, String name, String secondName, String email, List<String> ticketIds) throws Exception {
+        return ticketDAO.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds);
     }
 
 

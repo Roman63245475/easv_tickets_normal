@@ -101,7 +101,7 @@ public class TicketAccessObject {
         }
     }
 
-    public void sellTicket(int id, int ticketTypeId, String name, String secondName, String email, int quantity) throws Exception {
+    public boolean sellTicket(int id, int ticketTypeId, String name, String secondName, String email, List<String> ticketIds) throws Exception {
 
         //add small db check here for how much left just in case.
         Connection con = null;
@@ -118,10 +118,10 @@ public class TicketAccessObject {
                         System.out.println("capacity: " + capacity);
                         System.out.println("sold_amount: " + sold_amount);
                         System.out.println("tickets left: " + (capacity - sold_amount));
-                        if (capacity - sold_amount >= quantity) {
+                        if (capacity - sold_amount >= ticketIds.size()) {
                             try (PreparedStatement ps2 = con.prepareStatement("insert into tickets(id, typeId, CustomerName, CustomerEmail, IsScanned, second_name) values (?, ?, ?, ?, ?, ?)")){
-                                for (int i = 0; i < quantity; i++) {
-                                    String uniqueTicketId = java.util.UUID.randomUUID().toString();
+                                for (String uniqueTicketId : ticketIds) {
+                                    //String uniqueTicketId = java.util.UUID.randomUUID().toString();
                                     ps2.setString(1, uniqueTicketId);
                                     ps2.setInt(2, ticketTypeId);
                                     ps2.setString(3, name);
@@ -132,7 +132,7 @@ public class TicketAccessObject {
                                 }
                                 ps2.executeBatch();
                                 con.commit();
-                                //ps2.getGeneratedKeys()
+                                return true;
                             }
                         }
                         else{

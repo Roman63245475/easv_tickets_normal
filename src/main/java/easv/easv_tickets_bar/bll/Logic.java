@@ -1,5 +1,9 @@
 package easv.easv_tickets_bar.bll;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
@@ -11,10 +15,12 @@ import easv.easv_tickets_bar.repo.TicketRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.awt.image.BufferedImage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Logic {
@@ -218,10 +224,40 @@ public class Logic {
         if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
             throw new MyException("Make sure fields are filled out.");
         }
+        List<String> ticketIds = new ArrayList<>();
+        int validatedQuantity = validateQuantity(quantity);
+        for (int i = 0; i < validatedQuantity; i++) {
+            ticketIds.add(java.util.UUID.randomUUID().toString().replace("-", ""));
+        }
         int id = event.getId();
         int ticketTypeId = ticketType.getId();
-        int validatedQuantity = validateQuantity(quantity);
-        ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, validatedQuantity);
+        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
+
+        }
+    }
+
+//    int id = rs.getInt("EventID");
+//    String name = rs.getString("Name");
+//    LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
+//    LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
+//    String location = rs.getString("Location");
+//    String venue = rs.getString("Venue");
+//    String guidance = rs.getString("LocationGuidance");
+//    String notes = rs.getString("Notes");
+//    int capacity = rs.getInt("Capacity");
+//    int count = rs.getInt("CoordinatorCount");
+//    int sold_amount = rs.getInt("sold_amount")
+    private void sendTickets(Event event, Ticket ticketType, String name, String secondName, String email, List<String> ticketIds) {
+        for (String ticketId : ticketIds) {
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();//an object which can convert text into qr code
+            BitMatrix matrix = qrCodeWriter.encode(ticketId, BarcodeFormat.QR_CODE, 150, 150); //2d boolean matrix, if true then 0, if false then 255, grayscale although
+            BufferedImage image = new BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < 150; x++) {
+                for (int y = 0; y < 150; y++) {
+                    image.setRGB(x, y, matrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+                }
+            }
+        }
     }
 
     public boolean isValidEmail(String email) {
