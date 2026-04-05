@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="841.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane prefHeight="601.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <VBox prefWidth="400" spacing="0" styleClass="main_vbox">
 
@@ -24,22 +24,7 @@
             <Label fx:id="eventName" alignment="CENTER" maxWidth="340" styleClass="ticket-event-title" text="Event Name" wrapText="true">
                 <font><Font name="System Bold" size="24.0" /></font>
             </Label>
-            <Label fx:id="eventDescription" alignment="CENTER" maxWidth="320" styleClass="ticket-event-description" text="Event description goes here" wrapText="true">
-                <font><Font size="12.0" /></font>
-            </Label>
-            <Region prefHeight="1" prefWidth="60" styleClass="ticket-divider-white" />
         </VBox>
-
-        <!-- Tear line between header and body -->
-        <HBox alignment="CENTER" prefHeight="28" prefWidth="400" styleClass="tear-line-box">
-            <StackPane prefHeight="28" prefWidth="28" styleClass="tear-line-notch">
-                <StackPane.margin><Insets left="-14" /></StackPane.margin>
-            </StackPane>
-            <Region prefHeight="1" style="-fx-border-color: #d1d5db; -fx-border-width: 0 0 2 0; -fx-border-style: dashed;" HBox.hgrow="ALWAYS" />
-            <StackPane prefHeight="28" prefWidth="28" styleClass="tear-line-notch">
-                <StackPane.margin><Insets right="-14" /></StackPane.margin>
-            </StackPane>
-        </HBox>
 
         <!-- Ticket details -->
         <VBox spacing="14" styleClass="ticket-body" VBox.vgrow="ALWAYS">
@@ -47,34 +32,10 @@
                 <Insets bottom="20" left="24" right="24" top="20" />
             </padding>
 
-            <!-- Attendee name -->
-            <VBox spacing="4">
-                <Label styleClass="ticket-section-label" text="ATTENDEE">
-                    <font><Font name="System Bold" size="10.0" /></font>
-                </Label>
-                <Label fx:id="attendeeName" styleClass="ticket-name-label" text="Full Name">
-                    <font><Font name="System Bold" size="17.0" /></font>
-                </Label>
-            </VBox>
-
-            <Region prefHeight="1" styleClass="ticket-divider" />
-
-            <!-- Email address -->
-            <VBox spacing="4">
-                <Label styleClass="ticket-section-label" text="EMAIL">
-                    <font><Font name="System Bold" size="10.0" /></font>
-                </Label>
-                <Label fx:id="attendeeEmail" styleClass="ticket-value-label" text="email@example.com">
-                    <font><Font size="13.0" /></font>
-                </Label>
-            </VBox>
-
-            <Region prefHeight="1" styleClass="ticket-divider" />
-
             <!-- Start and end date side by side -->
             <HBox spacing="12">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="ticket-section-label" text="START DATE">
+                    <Label styleClass="ticket-section-label" text="START DATE AND TIME">
                         <font><Font name="System Bold" size="10.0" /></font>
                     </Label>
                     <Label fx:id="eventStartDate" styleClass="ticket-value-label" text="Jan 1, 2025 18:00">
@@ -82,7 +43,7 @@
                     </Label>
                 </VBox>
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="ticket-section-label" text="END DATE">
+                    <Label styleClass="ticket-section-label" text="END DATE AND TIME">
                         <font><Font name="System Bold" size="10.0" /></font>
                     </Label>
                     <Label fx:id="eventEndDate" styleClass="ticket-value-label" text="Jan 1, 2025 23:00">
@@ -93,34 +54,66 @@
 
             <Region prefHeight="1" styleClass="ticket-divider" />
 
-            <!-- Notes -->
-            <VBox spacing="4">
-                <Label styleClass="ticket-section-label" text="NOTES">
-                    <font><Font name="System Bold" size="10.0" /></font>
-                </Label>
-                <Label fx:id="eventNotes" styleClass="ticket-value-label" text="Notes will appear here" wrapText="true">
-                    <font><Font size="13.0" /></font>
-                </Label>
-            </VBox>
-
-            <Region prefHeight="1" styleClass="ticket-divider" />
-
             <!-- Location guidance box -->
-            <VBox spacing="8">
-                <Label styleClass="ticket-section-label" text="LOCATION GUIDANCE">
-                    <font><Font name="System Bold" size="10.0" /></font>
-                </Label>
-                <VBox spacing="4" styleClass="location-box">
-                    <padding>
-                        <Insets bottom="12" left="14" right="14" top="12" />
-                    </padding>
-                    <Label fx:id="locationName" styleClass="location-name-label" text="Venue Name, City">
-                        <font><Font name="System Bold" size="13.0" /></font>
-                    </Label>
-                    <Label fx:id="locationGuidance" styleClass="location-guidance-label" text="Entrance and directions will appear here" wrapText="true">
-                        <font><Font size="12.0" /></font>
-                    </Label>
-                </VBox>
+            <VBox spacing="8" styleClass="location-box">
+            <children>
+               <HBox prefHeight="0.0" prefWidth="350.0">
+                  <children>
+                     <Label text="Location:">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Label fx:id="locationField">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+               </HBox>
+               <HBox layoutX="11.0" layoutY="11.0" prefHeight="0.0" prefWidth="350.0">
+                  <children>
+                     <Label text="Venue:">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Label fx:id="venueField">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+               </HBox>
+               <HBox layoutX="11.0" layoutY="41.0" prefHeight="0.0" prefWidth="350.0">
+                  <children>
+                     <Label text="Location Guidance:">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Label fx:id="locationGuidanceField">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+               </HBox>
+               <HBox layoutX="11.0" layoutY="72.0" prefHeight="0.0" prefWidth="350.0">
+                  <children>
+                     <Label text="Notes:">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Label fx:id="notesField">
+                        <HBox.margin>
+                           <Insets left="10.0" top="5.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+               </HBox>
+            </children>
             </VBox>
 
             <Region prefHeight="1" styleClass="ticket-divider" />

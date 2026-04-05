@@ -119,7 +119,7 @@ public class TicketAccessObject {
                         System.out.println("sold_amount: " + sold_amount);
                         System.out.println("tickets left: " + (capacity - sold_amount));
                         if (capacity - sold_amount >= ticketIds.size()) {
-                            try (PreparedStatement ps2 = con.prepareStatement("insert into tickets(id, typeId, CustomerName, CustomerEmail, IsScanned, second_name) values (?, ?, ?, ?, ?, ?)")){
+                            try (PreparedStatement ps2 = con.prepareStatement("insert into tickets(id, typeId, CustomerName, CustomerEmail, IsScanned, second_name, qr_generated) values (?, ?, ?, ?, ?, ?, ?)")){
                                 for (String uniqueTicketId : ticketIds) {
                                     //String uniqueTicketId = java.util.UUID.randomUUID().toString();
                                     ps2.setString(1, uniqueTicketId);
@@ -128,6 +128,7 @@ public class TicketAccessObject {
                                     ps2.setString(4, email);
                                     ps2.setBoolean(5, false);
                                     ps2.setString(6, secondName);
+                                    ps2.setBoolean(7, false);
                                     ps2.addBatch();
                                 }
                                 ps2.executeBatch();
@@ -171,6 +172,22 @@ public class TicketAccessObject {
                 }
             }
 
+        }
+    }
+
+    public void markQrCodeGenerated(String ticketId) throws DataBaseConnectionException {
+        try (Connection con = connectionManager.getConnection()){
+            try(PreparedStatement ps = con.prepareStatement("Update tickets SET qr_generated = ? WHERE tickets.id = ?")){
+                ps.setBoolean(1, true);
+                ps.setString(2, ticketId);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            if (e.getSQLState().startsWith("08")) {
+                throw new DataBaseConnectionException("Connection Failed");
+            }else{
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 

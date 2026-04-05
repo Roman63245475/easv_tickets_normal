@@ -232,7 +232,7 @@ public class Logic {
         int id = event.getId();
         int ticketTypeId = ticketType.getId();
         if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
-
+            sendTickets(event, ticketType, name, secondName, email, ticketIds);
         }
     }
 
@@ -248,16 +248,30 @@ public class Logic {
 //    int count = rs.getInt("CoordinatorCount");
 //    int sold_amount = rs.getInt("sold_amount")
     private void sendTickets(Event event, Ticket ticketType, String name, String secondName, String email, List<String> ticketIds) {
-        for (String ticketId : ticketIds) {
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();//an object which can convert text into qr code
-            BitMatrix matrix = qrCodeWriter.encode(ticketId, BarcodeFormat.QR_CODE, 150, 150); //2d boolean matrix, if true then 0, if false then 255, grayscale although
-            BufferedImage image = new BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB);
-            for (int x = 0; x < 150; x++) {
-                for (int y = 0; y < 150; y++) {
-                    image.setRGB(x, y, matrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+        List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
+
+    }
+
+    private List<BufferedImage> generateQRCodes(List<String> ticketsIds){
+        List<BufferedImage> qrCodes = new ArrayList<>();
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();//an object which can convert text into qr code
+        try {
+            for (String ticketId : ticketsIds){
+                BitMatrix matrix = qrCodeWriter.encode(ticketId, BarcodeFormat.QR_CODE, 150, 150); //2d boolean matrix, if true then 0, if false then 255, grayscale although
+                ticketRepo.markQrCodeGenerated(ticketId);
+                BufferedImage image = new BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB);
+                for (int x = 0; x < 150; x++) {
+                    for (int y = 0; y < 150; y++) {
+                        image.setRGB(x, y, matrix.get(x, y) ? 0x000000 : 0xFFFFFF);
+                    }
                 }
+                qrCodes.add(image);
             }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        return qrCodes;
     }
 
     public boolean isValidEmail(String email) {

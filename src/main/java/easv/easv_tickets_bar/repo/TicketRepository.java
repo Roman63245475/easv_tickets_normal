@@ -9,13 +9,13 @@ import java.util.List;
 
 public class TicketRepository {
 
-    private TicketAccessObject ticketDAO;
+    private TicketAccessObject tao;
     public TicketRepository() {
-        this.ticketDAO = new TicketAccessObject();
+        this.tao = new TicketAccessObject();
     }
 
     public void createTicket(int id, String name, double priceDouble, String description) throws DataBaseConnectionException, DuplicateException {
-        ticketDAO.createTicket(id, name, priceDouble, description);
+        tao.createTicket(id, name, priceDouble, description);
     }
 
 //    public List<Ticket> getTicketsByCoordinator(int id) throws DataBaseConnectionException {
@@ -23,12 +23,15 @@ public class TicketRepository {
 //    }
 
     public List<Ticket> getTicketsOfEvent(int id) throws DataBaseConnectionException {
-        return ticketDAO.getTicketsOfEvent(id);
+        return tao.getTicketsOfEvent(id);
     }
 
     public boolean sellTicket(int id, int ticketTypeId, String name, String secondName, String email, List<String> ticketIds) throws Exception {
-        return ticketDAO.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds);
+        return tao.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds);
     }
 
 
+    public void markQrCodeGenerated(String ticketId) throws DataBaseConnectionException {
+        tao.markQrCodeGenerated(ticketId);
+    }
 }
