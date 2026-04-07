@@ -272,7 +272,6 @@ public class AdminController implements Initializable, IRefreshable{
         catch (IOException e) {
             System.out.println("here needs to be an alert");
         }
-
     }
 
     @FXML
@@ -302,7 +301,6 @@ public class AdminController implements Initializable, IRefreshable{
 
         new Thread(deleteUserTask).start();
     }
-
 
 
     @Override
