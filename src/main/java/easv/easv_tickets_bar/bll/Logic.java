@@ -9,13 +9,33 @@ import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.*;
+import easv.easv_tickets_bar.gui.TicketController;
+import easv.easv_tickets_bar.gui.TicketTemplateController;
 import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.TicketRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -250,8 +270,67 @@ public class Logic {
 //    int count = rs.getInt("CoordinatorCount");
 //    int sold_amount = rs.getInt("sold_amount")
     private void sendTickets(Event event, Ticket ticketType, String name, String secondName, String email, List<String> ticketIds) {
-        List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
+        try {
+            List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
+            List<WritableImage> ticketsImages = generateTickets(event, qrCodes);
+            File pdfDocument = convertToPDF(ticketsImages, event.getNameForFile(), name + "_" + secondName);
 
+        }
+        catch (Exception ex) {
+            System.out.println("simulating sone job");
+        }
+    }
+
+    private File convertToPDF(List<WritableImage> ticketsImages, String eventName, String userFullName) throws MyException {
+        try (PDDocument document = new PDDocument();){
+            for (WritableImage ticketImage : ticketsImages) {
+                BufferedImage img = SwingFXUtils.fromFXImage(ticketImage, null);
+                PDPage page = new PDPage();
+                document.addPage(page);
+                PDImageXObject pdImage = LosslessFactory.createFromImage(document, img);
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)){
+                    contentStream.drawImage(pdImage, 0, 0);
+                }
+
+            }
+            Path dirPath = Path.of("tickets");
+            dirPath.toFile().mkdirs();
+            Path targetPath = dirPath.resolve(eventName + "_" + userFullName + ".pdf");
+            int i = 1;
+            while (Files.exists(targetPath)) {
+                targetPath = dirPath.resolve(eventName + "_" + userFullName + "(" + i + ")" + ".pdf");
+                i++;
+            }
+            document.save(targetPath.toFile());
+            return targetPath.toFile();//return after
+        }
+        catch (IOException ex) {
+            throw new MyException("something went wrong");
+        }
+    }
+
+    private List<WritableImage> generateTickets(Event event, List<BufferedImage> qrCodes) throws MyException {
+        String fileName = "ticket.fxml";
+        List<WritableImage> ticketsImages = new ArrayList<>();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
+            Parent root = (Parent) loader.load();
+            new Scene(root);
+            TicketTemplateController controller = loader.getController();
+            root.applyCss();
+            root.layout();
+            for (BufferedImage qrCode : qrCodes) {
+                Image code = SwingFXUtils.toFXImage(qrCode, null );
+                String endDate = (event.getEndDate() != null) ? event.getEndDate().toString() : "End date is not specified";
+                controller.setData(event.getName(), event.getStartTime(), event.getEndTime(), event.getStartDate().toString(), endDate, event.getLocation(), event.getVenue(), event.getLocationGuidance(), event.getNotes(), code);
+                WritableImage image = root.snapshot(new SnapshotParameters(), null);
+                ticketsImages.add(image);
+            }
+            return ticketsImages;
+        } catch (IOException e) {
+            System.out.println("idi nahuy");
+            throw new MyException("something went wrong while generating a ticket");
+        }
     }
 
     private List<BufferedImage> generateQRCodes(List<String> ticketsIds){

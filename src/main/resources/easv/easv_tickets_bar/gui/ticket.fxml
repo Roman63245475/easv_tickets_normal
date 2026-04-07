@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="601.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane prefHeight="666.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <VBox prefWidth="400" spacing="0" styleClass="main_vbox">
 
@@ -27,7 +27,7 @@
         </VBox>
 
         <!-- Ticket details -->
-        <VBox spacing="14" styleClass="ticket-body" VBox.vgrow="ALWAYS">
+        <VBox spacing="10.0" styleClass="ticket-body" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets bottom="20" left="24" right="24" top="20" />
             </padding>
@@ -35,7 +35,7 @@
             <!-- Start and end date side by side -->
             <HBox spacing="12">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="ticket-section-label" text="START DATE AND TIME">
+                    <Label styleClass="ticket-section-label" text="START DATE">
                         <font><Font name="System Bold" size="10.0" /></font>
                     </Label>
                     <Label fx:id="eventStartDate" styleClass="ticket-value-label" text="Jan 1, 2025 18:00">
@@ -43,7 +43,7 @@
                     </Label>
                 </VBox>
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="ticket-section-label" text="END DATE AND TIME">
+                    <Label styleClass="ticket-section-label" text="END DATE">
                         <font><Font name="System Bold" size="10.0" /></font>
                     </Label>
                     <Label fx:id="eventEndDate" styleClass="ticket-value-label" text="Jan 1, 2025 23:00">
@@ -53,15 +53,47 @@
             </HBox>
 
             <Region prefHeight="1" styleClass="ticket-divider" />
+         <HBox layoutX="34.0" layoutY="30.0" prefWidth="352.0" spacing="12">
+            <children>
+               <VBox spacing="4" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Label styleClass="ticket-section-label" text="START Time">
+                        <font>
+                           <Font name="System Bold" size="10.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="eventStartTime" styleClass="ticket-value-label" text="Jan 1, 2025 18:00">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </VBox>
+               <VBox spacing="4" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Label styleClass="ticket-section-label" text="END Time">
+                        <font>
+                           <Font name="System Bold" size="10.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="eventEndTime" styleClass="ticket-value-label" text="Jan 1, 2025 23:00">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
 
             <!-- Location guidance box -->
-            <VBox spacing="8" styleClass="location-box">
+            <VBox prefHeight="206.0" prefWidth="352.0" spacing="20.0" styleClass="location-box">
             <children>
                <HBox prefHeight="0.0" prefWidth="350.0">
                   <children>
                      <Label text="Location:">
                         <HBox.margin>
-                           <Insets left="10.0" top="5.0" />
+                           <Insets left="10.0" top="10.0" />
                         </HBox.margin>
                      </Label>
                      <Label fx:id="locationField">

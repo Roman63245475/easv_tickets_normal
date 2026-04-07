@@ -20,6 +20,7 @@ public class Event {
     private int capacity;
     private int soldAmount;
     private int availableTickets;
+    private String nameForFile;
 
     public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location, String venue, String locationGuidance, String notes, int coordinators, int capacity, int soldAmount) {
         this.id = id;
@@ -36,6 +37,11 @@ public class Event {
         this.capacity = capacity;
         this.soldAmount = soldAmount;
         this.availableTickets = this.capacity - this.soldAmount;
+        setNameForFile(name);
+    }
+
+    private void setNameForFile(String name){
+        this.nameForFile = name.replace(" ", "_");
     }
 
     public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location) {
@@ -71,7 +77,7 @@ public class Event {
     }
 
     public String getEndTime() {
-        if (endTime == null) return "";
+        if (endTime == null) return "End time is not specified";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return endTime.format(formatter);
     }
@@ -85,6 +91,7 @@ public class Event {
     }
 
     public String getLocationGuidance() {
+        if (locationGuidance == null) return "Location guidance is not specified";
         return locationGuidance;
     }
 
@@ -111,5 +118,9 @@ public class Event {
 
     public int getAvailableTickets(){
         return this.availableTickets;
+    }
+
+    public String getNameForFile(){
+        return this.nameForFile;
     }
 }
