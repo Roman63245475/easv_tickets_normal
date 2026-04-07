@@ -243,19 +243,20 @@ public class Logic {
     }
 
     public void sellTicket(Event event, Ticket ticketType, String name, String secondName, String email, String quantity) throws Exception {
-        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
-            throw new MyException("Make sure fields are filled out.");
-        }
-        List<String> ticketIds = new ArrayList<>();
-        int validatedQuantity = validateQuantity(quantity);
-        for (int i = 0; i < validatedQuantity; i++) {
-            ticketIds.add(java.util.UUID.randomUUID().toString().replace("-", ""));
-        }
-        int id = event.getId();
-        int ticketTypeId = ticketType.getId();
-        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
-            sendTickets(event, ticketType, name, secondName, email, ticketIds);
-        }
+//        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
+//            throw new MyException("Make sure fields are filled out.");
+//        }
+//        List<String> ticketIds = new ArrayList<>();
+//        int validatedQuantity = validateQuantity(quantity);
+//        for (int i = 0; i < validatedQuantity; i++) {
+//            ticketIds.add(java.util.UUID.randomUUID().toString().replace("-", ""));
+//        }
+//        int id = event.getId();
+//        int ticketTypeId = ticketType.getId();
+//        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
+//            sendTickets(event, ticketType, name, secondName, email, ticketIds);
+//        }
+        System.out.println("hey");
     }
 
 //    int id = rs.getInt("EventID");
