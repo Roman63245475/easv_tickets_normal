@@ -77,19 +77,12 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
         nameInput.setText(selectedEvent.getName());
 
-        String[] parts = selectedEvent.getStartDateTime().split(" ");
-        String startDate = parts[0];
-        String startTime = parts[1];
-        startTimeInput.setText(startTime);
-        startDateInput.setValue(LocalDate.parse(startDate));
+        startTimeInput.setText(selectedEvent.getStartTime());
+        endTimeInput.setText(selectedEvent.getEndTime());
 
-        parts = selectedEvent.getEndDateTime().split(" ");
-        String endDate = parts[0];
-        String endTime = parts[1];
-        endTimeInput.setText(endTime);
-        endDateInput.setValue(LocalDate.parse(endDate));
+        startDateInput.setValue(selectedEvent.getStartDate());
+        endDateInput.setValue(selectedEvent.getEndDate());
 
-        endTimeInput.setText(selectedEvent.getEndDateTime());
         locationInput.setText(selectedEvent.getLocation());
         venueInput.setText(selectedEvent.getVenue());
         guidanceInput.setText(selectedEvent.getLocationGuidance());

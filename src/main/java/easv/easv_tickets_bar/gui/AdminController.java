@@ -35,17 +35,17 @@ public class AdminController implements Initializable, IRefreshable{
     @FXML private TableView<User> usersTable;
     @FXML private TableColumn<User, Integer> userIdColumn;
     @FXML private TableColumn<User, String> userUsernameColumn;
-    @FXML private TableColumn<User, String> userStatusColumn;
     @FXML private TableColumn<User, String> userRoleColumn;
 
     //events table and it's columns
     @FXML private TableView<Event> eventsTable;
     @FXML private TableColumn<Event, Integer> eventIdColumn;
     @FXML private TableColumn<Event, String> eventNameColumn;
-    @FXML private TableColumn<Event, String> startDateTimeColumn;
-    @FXML private TableColumn<Event, String> endDateTimeColumn;
+    @FXML private TableColumn<Event, String> startDateColumn;
+    @FXML private TableColumn<Event, String> startTimeColumn;
+    @FXML private TableColumn<Event, String> endDateColumn;
+    @FXML private TableColumn<Event, String> endTimeColumn;
     @FXML private TableColumn<Event, String> eventLocationColumn;
-    @FXML private TableColumn<Event, String> eventStatusColumn;
 
 
     private boolean isMenuOpen = false;
@@ -102,24 +102,23 @@ public class AdminController implements Initializable, IRefreshable{
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         userUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         userRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        userStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
     private void setUpColumnsAlignment(){
         userIdColumn.setStyle("-fx-alignment: CENTER;");
         userUsernameColumn.setStyle("-fx-alignment: CENTER;");
         userRoleColumn.setStyle("-fx-alignment: CENTER;");
-        userStatusColumn.setStyle("-fx-alignment: CENTER;");
     }
 
     private void setupEventTableColumns() {
         eventsTable.setItems(eventList);
         eventIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         eventNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        startDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
-        endDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+        startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         eventLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-        eventStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
     private void fillEventTable(){

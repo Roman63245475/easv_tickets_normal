@@ -343,32 +343,19 @@ public class Logic {
     }
 
     public void updateEvent(int id, String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws Exception {
-        if (isInvalidString(name) || isInvalidString(location) || isInvalidString(venue)) {
-            throw new Exception("Make sure Name, Start Time, Location, Venue and Capacity fields are filled out!");
-        }
-        if (startDate == null || endDate == null) {
-            throw new Exception("Please select a valid Start Date and End Date");
-        }
+        validateEventData(name, startTimeStr, endTimeStr, startDate, endDate, location, venue, guidance, notes, capacityStr);
         LocalTime startTime, endTime;
+        startTime = LocalTime.parse(startTimeStr);
         try {
-            startTime = LocalTime.parse(startTimeStr);
             endTime = LocalTime.parse(endTimeStr);
-        } catch (Exception e) {
-            throw new Exception("Please fill out the time fields correctly (hh:mm)");
+        }
+        catch (DateTimeParseException ex) {
+            endTime = null;
         }
 
         int capacity;
-        try {
-            capacity = Integer.parseInt(capacityStr);
-            if (capacity <= 0) throw new Exception();
-        } catch (Exception e) {
-            throw new Exception("Capacity must be a positive number");
-        }
-
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
-
-        eventRepo.updateEvent(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+        capacity = Integer.parseInt(capacityStr);
+        eventRepo.updateEvent(id, name, startTime, startDate, endTime, endDate, location, venue, guidance, notes, capacity);
     }
 
     public List<Ticket> getAllTicketsByEvent(Event event) throws DataBaseConnectionException {

@@ -33,7 +33,7 @@ public class EventRepository {
         return eao.getEvents(userId);
     }
 
-    public void updateEvent(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
-        eao.updateEvent(id, name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+    public void updateEvent(int id, String name, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
+        eao.updateEvent(id, name, startTime, startDate, endTime, endDate, location, venue, guidance, notes, capacity);
     }
 }

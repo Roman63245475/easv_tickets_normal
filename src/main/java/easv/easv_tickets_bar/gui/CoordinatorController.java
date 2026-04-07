@@ -23,7 +23,9 @@ import java.net.URL;
 
 import javafx.util.Duration;
 //import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,20 +36,18 @@ public class CoordinatorController implements IRefreshable, Initializable {
     //Events Table
     @FXML private TableView<Event> eventTable;
     @FXML private TableColumn<Event, String> nameColumn;
-    @FXML private TableColumn<Event, LocalDateTime> dateTimeColumn;
+    @FXML private TableColumn<Event, LocalDate> dateColumn;
+    @FXML private TableColumn<Event, LocalTime> timeColumn;
     @FXML private TableColumn<Event, String> locationColumn;
-    @FXML private TableColumn<Event, String> statusColumn;
     @FXML private TableColumn<Event, Integer> ticketColumn;
     @FXML private TableColumn<Event, Integer> coordinatorsColumn;
 
     //Tickets Table
     @FXML private TableView<Event> ticketsTable;
     @FXML private TableColumn<Event, String> eventTName;
-    //@FXML private TableColumn<Event, String> priceColumn;
     @FXML private TableColumn<Event, Integer> quantityTColumn;
     @FXML private TableColumn<Event, Integer> soldColumn;
     @FXML private TableColumn<Event, Integer> availableColumn;
-    @FXML private TableColumn<Event, String> statusTColumn;
 
 
     @FXML private Label welcomeUserLabel;
@@ -84,9 +84,9 @@ public class CoordinatorController implements IRefreshable, Initializable {
         eventTable.setItems(eventsObservableList);
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        dateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         coordinatorsColumn.setCellValueFactory(new PropertyValueFactory<>("coordinators"));
         ticketColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
     }
@@ -100,7 +100,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
         quantityTColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
         soldColumn.setCellValueFactory(new PropertyValueFactory<>("soldAmount"));
         availableColumn.setCellValueFactory(new PropertyValueFactory<>("availableTickets"));
-        statusTColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
     @Override

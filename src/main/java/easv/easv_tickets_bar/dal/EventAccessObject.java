@@ -83,18 +83,20 @@ public class EventAccessObject {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("EventID");
+                    int id = rs.getInt("id");
                     String name = rs.getString("Name");
-                    LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
-                    LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
+                    LocalTime startTime = rs.getObject("StartTime", LocalTime.class);
+                    LocalTime endTime = rs.getObject("EndTime", LocalTime.class);
                     String location = rs.getString("Location");
                     String venue = rs.getString("Venue");
                     String guidance = rs.getString("LocationGuidance");
                     String notes = rs.getString("Notes");
                     int capacity = rs.getInt("Capacity");
+                    LocalDate startDate = rs.getObject("startDate", LocalDate.class);
+                    LocalDate endDate = rs.getObject("endDate", LocalDate.class);
                     int count = rs.getInt("CoordinatorCount");
                     int sold_amount = rs.getInt("sold_amount");
-                    events.add(new Event(id, name, startDateTime, endDateTime, location, venue, guidance, notes, count, capacity, sold_amount));
+                    events.add(new Event(id, name, startDate, startTime, endDate, endTime, location, venue, guidance, notes, count, capacity, sold_amount));
                 }
             }
             return events;
@@ -128,10 +130,12 @@ public class EventAccessObject {
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     String name = rs.getString("Name");
-                    LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
-                    LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
+                    LocalDate startDate = rs.getObject("startDate", LocalDate.class);
+                    LocalTime startTime = rs.getObject("StartTime", LocalTime.class);
+                    LocalDate endDate = rs.getObject("endDate", LocalDate.class);
+                    LocalTime endTime = rs.getObject("endTime", LocalTime.class);
                     String location = rs.getString("Location");
-                    events.add(new Event(id, name,  startDateTime, endDateTime, location));
+                    events.add(new Event(id, name, startDate, startTime, endDate, endTime, location));
                 }
             }
             return events;
@@ -182,20 +186,22 @@ public class EventAccessObject {
         }
     }
 
-    public void updateEvent(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
+    public void updateEvent(int id, String name, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException {
         Connection con = null;
         try {
             con = connectionManager.getConnection();
-            try(PreparedStatement ps = con.prepareStatement("UPDATE Events SET Name = ?, StartTime = ?, EndTime = ?, Location = ?, Venue = ?, LocationGuidance = ?, Notes = ?, Capacity = ? WHERE id = ?")) {
+            try(PreparedStatement ps = con.prepareStatement("UPDATE Events SET Name = ?, StartTime = ?, EndTime = ?, Location = ?, Venue = ?, LocationGuidance = ?, Notes = ?, Capacity = ?, startDate = ?, endDate = ? WHERE id = ?")) {
                 ps.setString(1, name);
-                ps.setObject(2, startDateTime);
-                ps.setObject(3, endDateTime);
+                ps.setObject(2, startTime);
+                ps.setObject(3, endTime);
                 ps.setString(4, location);
                 ps.setString(5, venue);
                 ps.setString(6, guidance);
                 ps.setString(7, notes);
                 ps.setInt(8, capacity);
-                ps.setInt(9, id);
+                ps.setObject(9, startDate);
+                ps.setObject(10, endDate);
+                ps.setInt(11, id);
                 ps.execute();
             }
         }
@@ -217,5 +223,4 @@ public class EventAccessObject {
             }
         }
     }
-
 }

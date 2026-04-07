@@ -1,13 +1,17 @@
 package easv.easv_tickets_bar.be;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Event {
     private int id;
     private String name;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDate startDate;
+    private LocalTime startTime;
+    private LocalDate endDate;
+    private LocalTime endTime;
     private String location;
     private String venue;
     private String locationGuidance;
@@ -17,11 +21,13 @@ public class Event {
     private int soldAmount;
     private int availableTickets;
 
-    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String locationGuidance, String notes, int coordinators, int capacity, int soldAmount) {
+    public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location, String venue, String locationGuidance, String notes, int coordinators, int capacity, int soldAmount) {
         this.id = id;
         this.name = name;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
         this.location = location;
         this.venue = venue;
         this.locationGuidance = locationGuidance;
@@ -32,11 +38,13 @@ public class Event {
         this.availableTickets = this.capacity - this.soldAmount;
     }
 
-    public Event(int id, String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location) {
+    public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location) {
         this.id = id;
         this.name = name;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
         this.location = location;
     }
 
@@ -48,16 +56,24 @@ public class Event {
         return name;
     }
 
-    public String getStartDateTime() {
-        if (startDateTime == null) return "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return startDateTime.format(formatter);
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public String getEndDateTime() {
-        if (endDateTime == null) return "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return endDateTime.format(formatter);
+    public String getStartTime() {
+        if (startTime == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return startTime.format(formatter);
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getEndTime() {
+        if (endTime == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return endTime.format(formatter);
     }
 
     public String getLocation() {
@@ -87,11 +103,6 @@ public class Event {
     @Override
     public String toString() {
         return this.name;
-    }
-
-
-    public String getStatus(){
-        return "Active";
     }
 
     public int getSoldAmount(){
