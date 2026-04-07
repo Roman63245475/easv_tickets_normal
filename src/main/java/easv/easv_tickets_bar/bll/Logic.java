@@ -78,16 +78,16 @@ public class Logic {
     }
 
     public void validateEventData(String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws MyException {
-        if (isInvalidString(name) || isInvalidString(location) || isInvalidString(venue)) {
+        if (isInvalidString(name) || isInvalidString(location) || isInvalidString(venue) || isInvalidString(notes)) {
             throw new MyException("Make sure Name, Start Time, Location, Venue and Capacity fields are filled out!");
         }
-        if (startDate == null || endDate == null) {
+        if (startDate == null) {
             throw new MyException("Please select a valid Start Date and End Date");
         }
         LocalTime startTime, endTime;
         try {
             startTime = LocalTime.parse(startTimeStr);
-            endTime = LocalTime.parse(endTimeStr);
+            //endTime = LocalTime.parse(endTimeStr);
         } catch (DateTimeParseException ex) {
             throw new MyException("Please fill out the time fields correctly (hh:mm)");
         }
@@ -107,15 +107,17 @@ public class Logic {
         validateEventData(name, startTimeStr, endTimeStr, startDate, endDate, location, venue, guidance, notes, capacityStr);
         LocalTime startTime, endTime;
         startTime = LocalTime.parse(startTimeStr);
-        endTime = LocalTime.parse(endTimeStr);
-
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+        try {
+            endTime = LocalTime.parse(endTimeStr);
+        }
+        catch (DateTimeParseException ex) {
+            endTime = null;
+        }
 
         int capacity;
         capacity = Integer.parseInt(capacityStr);
 
-        int eventId = eventRepo.createNewEvent(name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+        int eventId = eventRepo.createNewEvent(name, startTime, endTime, location, venue, guidance, notes, capacity, startDate, endDate);
         eventCoordinatorRepo.assignSelf(userId, eventId);
     }
 

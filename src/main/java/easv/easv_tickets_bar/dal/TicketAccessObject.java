@@ -158,6 +158,7 @@ public class TicketAccessObject {
             else{
                 try {
                     con.rollback();
+                    return false;
                 } catch (SQLException ex) {
                     throw new RuntimeException("Rollback failed", ex);
                 }
@@ -173,6 +174,7 @@ public class TicketAccessObject {
             }
 
         }
+        //return true;
     }
 
     public void markQrCodeGenerated(String ticketId) throws DataBaseConnectionException {

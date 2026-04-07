@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +27,22 @@ public class EventAccessObject {
     }
 
 
-    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException, DuplicateException {
+    public int createNewEvent(String name, LocalTime startTime, LocalTime endTime, String location, String venue, String guidance, String notes, int capacity, LocalDate startDate, LocalDate endDate) throws DataBaseConnectionException, DuplicateException {
         int id = -1;
         Connection con = null;
         try {
             con = connectionManager.getConnection();
-            try(PreparedStatement ps = con.prepareStatement("INSERT INTO Events(Name, StartTime, EndTime, Location, Venue, LocationGuidance, Notes, Capacity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)){
+            try(PreparedStatement ps = con.prepareStatement("INSERT INTO Events(Name, StartTime, EndTime, Location, Venue, LocationGuidance, Notes, Capacity, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)){
                 ps.setString(1, name);
-                ps.setObject(2, startDateTime);
-                ps.setObject(3, endDateTime);
+                ps.setObject(2, startTime);
+                ps.setObject(3, endTime);
                 ps.setString(4, location);
                 ps.setString(5, venue);
                 ps.setString(6, guidance);
                 ps.setString(7, notes);
                 ps.setInt(8, capacity);
+                ps.setObject(9, startDate);
+                ps.setObject(10, endDate);
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {

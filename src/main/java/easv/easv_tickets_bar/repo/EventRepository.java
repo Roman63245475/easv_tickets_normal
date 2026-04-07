@@ -5,7 +5,9 @@ import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.dal.EventAccessObject;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class EventRepository {
@@ -23,8 +25,8 @@ public class EventRepository {
         eao.deleteSelectedEvent(selectedEvent);
     }
 
-    public int createNewEvent(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, String location, String venue, String guidance, String notes, int capacity) throws DataBaseConnectionException, DuplicateException {
-        return eao.createNewEvent(name, startDateTime, endDateTime, location, venue, guidance, notes, capacity);
+    public int createNewEvent(String name, LocalTime startTime, LocalTime endTime, String location, String venue, String guidance, String notes, int capacity, LocalDate startDate, LocalDate endDate) throws DataBaseConnectionException, DuplicateException {
+        return eao.createNewEvent(name, startTime, endTime, location, venue, guidance, notes, capacity, startDate, endDate);
     }
 
     public List<Event> getEvents(int userId) throws DataBaseConnectionException {
