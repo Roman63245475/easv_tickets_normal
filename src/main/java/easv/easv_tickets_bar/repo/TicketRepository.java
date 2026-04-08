@@ -31,7 +31,7 @@ public class TicketRepository {
     }
 
 
-    public void markQrCodeGenerated(String ticketId) throws DataBaseConnectionException {
-        tao.markQrCodeGenerated(ticketId);
+    public void markEmailSent(List<String> ticketsIds) throws DataBaseConnectionException {
+        tao.markEmailSent(ticketsIds);
     }
 }

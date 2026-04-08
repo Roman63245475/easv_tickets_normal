@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="666.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane prefHeight="666.0" prefWidth="420" styleClass="root_stack_pane" stylesheets="@css/ticket.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.TicketTemplateController">
 
     <VBox prefWidth="400" spacing="0" styleClass="main_vbox">
 

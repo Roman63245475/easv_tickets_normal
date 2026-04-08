@@ -34,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -243,20 +244,19 @@ public class Logic {
     }
 
     public void sellTicket(Event event, Ticket ticketType, String name, String secondName, String email, String quantity) throws Exception {
-//        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
-//            throw new MyException("Make sure fields are filled out.");
-//        }
-//        List<String> ticketIds = new ArrayList<>();
-//        int validatedQuantity = validateQuantity(quantity);
-//        for (int i = 0; i < validatedQuantity; i++) {
-//            ticketIds.add(java.util.UUID.randomUUID().toString().replace("-", ""));
-//        }
-//        int id = event.getId();
-//        int ticketTypeId = ticketType.getId();
-//        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
-//            sendTickets(event, ticketType, name, secondName, email, ticketIds);
-//        }
-        System.out.println("hey");
+        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
+            throw new MyException("Make sure fields are filled out.");
+        }
+        List<String> ticketIds = new ArrayList<>();
+        int validatedQuantity = validateQuantity(quantity);
+        for (int i = 0; i < validatedQuantity; i++) {
+            ticketIds.add(java.util.UUID.randomUUID().toString().replace("-", ""));
+        }
+        int id = event.getId();
+        int ticketTypeId = ticketType.getId();
+        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
+            sendTickets(event, ticketType, name, secondName, email, ticketIds);
+        }
     }
 
 //    int id = rs.getInt("EventID");
@@ -275,10 +275,18 @@ public class Logic {
             List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
             List<WritableImage> ticketsImages = generateTickets(event, qrCodes);
             File pdfDocument = convertToPDF(ticketsImages, event.getNameForFile(), name + "_" + secondName);
+            EmailSender emailSender = new EmailSender(pdfDocument, email);
+            boolean sent = emailSender.sendEmail(name, event.getName());
+            if (sent) {
+                ticketRepo.markEmailSent(ticketIds);
+            }
+            else{
+                throw new MyException("Email will be sent later");
+            }
 
         }
         catch (Exception ex) {
-            System.out.println("simulating sone job");
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -306,7 +314,7 @@ public class Logic {
             return targetPath.toFile();//return after
         }
         catch (IOException ex) {
-            throw new MyException("something went wrong");
+            throw new MyException("something went wrong while generating PDF");
         }
     }
 
@@ -314,7 +322,7 @@ public class Logic {
         String fileName = "ticket.fxml";
         List<WritableImage> ticketsImages = new ArrayList<>();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv/easv_tickets_bar/gui/ticket.fxml"));
             Parent root = (Parent) loader.load();
             new Scene(root);
             TicketTemplateController controller = loader.getController();
@@ -334,13 +342,12 @@ public class Logic {
         }
     }
 
-    private List<BufferedImage> generateQRCodes(List<String> ticketsIds){
+    private List<BufferedImage> generateQRCodes(List<String> ticketsIds) throws MyException {
         List<BufferedImage> qrCodes = new ArrayList<>();
         QRCodeWriter qrCodeWriter = new QRCodeWriter();//an object which can convert text into qr code
         try {
             for (String ticketId : ticketsIds){
                 BitMatrix matrix = qrCodeWriter.encode(ticketId, BarcodeFormat.QR_CODE, 150, 150); //2d boolean matrix, if true then 0, if false then 255, grayscale although
-                ticketRepo.markQrCodeGenerated(ticketId);
                 BufferedImage image = new BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB);
                 for (int x = 0; x < 150; x++) {
                     for (int y = 0; y < 150; y++) {
@@ -349,11 +356,10 @@ public class Logic {
                 }
                 qrCodes.add(image);
             }
-
+            return qrCodes;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new MyException("QR Code generating failed");
         }
-        return qrCodes;
     }
 
     public boolean isValidEmail(String email) {
