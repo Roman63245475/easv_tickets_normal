@@ -11,7 +11,6 @@ import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.*;
 import easv.easv_tickets_bar.gui.TicketController;
-import easv.easv_tickets_bar.gui.TicketTemplateController;
 import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.TicketRepository;
@@ -533,29 +532,29 @@ public class Logic {
         return pdfFile;
     }
 
-    private List<WritableImage> generateTickets(Event event, List<BufferedImage> qrCodes) throws MyException {
-        String fileName = "ticket.fxml";
-        List<WritableImage> ticketsImages = new ArrayList<>();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv/easv_tickets_bar/gui/ticket.fxml"));
-            Parent root = (Parent) loader.load();
-            new Scene(root);
-            TicketTemplateController controller = loader.getController();
-            root.applyCss();
-            root.layout();
-            for (BufferedImage qrCode : qrCodes) {
-                Image code = SwingFXUtils.toFXImage(qrCode, null );
-                String endDate = (event.getEndDate() != null) ? event.getEndDate().toString() : "End date is not specified";
-                controller.setData(event.getName(), event.getStartTime(), event.getEndTime(), event.getStartDate().toString(), endDate, event.getLocation(), event.getVenue(), event.getLocationGuidance(), event.getNotes(), code);
-                WritableImage image = root.snapshot(new SnapshotParameters(), null);
-                ticketsImages.add(image);
-            }
-            return ticketsImages;
-        } catch (IOException e) {
-            System.out.println("idi nahuy");
-            throw new MyException("something went wrong while generating a ticket");
-        }
-    }
+//    private List<WritableImage> generateTickets(Event event, List<BufferedImage> qrCodes) throws MyException {
+//        String fileName = "ticket.fxml";
+//        List<WritableImage> ticketsImages = new ArrayList<>();
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv/easv_tickets_bar/gui/ticket.fxml"));
+//            Parent root = (Parent) loader.load();
+//            new Scene(root);
+//            TicketTemplateController controller = loader.getController();
+//            root.applyCss();
+//            root.layout();
+//            for (BufferedImage qrCode : qrCodes) {
+//                Image code = SwingFXUtils.toFXImage(qrCode, null );
+//                String endDate = (event.getEndDate() != null) ? event.getEndDate().toString() : "End date is not specified";
+//                controller.setData(event.getName(), event.getStartTime(), event.getEndTime(), event.getStartDate().toString(), endDate, event.getLocation(), event.getVenue(), event.getLocationGuidance(), event.getNotes(), code);
+//                WritableImage image = root.snapshot(new SnapshotParameters(), null);
+//                ticketsImages.add(image);
+//            }
+//            return ticketsImages;
+//        } catch (IOException e) {
+//            System.out.println("idi nahuy");
+//            throw new MyException("something went wrong while generating a ticket");
+//        }
+//    }
 
     private List<BufferedImage> generateQRCodes(List<String> ticketsIds) throws MyException {
         List<BufferedImage> qrCodes = new ArrayList<>();
@@ -597,10 +596,13 @@ public class Logic {
             }
             else {
                 hashed_password = user.getPassword();
+                if (passwordEncoder.matches(hashed_password, passwordEncoder.encode(changedUsername))) {
+                    throw new MyException("Unallowed username");
+                }
             }
             try {
                 userRepo.editUser(user, changedUsername, hashed_password, changedRole);
-                if (changedRole == Role.ADMIN) {
+                if (user.getRole() == Role.EVENT_COORDINATOR && changedRole == Role.ADMIN) {
                     userRepo.eraseAllAssignedEvents(user.getId());
                 }
             } catch (DataBaseConnectionException e) {

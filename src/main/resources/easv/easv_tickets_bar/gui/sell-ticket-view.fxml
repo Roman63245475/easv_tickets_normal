@@ -87,8 +87,8 @@
         </VBox>
         <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="20.0">
             <children>
-                <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
-                <Button mnemonicParsing="false" onAction="#onSellTicket" prefHeight="25.0" prefWidth="129.0" text="SEND TICKET">
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelClick" styleClass="indigo-c-text" text="CANCEL" />
+                <Button fx:id="sendTicketButton" mnemonicParsing="false" onAction="#onSellTicket" prefHeight="25.0" prefWidth="129.0" text="SEND TICKET">
                     <styleClass>
                         <String fx:value="gradient-indigo-purple" />
                         <String fx:value="white-c-text" />

@@ -27,11 +27,14 @@ public class SellTicketController implements Initializable, IPanel {
     @FXML private TextField amountField;
     @FXML private ComboBox<Ticket> ticketTypeBox;
     @FXML private Label totalSum;
+    @FXML private Button cancelButton;
+    @FXML private Button sendTicketButton;
 
     private Logic logic = new Logic();
     private IRefreshable cController;
     private ObservableList<Ticket> tickets =  FXCollections.observableArrayList();
     private Event event;
+    private boolean isSelling = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,6 +42,13 @@ public class SellTicketController implements Initializable, IPanel {
         ticketTypeBox.setItems(tickets);
     }
 
+
+    @FXML
+    private void onCancelClick(){
+        onClose();
+        Stage stage = (Stage) this.amountField.getScene().getWindow();
+        stage.close();
+    }
 
 
 
@@ -53,12 +63,17 @@ public class SellTicketController implements Initializable, IPanel {
         Task<Void> sellTicketTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
+                isSelling = true;
                 logic.sellTicket(event, ticketType, name, secondName, email, quantity);
                 return null;
             }
         };
 
+        cancelButton.disableProperty().bind(sellTicketTask.runningProperty());
+        sendTicketButton.disableProperty().bind(sellTicketTask.runningProperty());
+
         sellTicketTask.setOnSucceeded(event -> {
+            isSelling = false;
             Stage stage = (Stage) btn.getScene().getWindow();
             cController.refreshTable();
             cController.restoreTimeLine();
@@ -66,6 +81,7 @@ public class SellTicketController implements Initializable, IPanel {
         });
 
         sellTicketTask.setOnFailed(event -> {
+            isSelling = false;
             errorLabel.setOpacity(1);
             errorLabel.setText(sellTicketTask.getException().getMessage());
         });

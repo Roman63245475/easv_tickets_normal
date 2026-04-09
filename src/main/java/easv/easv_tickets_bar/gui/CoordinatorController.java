@@ -206,7 +206,7 @@ public class CoordinatorController implements IRefreshable, Initializable {
             tController.setController(this);
             tController.setUser(this.user);
         }catch (IOException e) {
-            throw new RuntimeException(e);
+            restoreTimeLine();
         }
     }
 

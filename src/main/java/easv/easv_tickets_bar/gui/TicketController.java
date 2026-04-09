@@ -97,4 +97,11 @@ public class TicketController implements IPanel, Initializable {
         Thread thread = new Thread(task);
         thread.start();
     }
+
+    @FXML
+    private void onCancelClick(){
+        onClose();
+        Stage stage = (Stage) this.descriptionTextfield.getScene().getWindow();
+        stage.close();
+    }
 }
