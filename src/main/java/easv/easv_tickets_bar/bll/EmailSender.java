@@ -33,6 +33,7 @@ public class EmailSender {
                 }
             };
             Session session = Session.getInstance(this.emailProperties, auth);
+            session.setDebug(true);
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(this.emailProperties.getProperty("email")));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.toEmail));
@@ -48,9 +49,10 @@ public class EmailSender {
             Transport.send(message);
             return true;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
 
+        return false;
     }
 
 

@@ -4,6 +4,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
@@ -30,11 +31,11 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class Logic {
@@ -273,8 +275,21 @@ public class Logic {
     private void sendTickets(Event event, Ticket ticketType, String name, String secondName, String email, List<String> ticketIds) {
         try {
             List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
-            List<WritableImage> ticketsImages = generateTickets(event, qrCodes);
-            File pdfDocument = convertToPDF(ticketsImages, event.getNameForFile(), name + "_" + secondName);
+            List<String> qrBase64List = new ArrayList<>();
+            StringBuilder allTickets = new StringBuilder();
+            for (int i = 0; i < qrCodes.size(); i++) {
+                String base64 = convertQrToBase64(qrCodes.get(i));
+
+                String ticketHtml = generateSingleTicketHtml(event, base64);
+
+                allTickets.append(ticketHtml);
+
+                if (i < qrCodes.size() - 1) {
+                    allTickets.append("<div style='page-break-after: always;'></div>");
+                }
+            }
+            String finalHtml = wrapHtml(allTickets.toString());
+            File pdfDocument = convertToPDF(finalHtml,  event.getNameForFile() + "_" + name + "_" + secondName);
             EmailSender emailSender = new EmailSender(pdfDocument, email);
             boolean sent = emailSender.sendEmail(name, event.getName());
             if (sent) {
@@ -290,32 +305,232 @@ public class Logic {
         }
     }
 
-    private File convertToPDF(List<WritableImage> ticketsImages, String eventName, String userFullName) throws MyException {
-        try (PDDocument document = new PDDocument();){
-            for (WritableImage ticketImage : ticketsImages) {
-                BufferedImage img = SwingFXUtils.fromFXImage(ticketImage, null);
-                PDPage page = new PDPage();
-                document.addPage(page);
-                PDImageXObject pdImage = LosslessFactory.createFromImage(document, img);
-                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)){
-                    contentStream.drawImage(pdImage, 0, 0);
-                }
+    private String generateSingleTicketHtml(Event event, String base64Qr) throws IOException {
 
-            }
-            Path dirPath = Path.of("tickets");
-            dirPath.toFile().mkdirs();
-            Path targetPath = dirPath.resolve(eventName + "_" + userFullName + ".pdf");
-            int i = 1;
-            while (Files.exists(targetPath)) {
-                targetPath = dirPath.resolve(eventName + "_" + userFullName + "(" + i + ")" + ".pdf");
-                i++;
-            }
-            document.save(targetPath.toFile());
-            return targetPath.toFile();//return after
+        InputStream is = getClass().getResourceAsStream("/easv/easv_tickets_bar/gui/ticket.html");
+        if (is == null) {
+            throw new RuntimeException("HTML template not found");
         }
-        catch (IOException ex) {
-            throw new MyException("something went wrong while generating PDF");
+        String html = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+        html = html.replace("{{eventName}}", safe(escapeHtml(event.getName())));
+        html = html.replace("{{eventStartDate}}", safe(event.getStartDate().toString()));
+        html = html.replace("{{eventEndDate}}", safe(
+                event.getEndDate() != null ? event.getEndDate().toString() : "Not specified"
+        ));
+        html = html.replace("{{eventStartTime}}", safe(event.getStartTime().toString()));
+        html = html.replace("{{eventEndTime}}", safe(event.getEndTime().toString()));
+        html = html.replace("{{location}}", safe(escapeHtml(event.getLocation())));
+        html = html.replace("{{venue}}", safe(escapeHtml(event.getVenue())));
+        html = html.replace("{{locationGuidance}}", safe(escapeHtml(event.getLocationGuidance())));
+        html = html.replace("{{notes}}", safe(escapeHtml(event.getNotes())));
+        html = html.replace("{{qrCode}}", base64Qr);
+
+        return html;
+    }
+
+    private String safe(String value) {
+        return value != null ? value : "";
+    }
+
+    private String wrapHtml(String bodyContent) {
+        return """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\s
+                    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta charset="UTF-8" />
+                    <title>Tickets</title>
+                    <style>
+                            body {
+                                margin: 0;
+                                padding: 20px;
+                                background: #f0f0f0;
+                                font-family: Arial, sans-serif;
+                
+                                display: flex;
+                                justify-content: center;
+                            }
+                
+                            .ticket {
+                                width: 400px;
+                                background: white;
+                                border-radius: 12px;
+                                overflow: hidden;
+                                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                
+                                display: flex;
+                                flex-direction: column;
+                            }
+                
+                            /* HEADER */
+                            .header {
+                                background: linear-gradient(to right, #4facfe, #00f2fe);
+                                color: white;
+                                text-align: center;
+                                padding: 28px 24px 22px;
+                            }
+                
+                            .badge {
+                                font-size: 11px;
+                                font-weight: bold;
+                                margin-bottom: 8px;
+                                color: black
+                            }
+                
+                            .title {
+                                font-size: 24px;
+                                font-weight: bold;
+                                max-width: 340px;
+                                margin: 0 auto;
+                                word-wrap: break-word;
+                                color: black
+                            }
+                
+                            /* BODY */
+                            .body {
+                                padding: 20px 24px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 10px;
+                            }
+                
+                            .row {
+                                display: flex;
+                                gap: 12px;
+                            }
+                
+                            .column {
+                                flex: 1;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                            }
+                
+                            .section-label {
+                                font-size: 10px;
+                                font-weight: bold;
+                                color: #777;
+                            }
+                
+                            .value {
+                                font-size: 13px;
+                            }
+                
+                            .divider {
+                                height: 1px;
+                                background: #e0e0e0;
+                                margin: 10px 0;
+                            }
+                
+                            /* LOCATION BOX */
+                            .location-box {
+                                border-radius: 10px;
+                                background: #f7f7f7;
+                                padding: 10px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 8px;
+                            }
+                
+                            .location-row {
+                                display: flex;
+                                gap: 10px;
+                            }
+                
+                            .location-label {
+                                font-weight: bold;
+                                font-size: 12px;
+                                min-width: 120px;
+                            }
+                
+                            .location-value {
+                                font-size: 12px;
+                            }
+                
+                            /* QR */
+                            .qr-section {
+                                text-align: center;
+                                margin-top: 10px;
+                            }
+                
+                            .qr-label {
+                                font-size: 10px;
+                                font-weight: bold;
+                                margin-bottom: 10px;
+                            }
+                
+                            .qr-box {
+                                width: 120px;
+                                height: 120px;
+                                border: 1px dashed #ccc;
+                                margin: 0 auto;
+                
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                
+                            .qr-box img {
+                                max-width: 100%;
+                                max-height: 100%;
+                            }
+                
+                            /* FOOTER */
+                            .footer {
+                                height: 40px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                
+                                background: linear-gradient(to right, #4facfe, #00f2fe);
+                                color: white;
+                                font-size: 11px;
+                                font-weight: bold;
+                            }
+                
+                        </style>
+                </head>
+                <body>
+                """ + bodyContent + """
+                </body>
+                </html>
+        """;
+    }
+
+    private String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&apos;");
+    }
+
+    private File convertToPDF(String htmlContent, String fileName) throws MyException, IOException {
+        File dir = new File("tickets");
+        if (!dir.exists()) dir.mkdirs();
+
+        File pdfFile = new File(dir, fileName + ".pdf");
+        int i = 1;
+        while (pdfFile.exists()) {
+            pdfFile = new File(dir, fileName + "(" + i + ").pdf");
+            i++;
         }
+
+        try (OutputStream os = new FileOutputStream(pdfFile)) {
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.useFastMode();
+            builder.withHtmlContent(htmlContent, null);
+            builder.toStream(os);
+            builder.run();
+        } catch (Exception e) {
+            e.printStackTrace();  // <--- Добавили вывод полной ошибки
+            throw new IOException("Failed to generate PDF", e);
+        }
+
+        return pdfFile;
     }
 
     private List<WritableImage> generateTickets(Event event, List<BufferedImage> qrCodes) throws MyException {
@@ -360,6 +575,12 @@ public class Logic {
         } catch (Exception e) {
             throw new MyException("QR Code generating failed");
         }
+    }
+
+    private String convertQrToBase64(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baos);
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
     public boolean isValidEmail(String email) {

@@ -1,0 +1,79 @@
+<div class="ticket">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="badge">EVENT TICKET</div>
+        <div class="title">{{eventName}}</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+        <!-- Dates -->
+        <div class="row">
+            <div class="column">
+                <div class="section-label">START DATE</div>
+                <div class="value">{{eventStartDate}}</div>
+            </div>
+            <div class="column">
+                <div class="section-label">END DATE</div>
+                <div class="value">{{eventEndDate}}</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Time -->
+        <div class="row">
+            <div class="column">
+                <div class="section-label">START TIME</div>
+                <div class="value">{{eventStartTime}}</div>
+            </div>
+            <div class="column">
+                <div class="section-label">END TIME</div>
+                <div class="value">{{eventEndTime}}</div>
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="location-box">
+            <div class="location-row">
+                <div class="location-label">Location:</div>
+                <div class="location-value">{{location}}</div>
+            </div>
+
+            <div class="location-row">
+                <div class="location-label">Venue:</div>
+                <div class="location-value">{{venue}}</div>
+            </div>
+
+            <div class="location-row">
+                <div class="location-label">Location Guidance:</div>
+                <div class="location-value">{{locationGuidance}}</div>
+            </div>
+
+            <div class="location-row">
+                <div class="location-label">Notes:</div>
+                <div class="location-value">{{notes}}</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- QR -->
+        <div class="qr-section">
+            <div class="qr-label">SCAN TO VERIFY</div>
+
+            <div class="qr-box">
+                <img src="data:image/png;base64,{{qrCode}}" />
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        Valid for one-time entry only
+    </div>
+
+</div>
