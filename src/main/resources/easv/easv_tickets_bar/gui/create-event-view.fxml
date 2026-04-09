@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="800.0" spacing="15.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.EventController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="800.0" spacing="10.0" stylesheets="@css/coordinator-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.EventController">
     <children>
           <HBox alignment="CENTER_LEFT" minHeight="58" spacing="10.0" styleClass="gradient-light-indigo">
               <padding>
@@ -26,104 +26,203 @@
             </Label>
          </children>
       </HBox>
-      <VBox prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
+      <VBox maxWidth="850.0" prefHeight="200.0" spacing="20.0" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Region id="calendar-icon" maxHeight="-Infinity" prefHeight="15.0" prefWidth="15.0" styleClass="light-blue-c" />
-                  <Label styleClass="light-blue-c-text" text="Basic Information">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font></Label>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <TextField fx:id="nameInput" focusTraversable="false" prefHeight="49.0" prefWidth="149.0" promptText="Event Name *" />
-                  <VBox prefHeight="29.0" prefWidth="371.0" spacing="15.0" HBox.hgrow="ALWAYS">
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <HBox prefHeight="100.0" prefWidth="186.0" spacing="15.0">
+                        <Region id="calendar-icon" maxHeight="-Infinity" prefHeight="15.0" prefWidth="15.0" styleClass="light-blue-c" />
+                        <Label styleClass="light-blue-c-text" text="Basic Information">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
+                     <children>
+                        <VBox alignment="CENTER">
                            <children>
-                              <TextField fx:id="startTimeInput" focusTraversable="false" prefHeight="49.0" promptText="Start Time *" />
-                              <DatePicker fx:id="startDateInput" focusTraversable="false" prefHeight="49.0" promptText="Start Date *" styleClass="date-picker" />
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label styleClass="gray-c-text" text="Event Name: " />
+                                    <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="nameInput" focusTraversable="false" prefHeight="33.0" />
                            </children>
-                        </HBox>
-                        <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="186.0" spacing="15.0">
+                        </VBox>
+                        <VBox spacing="15.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="endTimeInput" focusTraversable="false" prefHeight="49.0" promptText="End Time" />
-                              <DatePicker fx:id="endDateInput" focusTraversable="false" prefHeight="49.0" promptText="End Date" styleClass="date-picker" />
+                              <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="46.0" spacing="5.0">
+                                       <children>
+                                          <HBox fx:id="textContainer" alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label styleClass="gray-c-text" text="Start Time: " />
+                                                <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="startTimeInput" focusTraversable="false" prefHeight="49.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="46.0" spacing="5.0">
+                                       <children>
+                                          <HBox fx:id="textContainer2" alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label styleClass="gray-c-text" text="Start Date: " />
+                                                <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                             </children>
+                                          </HBox>
+                                          <DatePicker fx:id="startDateInput" focusTraversable="false" prefHeight="49.0" styleClass="date-picker" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="10.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="46.0" spacing="5.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" minWidth="${textContainer.width}">
+                                             <children>
+                                                <Label styleClass="gray-c-text" text="End Time: " />
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="endTimeInput" focusTraversable="false" prefHeight="49.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="46.0" spacing="5.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" minWidth="${textContainer2.width}">
+                                             <children>
+                                                <Label styleClass="gray-c-text" text="End Date: " />
+                                             </children>
+                                          </HBox>
+                                          <DatePicker fx:id="endDateInput" focusTraversable="false" prefHeight="49.0" styleClass="date-picker" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
                            </children>
-                        </HBox>
-                     </children></VBox>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </VBox>
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Region id="pin-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="light-green-c" />
+                        <Label styleClass="light-green-c-text" text="Location Details">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label styleClass="gray-c-text" text="City/Location: " />
+                                    <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="locationInput" focusTraversable="false" prefHeight="49.0" />
+                           </children>
+                        </VBox>
+                        <VBox layoutX="10.0" layoutY="10.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label styleClass="gray-c-text" text="Venue Name: " />
+                                    <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="venueInput" focusTraversable="false" prefHeight="49.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="25.0" layoutY="39.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox>
+                           <children>
+                              <Label styleClass="gray-c-text" text="Location Guidance: " />
+                              <TextField fx:id="guidanceInput" focusTraversable="false" prefHeight="49.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </VBox>
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Region id="docs-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="indigo-c" />
+                        <Label styleClass="indigo-c-text" text="Event Details">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox>
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label styleClass="gray-c-text" text="Description: " />
+                                    <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="notesInput" focusTraversable="false" prefHeight="87.0" prefWidth="149.0" styleClass="text-area" wrapText="true" />
+                           </children>
+                        </VBox>
+                        <VBox layoutX="10.0" layoutY="10.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label styleClass="gray-c-text" text="Max Capacity: " />
+                                    <Region id="asterisk-icon" maxHeight="-Infinity" prefHeight="11.0" prefWidth="11.0" styleClass="important-red-c" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="capacityInput" focusTraversable="false" prefHeight="49.0" />
+                           </children>
+                        </VBox>
+                        <Label fx:id="errorLabel" managed="false" text="Label" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </VBox>
          </children>
-         <padding>
-            <Insets left="15.0" />
-         </padding>
       </VBox>
-      <VBox layoutX="10.0" layoutY="68.0" prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Region id="pin-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="light-green-c" />
-                  <Label styleClass="light-green-c-text" text="Location Details">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
-            <HBox prefWidth="200.0" spacing="15.0">
-               <children>
-                  <TextField fx:id="locationInput" focusTraversable="false" prefHeight="49.0" promptText="City/Location *" />
-                  <TextField fx:id="venueInput" focusTraversable="false" prefHeight="49.0" promptText="Venue Name *" />
-               </children>
-            </HBox>
-            <HBox layoutX="25.0" layoutY="39.0" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <TextField fx:id="guidanceInput" focusTraversable="false" prefHeight="49.0" promptText="Location Guidance" />
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets left="15.0" />
-         </padding>
-      </VBox>
-      <VBox layoutX="10.0" layoutY="168.0" prefWidth="800.0" spacing="10.0" VBox.vgrow="ALWAYS">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Region id="docs-icon" maxHeight="-Infinity" prefHeight="20.0" prefWidth="15.0" styleClass="indigo-c" />
-                  <Label styleClass="indigo-c-text" text="Event Details">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <TextField fx:id="notesInput" focusTraversable="false" prefHeight="87.0" prefWidth="149.0" promptText="Description *" />
-                  <TextField fx:id="capacityInput" focusTraversable="false" prefHeight="49.0" promptText="Max Capacity *" />
-                  <Label fx:id="errorLabel" managed="false" text="Label" />
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets left="15.0" />
-         </padding>
-      </VBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+      <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
             <Button fx:id="finishBtn" mnemonicParsing="false" onAction="#onCreateEvent" prefHeight="25.0" prefWidth="129.0" text="CREATE EVENT">
@@ -134,7 +233,7 @@
             </Button>
          </children>
          <padding>
-            <Insets right="20.0" />
+            <Insets bottom="20.0" right="20.0" />
          </padding>
       </HBox>
     </children>

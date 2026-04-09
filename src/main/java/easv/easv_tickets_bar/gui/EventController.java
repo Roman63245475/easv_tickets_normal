@@ -8,10 +8,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -34,7 +31,7 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @FXML private TextField locationInput;
     @FXML private TextField venueInput;
     @FXML private TextField guidanceInput;
-    @FXML private TextField notesInput;
+    @FXML private TextArea notesInput;
     @FXML private TextField capacityInput;
 
     @FXML private Button finishBtn;

@@ -33,7 +33,6 @@ public class AdminController implements Initializable, IRefreshable{
 
     //users table and it's columns
     @FXML private TableView<User> usersTable;
-    @FXML private TableColumn<User, Integer> userIdColumn;
     @FXML private TableColumn<User, String> userUsernameColumn;
     @FXML private TableColumn<User, String> userRoleColumn;
 
@@ -99,13 +98,11 @@ public class AdminController implements Initializable, IRefreshable{
 
     private void setupUserTableColumns() {
         usersTable.setItems(userList);
-        userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         userUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         userRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
     }
 
     private void setUpColumnsAlignment(){
-        userIdColumn.setStyle("-fx-alignment: CENTER;");
         userUsernameColumn.setStyle("-fx-alignment: CENTER;");
         userRoleColumn.setStyle("-fx-alignment: CENTER;");
     }
