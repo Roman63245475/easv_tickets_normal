@@ -119,7 +119,7 @@ public class TicketAccessObject {
                         System.out.println("sold_amount: " + sold_amount);
                         System.out.println("tickets left: " + (capacity - sold_amount));
                         if (capacity - sold_amount >= ticketIds.size()) {
-                            try (PreparedStatement ps2 = con.prepareStatement("insert into tickets(id, typeId, CustomerName, CustomerEmail, IsScanned, second_name, qr_generated) values (?, ?, ?, ?, ?, ?, ?)")){
+                            try (PreparedStatement ps2 = con.prepareStatement("insert into tickets(id, typeId, CustomerName, CustomerEmail, IsScanned, second_name, is_sent) values (?, ?, ?, ?, ?, ?, ?)")){
                                 for (String uniqueTicketId : ticketIds) {
                                     //String uniqueTicketId = java.util.UUID.randomUUID().toString();
                                     ps2.setString(1, uniqueTicketId);
@@ -177,12 +177,15 @@ public class TicketAccessObject {
         //return true;
     }
 
-    public void markQrCodeGenerated(String ticketId) throws DataBaseConnectionException {
+    public void markEmailSent(List<String> ticketIds) throws DataBaseConnectionException {
         try (Connection con = connectionManager.getConnection()){
-            try(PreparedStatement ps = con.prepareStatement("Update tickets SET qr_generated = ? WHERE tickets.id = ?")){
-                ps.setBoolean(1, true);
-                ps.setString(2, ticketId);
-                ps.executeUpdate();
+            try(PreparedStatement ps = con.prepareStatement("Update tickets SET is_sent = ? WHERE tickets.id = ?")){
+                for (String uniqueTicketId : ticketIds) {
+                    ps.setBoolean(1, true);
+                    ps.setString(2, uniqueTicketId);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
             }
         } catch (SQLException e) {
             if (e.getSQLState().startsWith("08")) {
