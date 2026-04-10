@@ -44,7 +44,7 @@ public class Event {
         this.nameForFile = name.replace(" ", "_");
     }
 
-    public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location) {
+    public Event(int id, String name, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, String location, String venue, String locationGuidance, String notes, int capacity) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -52,6 +52,10 @@ public class Event {
         this.endDate = endDate;
         this.endTime = endTime;
         this.location = location;
+        this.venue = venue;
+        this.locationGuidance = locationGuidance;
+        this.notes = notes;
+        this.capacity = capacity;
     }
 
     public int getId() {

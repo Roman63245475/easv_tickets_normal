@@ -223,6 +223,21 @@ public class AdminController implements Initializable, IRefreshable{
     }
 
     @FXML
+    public void editEvent(){
+        Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent == null) return;
+        try{
+            stopAutoRefresh();
+            Object obj = openWindow.openNewWindow("create-event-view.fxml", "Edit Event", true);
+            EventController eController = (EventController) obj;
+            eController.setController(this);
+            eController.setEvent(selectedEvent);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
     private void assignCoordinator(){
         Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
         if (selectedEvent == null){
