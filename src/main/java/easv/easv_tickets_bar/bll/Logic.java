@@ -1,7 +1,6 @@
 package easv.easv_tickets_bar.bll;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
@@ -10,35 +9,17 @@ import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.CustomExceptions.MyException;
 import easv.easv_tickets_bar.be.*;
-import easv.easv_tickets_bar.gui.TicketController;
 import easv.easv_tickets_bar.repo.EventCoordinatorRepository;
 import easv.easv_tickets_bar.repo.EventRepository;
 import easv.easv_tickets_bar.repo.TicketRepository;
 import easv.easv_tickets_bar.repo.UserRepository;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -244,9 +225,12 @@ public class Logic {
         }
     }
 
-    public void sellTicket(Event event, Ticket ticketType, String name, String secondName, String email, String quantity) throws Exception {
-        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName) || ticketType == null) {
+    public List<String> sellTicket(Event event, Ticket ticketType, String name, String secondName, String email, String quantity) throws Exception {
+        if (isInvalidString(name) || !isValidEmail(email) || isInvalidString(secondName)) {
             throw new MyException("Make sure fields are filled out.");
+        }
+        if (ticketType == null){
+            throw new MyException("You can't buy tickets right now as they were not created yet.");
         }
         List<String> ticketIds = new ArrayList<>();
         int validatedQuantity = validateQuantity(quantity);
@@ -255,9 +239,9 @@ public class Logic {
         }
         int id = event.getId();
         int ticketTypeId = ticketType.getId();
-        if (ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds)){
-            sendTickets(event, ticketType, name, secondName, email, ticketIds);
-        }
+        ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds);
+        return ticketIds;
+            //sendTickets(event, ticketType, name, secondName, email, ticketIds);
     }
 
 //    int id = rs.getInt("EventID");
@@ -271,7 +255,7 @@ public class Logic {
 //    int capacity = rs.getInt("Capacity");
 //    int count = rs.getInt("CoordinatorCount");
 //    int sold_amount = rs.getInt("sold_amount")
-    private void sendTickets(Event event, Ticket ticketType, String name, String secondName, String email, List<String> ticketIds) {
+    public void sendTickets(Event event, String name, String secondName, String email, List<String> ticketIds) {
         try {
             List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
             List<String> qrBase64List = new ArrayList<>();

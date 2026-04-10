@@ -1,5 +1,6 @@
 package easv.easv_tickets_bar.gui;
 
+import com.beust.jcommander.internal.Lists;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.Ticket;
 import easv.easv_tickets_bar.bll.Logic;
@@ -34,7 +35,8 @@ public class SellTicketController implements Initializable, IPanel {
     private IRefreshable cController;
     private ObservableList<Ticket> tickets =  FXCollections.observableArrayList();
     private Event event;
-    private boolean isSelling = false;
+
+    private Task<List<String>> dbTask;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,33 +62,40 @@ public class SellTicketController implements Initializable, IPanel {
         Ticket ticketType = ticketTypeBox.getSelectionModel().getSelectedItem();
         Button btn = (Button) actionEvent.getSource();
 
-        Task<Void> sellTicketTask = new Task<>() {
+        dbTask = new Task<>() {
             @Override
-            protected Void call() throws Exception {
-                isSelling = true;
-                logic.sellTicket(event, ticketType, name, secondName, email, quantity);
-                return null;
+            protected List<String> call() throws Exception {
+                return logic.sellTicket(event, ticketType, name, secondName, email, quantity);
             }
         };
 
-        cancelButton.disableProperty().bind(sellTicketTask.runningProperty());
-        sendTicketButton.disableProperty().bind(sellTicketTask.runningProperty());
+        cancelButton.disableProperty().bind(dbTask.runningProperty());
+        sendTicketButton.disableProperty().bind(dbTask.runningProperty());
 
-        sellTicketTask.setOnSucceeded(event -> {
-            isSelling = false;
+        dbTask.setOnSucceeded(event -> {
             Stage stage = (Stage) btn.getScene().getWindow();
-            cController.refreshTable();
-            cController.restoreTimeLine();
+            onClose();
             stage.close();
+            startBackgroundTask(this.event, name, secondName, email, dbTask.getValue());
         });
 
-        sellTicketTask.setOnFailed(event -> {
-            isSelling = false;
+        dbTask.setOnFailed(event -> {
             errorLabel.setOpacity(1);
-            errorLabel.setText(sellTicketTask.getException().getMessage());
+            errorLabel.setText(dbTask.getException().getMessage());
         });
 
-        new Thread(sellTicketTask).start();
+        new Thread(dbTask).start();
+    }
+
+    private void startBackgroundTask(Event event, String name, String secondName, String email, List<String> ids) {
+        Task<Void> sendEmailsTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                logic.sendTickets(event, name, secondName, email, ids);
+                return null;
+            }
+        };
+        new Thread(sendEmailsTask).start();
     }
 
 //    public void setTicket(TicketEvent ticket) {
@@ -127,11 +136,19 @@ public class SellTicketController implements Initializable, IPanel {
     public void setController(IRefreshable controller) {
         this.cController = controller;
         Stage stage = (Stage) firstNameField.getScene().getWindow();
-        stage.setOnCloseRequest(e->onClose());
+        stage.setOnCloseRequest(e -> {
+            if (dbTask != null && dbTask.isRunning()) {
+                e.consume();
+            }
+            else{
+                onClose();
+            }
+        });
     }
 
     @Override
     public void onClose() {
+        cController.refreshTable();
         cController.restoreTimeLine();
     }
 }

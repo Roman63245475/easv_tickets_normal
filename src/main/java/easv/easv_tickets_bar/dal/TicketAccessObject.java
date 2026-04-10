@@ -158,7 +158,7 @@ public class TicketAccessObject {
             else{
                 try {
                     con.rollback();
-                    return false;
+                    throw new MyException("Sorry something went wrong because our developer is an idiot");
                 } catch (SQLException ex) {
                     throw new RuntimeException("Rollback failed", ex);
                 }
