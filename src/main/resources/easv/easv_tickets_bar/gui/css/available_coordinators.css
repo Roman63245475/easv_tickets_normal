@@ -1,10 +1,19 @@
 .mainPane{
-    -fx-background-color: linear-gradient(to bottom right, deeppink, lightblue);
+    -fx-background-color: linear-gradient(to bottom right, #b95fc3, #e6a9ec);
 }
 
-.ok_button{
-    -fx-background-color: linear-gradient(to bottom right, deeppink, blue);
-    -fx-background-radius: 12;
+.button{
+    -fx-cursor: hand;
+    -fx-background-color: rgba(176, 65, 191, 0.1);
+    -fx-border-color: #b95fc3;
+    -fx-text-fill: #b95fc3;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.button:hover{
+    -fx-background-color: #b95fc3;
+    -fx-text-fill: white;
 }
 
 .label_text{

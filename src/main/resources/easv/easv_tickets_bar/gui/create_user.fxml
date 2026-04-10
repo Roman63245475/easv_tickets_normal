@@ -9,7 +9,7 @@
    <children>
       <VBox alignment="CENTER" prefHeight="143.0" prefWidth="470.0" styleClass="background_color_orange">
          <children>
-            <Label styleClass="text" text="Create New User">
+            <Label fx:id="titleLabelTop" styleClass="text" text="Create New User">
                <font>
                   <Font size="23.0" />
                </font>
@@ -17,66 +17,78 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <Label styleClass="text" text="Set up a new account with username and permissions">
+            <Label fx:id="titleLabelBottom" styleClass="text" text="Set up a new account with username and permissions">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <VBox prefHeight="423.0" prefWidth="470.0">
+      <VBox alignment="CENTER" prefHeight="423.0" prefWidth="470.0" spacing="10.0">
          <children>
-            <Label text="Username">
-               <VBox.margin>
-                  <Insets top="60.0" />
-               </VBox.margin>
-               <padding>
-                  <Insets left="30.0" />
-               </padding>
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <TextField fx:id="userNameField" maxWidth="410.0" prefHeight="31.0" prefWidth="410.0" promptText="Enter username" styleClass="fields">
-               <VBox.margin>
-                  <Insets left="30.0" top="5.0" />
-               </VBox.margin>
-            </TextField>
-            <Label layoutX="10.0" layoutY="70.0" text="Password">
-               <padding>
-                  <Insets left="30.0" />
-               </padding>
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="25.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="passwordField" maxWidth="410.0" prefHeight="31.0" promptText="Enter password" styleClass="fields">
-               <VBox.margin>
-                  <Insets left="30.0" top="5.0" />
-               </VBox.margin>
-            </TextField>
-            <Label layoutX="10.0" layoutY="153.0" text="User Role">
-               <padding>
-                  <Insets left="30.0" />
-               </padding>
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <VBox.margin>
-                  <Insets top="25.0" />
-               </VBox.margin>
-            </Label>
-            <ComboBox fx:id="userRoleBox" maxWidth="410.0" prefHeight="34.0" prefWidth="410.0" promptText="Select user role" styleClass="fields">
-               <VBox.margin>
-                  <Insets left="30.0" top="5.0" />
-               </VBox.margin>
-            </ComboBox>
+            <VBox alignment="CENTER" prefWidth="100.0">
+               <children>
+                  <Label text="Username">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="userNameField" maxWidth="410.0" prefHeight="31.0" prefWidth="410.0" promptText="Enter username" styleClass="fields">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="100.0">
+               <children>
+                  <Label text="Password">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" maxWidth="410.0" prefWidth="200.0" styleClass="fields">
+                     <children>
+                        <StackPane prefWidth="200.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <PasswordField fx:id="passwordField" maxWidth="400.0" prefHeight="32.0" prefWidth="370.0" styleClass="fields" />
+                              <TextField fx:id="revealField" maxWidth="400.0" prefHeight="32.0" prefWidth="370.0" styleClass="fields" visible="false" />
+                           </children>
+                        </StackPane>
+                        <Region id="open-eye-icon" fx:id="eyeIcon" maxHeight="15.0" minHeight="15.0" onMouseClicked="#toggleVisibility" prefHeight="7.0" prefWidth="23.0" styleClass="darken-c" />
+                     </children>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="100.0">
+               <children>
+                  <Label text="User Role">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <ComboBox fx:id="userRoleBox" maxWidth="410.0" prefHeight="34.0" prefWidth="410.0" promptText="Select user role" styleClass="fields">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ComboBox>
+               </children>
+            </VBox>
             <Label fx:id="errorLabel" text="Label">
                <VBox.margin>
-                  <Insets left="30.0" top="5.0" />
+                  <Insets />
                </VBox.margin>
                <font>
                   <Font size="14.0" />
@@ -84,7 +96,7 @@
             </Label>
             <Button fx:id="createUserButton" maxWidth="410.0" mnemonicParsing="false" onAction="#createUser" prefHeight="51.0" prefWidth="410.0" styleClass="create_user_button" text="Create user">
                <VBox.margin>
-                  <Insets left="30.0" top="20.0" />
+                  <Insets />
                </VBox.margin>
                <font>
                   <Font size="19.0" />

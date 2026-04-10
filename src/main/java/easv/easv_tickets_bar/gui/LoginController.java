@@ -16,7 +16,9 @@ import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,9 +28,12 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML private TextField usernameField;
-    @FXML private TextField passwordField;
+    @FXML private TextField revealField;
+    @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
     @FXML private Button loginButton;
+
+    @FXML private Region eyeIcon;
 
     private Logic logic;
     private OpenWindow openWindow;
@@ -42,6 +47,7 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.errorLabel.setStyle("-fx-text-fill: red");
         this.errorLabel.setOpacity(0.0);
+        revealField.textProperty().bindBidirectional(passwordField.textProperty());
     }
 
 
@@ -92,6 +98,19 @@ public class LoginController implements Initializable {
             this.errorLabel.setOpacity(1.0);
         });
         new Thread(loginTask).start();
+    }
+
+    @FXML
+    private void toggleVisibility() {
+        if (passwordField.isVisible()) {
+            eyeIcon.setId("closed-eye-icon");
+            passwordField.setVisible(false);
+            revealField.setVisible(true);
+        }else{
+            eyeIcon.setId("open-eye-icon");
+            passwordField.setVisible(true);
+            revealField.setVisible(false);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 
 .button{
     -fx-background-color: transparent;
+    -fx-cursor: hand;
 }
 
 .text-field{
@@ -102,6 +103,19 @@
     -fx-text-fill: #20c997;
     -fx-border-radius: 4px;
     -fx-border-width: 1px;
+}
+
+.button-sell{
+    -fx-background-color: rgba(245, 158, 11, 0.1);
+    -fx-border-color: #f59e0b;
+    -fx-text-fill: #f59e0b;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.button-sell:hover{
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: white;
 }
 
 .gray-c-text{

@@ -7,62 +7,65 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" styleClass="primary_vbox" stylesheets="@css/login-styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.easv_tickets_bar.gui.LoginController">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="120.0" prefWidth="500.0" styleClass="header_vbox">
+      <VBox alignment="CENTER" maxHeight="350.0" prefHeight="120.0" prefWidth="500.0" styleClass="header_vbox" VBox.vgrow="ALWAYS">
          <children>
             <Label styleClass="welcome_text" text="Welcome Back">
-               <padding>
-                  <Insets top="25.0" />
-               </padding>
                <font>
                   <Font size="27.0" />
                </font>
             </Label>
             <Label styleClass="welcome_text" text="Enter your credentials to access your account">
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <VBox prefHeight="291.0" prefWidth="426.0" styleClass="main_vbox">
+      <VBox alignment="CENTER" prefHeight="291.0" prefWidth="426.0" spacing="5.0" styleClass="main_vbox" VBox.vgrow="ALWAYS">
          <children>
             <Label text="Username">
                <VBox.margin>
-                  <Insets left="25.0" top="45.0" />
+                  <Insets />
                </VBox.margin>
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameField" maxWidth="400.0" prefHeight="32.0" prefWidth="400.0" promptText="username_example" styleClass="fields" text="event_kalivan">
+            <TextField fx:id="usernameField" maxWidth="400.0" prefHeight="32.0" prefWidth="400.0" styleClass="fields" text="event_kalivan">
                <VBox.margin>
-                  <Insets left="25.0" top="5.0" />
+                  <Insets />
                </VBox.margin>
             </TextField>
             <Label text="Password">
                <VBox.margin>
-                  <Insets left="25.0" top="20.0" />
+                  <Insets />
                </VBox.margin>
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="passwordField" layoutX="35.0" layoutY="86.0" maxWidth="400.0" prefHeight="32.0" prefWidth="400.0" promptText="Enter your password " styleClass="fields" text="eboboshka">
-               <VBox.margin>
-                  <Insets left="25.0" top="5.0" />
-               </VBox.margin>
-            </TextField>
+            <HBox alignment="CENTER_LEFT" maxWidth="400.0" prefWidth="200.0" styleClass="fields">
+               <children>
+                  <StackPane prefWidth="200.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <PasswordField fx:id="passwordField" maxWidth="400.0" prefHeight="32.0" prefWidth="370.0" styleClass="fields" text="eboboshka" />
+                        <TextField fx:id="revealField" maxWidth="400.0" prefHeight="32.0" prefWidth="370.0" styleClass="fields" visible="false" />
+                     </children>
+                  </StackPane>
+                  <Region id="open-eye-icon" fx:id="eyeIcon" maxHeight="15.0" minHeight="15.0" onMouseClicked="#toggleVisibility" prefHeight="7.0" prefWidth="23.0" styleClass="darken-c" />
+               </children>
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </HBox>
             <Label fx:id="errorLabel" text="Label">
                <VBox.margin>
-                  <Insets left="30.0" top="5.0" />
+                  <Insets />
                </VBox.margin>
             </Label>
             <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginClick" prefHeight="46.0" prefWidth="427.0" styleClass="login_button" text="Log In">
                <VBox.margin>
-                  <Insets left="150.0" top="5.0" />
+                  <Insets />
                </VBox.margin>
             </Button>
          </children>

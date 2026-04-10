@@ -1,6 +1,7 @@
 
 .button{
     -fx-background-color: transparent;
+    -fx-cursor: hand;
 }
 
 .white-c-text {
@@ -13,6 +14,27 @@
 
 .bg-top-bar-gradient{
     -fx-background-color: linear-gradient(to right, #8b5cf6, #ec4899);
+}
+
+.button-secondary{
+    -fx-background-color: rgba(131, 131, 131, 0.1);
+    -fx-border-color: #5c45ae;
+    -fx-text-fill: #8b5cf6;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.button-delete{
+    -fx-background-color: rgba(223, 66, 98, 0.1);
+    -fx-border-color: #df4262;
+    -fx-text-fill: #e11d48;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.button-delete:hover{
+    -fx-background-color: #e11d48;
+    -fx-text-fill: white;
 }
 
 .white-c{

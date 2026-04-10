@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -17,11 +18,18 @@ import java.util.ResourceBundle;
 public class AddEditUserController implements IUserPanel, Initializable, IPanel {
 
 
-    @FXML private TextField passwordField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField revealField;
     @FXML private TextField userNameField;
     @FXML private ComboBox<Role> userRoleBox;
+
     @FXML private Label errorLabel;
+    @FXML private Label titleLabelTop;
+    @FXML private Label titleLabelBottom;
+
     @FXML private Button createUserButton;
+
+    @FXML private Region eyeIcon;
 
     private Logic logic;
     private User user;
@@ -36,6 +44,8 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
     @Override
     public void setUser(User user) {
         this.user = user;
+        titleLabelTop.setText("Edit User");
+        titleLabelBottom.setText("Edit an existing account");
         createUserButton.setText("Edit User");
         createUserButton.setOnAction(e -> {editUser();});
         fillFields();
@@ -111,6 +121,7 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
         this.userRoleBox.getItems().setAll(Role.values());
         this.errorLabel.setStyle("-fx-text-fill: red");
         this.errorLabel.setOpacity(0.0);
+        revealField.textProperty().bindBidirectional(passwordField.textProperty());
     }
 
     private void fillFields(){
@@ -149,4 +160,18 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
         });
         new Thread(editUserTask).start();
     }
+
+    @FXML
+    private void toggleVisibility() {
+        if (passwordField.isVisible()) {
+            eyeIcon.setId("closed-eye-icon");
+            passwordField.setVisible(false);
+            revealField.setVisible(true);
+        }else{
+            eyeIcon.setId("open-eye-icon");
+            passwordField.setVisible(true);
+            revealField.setVisible(false);
+        }
+    }
+
 }

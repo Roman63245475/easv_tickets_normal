@@ -101,7 +101,7 @@ public class Logic {
 
     public void validateEventData(String name, String startTimeStr, String endTimeStr, LocalDate startDate, LocalDate endDate, String location, String venue, String guidance, String notes, String capacityStr) throws MyException {
         if (isInvalidString(name) || isInvalidString(location) || isInvalidString(venue) || isInvalidString(notes)) {
-            throw new MyException("Make sure Name, Start Time, Location, Venue and Capacity fields are filled out!");
+            throw new MyException("Make sure fields with big red star are filled out!");
         }
         if (startDate == null) {
             throw new MyException("Please select a valid Start Date and End Date");
