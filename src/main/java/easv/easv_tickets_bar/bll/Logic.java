@@ -221,7 +221,7 @@ public class Logic {
             }
         }
         catch (NumberFormatException ex) {
-            throw new MyException("Quantity must be a positive number and ");
+            throw new MyException("Quantity must be a positive number");
         }
     }
 
