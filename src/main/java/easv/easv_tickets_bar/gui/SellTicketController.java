@@ -28,6 +28,7 @@ public class SellTicketController implements Initializable, IPanel {
     @FXML private TextField amountField;
     @FXML private ComboBox<Ticket> ticketTypeBox;
     @FXML private Label totalSum;
+    @FXML private Label priceLabel;
     @FXML private Button cancelButton;
     @FXML private Button sendTicketButton;
 
@@ -42,6 +43,41 @@ public class SellTicketController implements Initializable, IPanel {
     public void initialize(URL location, ResourceBundle resources) {
         UIHelper.numberInputValidator(amountField);
         ticketTypeBox.setItems(tickets);
+
+        amountField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updatePrice();
+        });
+
+        ticketTypeBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updatePrice();
+        });
+    }
+
+    private void updatePrice(){
+        Ticket selectedTicket = ticketTypeBox.getSelectionModel().getSelectedItem();
+        String amount = amountField.getText();
+
+        if (selectedTicket == null) {
+            priceLabel.setText("Price for one: 0kr.");
+            totalSum.setText("Total: 0kr.");
+            return;
+        }
+
+        priceLabel.setManaged(true);
+        totalSum.setManaged(true);
+        priceLabel.setText("Price for one: " + selectedTicket.getPrice() + "kr.");
+
+        if (amountField == null || amount.isBlank()){
+            totalSum.setText("Total: 0kr.");
+            return;
+        }
+
+        try{
+            int quantity = Integer.parseInt(amountField.getText());
+            totalSum.setText("Total: " + selectedTicket.getPrice() * quantity + "kr.");
+        } catch (NumberFormatException e) {
+            totalSum.setText("Total: Max limit reached");
+        }
     }
 
 
