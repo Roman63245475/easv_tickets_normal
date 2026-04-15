@@ -75,21 +75,7 @@ public class AdminController implements Initializable, IRefreshable{
         setupEventTableColumns();
         setUpColumnsAlignment();
         fillEventTable();
-
-        //setupUserTableColumns();
-        //userTable.setItems(FXCollections.observableArrayList());
     }
-
-    private void updateAllTables() {
-    }
-
-
-//    private List<User> getUsersWithoutCurrent() {
-//        List<User> users = new ArrayList<>();
-//        if (user == null) return users;
-//        users = logic.getUsersWithoutCurrent(user.getId());
-//        return users;
-//    }
 
     private void fillUserTable(List<User> users){
         userList.setAll(users);
@@ -306,9 +292,6 @@ public class AdminController implements Initializable, IRefreshable{
         });
         deleteUserTask.setOnFailed(e -> {
             Throwable ex = deleteUserTask.getException();
-            System.out.println(ex.getMessage());
-            //need to use a label or alert
-            this.deleteButton.setDisable(false);
         });
 
         new Thread(deleteUserTask).start();

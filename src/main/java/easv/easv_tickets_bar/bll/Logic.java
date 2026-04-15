@@ -45,11 +45,6 @@ public class Logic {
                 throw new LoginException("password doesn't match");
             }
         } catch (DataBaseConnectionException | LoginException ex) {
-            if (ex instanceof DataBaseConnectionException) {
-                System.out.println("do some job");
-            } else {
-                System.out.println("do some otehr job");
-            }
             throw new MyException(ex.getMessage());
         }
     }
@@ -66,11 +61,6 @@ public class Logic {
                 String hashed_password = passwordEncoder.encode(password);
                 userRepo.createUser(username, hashed_password, role);
             } catch (DataBaseConnectionException | DuplicateException ex) {
-                if (ex instanceof DataBaseConnectionException) {
-                    System.out.println("do some job");
-                } else {
-                    System.out.println("do some otehr job");
-                }
                 throw new MyException(ex.getMessage());
             }
         }
@@ -85,12 +75,14 @@ public class Logic {
             throw new MyException("Make sure fields with big red star are filled out!");
         }
         if (startDate == null) {
-            throw new MyException("Please select a valid Start Date and End Date");
+            throw new MyException("Please select a valid Start Date");
+        }
+        if (endDate != null && endDate.isBefore(startDate)) {
+            throw new MyException("End Date cannot be earlier than Start Date");
         }
         LocalTime startTime, endTime;
         try {
             startTime = LocalTime.parse(startTimeStr);
-            //endTime = LocalTime.parse(endTimeStr);
         } catch (DateTimeParseException ex) {
             throw new MyException("Please fill out the time fields correctly (hh:mm)");
         }
@@ -128,7 +120,6 @@ public class Logic {
         try {
             return eventRepo.getEvents(userId);
         } catch (DataBaseConnectionException ex) {
-            System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
 
@@ -147,10 +138,8 @@ public class Logic {
         }
         catch (DataBaseConnectionException | DuplicateException ex) {
             if (ex instanceof DataBaseConnectionException) {
-                System.out.println("do some certain job");
                 throw new MyException(ex.getMessage());
             }
-            System.out.println("do some other job");
             throw new MyException(ex.getMessage());
         }
 
@@ -162,7 +151,6 @@ public class Logic {
             List<User> users = userRepo.getUsersWithoutCurrent(id);
             return users;
         } catch (DataBaseConnectionException ex) {
-            System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
 
@@ -176,7 +164,6 @@ public class Logic {
         try {
             eventRepo.deleteSelectedEvent(selectedEvent);
         } catch (DataBaseConnectionException ex) {
-            System.out.println("simulating sone job");
             throw new MyException(ex.getMessage());
         }
 
@@ -186,7 +173,6 @@ public class Logic {
         try {
             return eventCoordinatorRepo.getAvailableEventCoordinators(selectedEvent);
         } catch (DataBaseConnectionException ex) {
-            System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
 
@@ -196,21 +182,10 @@ public class Logic {
         try {
             eventCoordinatorRepo.assignCoordinator(event, selectedCoordinator);
         } catch (DataBaseConnectionException ex) {
-            System.out.println("do some job");
             throw new MyException(ex.getMessage());
         }
 
     }
-
-//    public List<Ticket> getTicketsByCoordinator(int id) throws MyException {
-//        try {
-//            return ticketRepo.getTicketsByCoordinator(id);
-//        } catch (DataBaseConnectionException ex) {
-//            System.out.println("do some job");
-//            throw new MyException(ex.getMessage());
-//        }
-//    }
-
 
     private int validateQuantity(String quantity) throws MyException {
         try {
@@ -241,20 +216,8 @@ public class Logic {
         int ticketTypeId = ticketType.getId();
         ticketRepo.sellTicket(id, ticketTypeId, name, secondName, email, ticketIds);
         return ticketIds;
-            //sendTickets(event, ticketType, name, secondName, email, ticketIds);
     }
 
-//    int id = rs.getInt("EventID");
-//    String name = rs.getString("Name");
-//    LocalDateTime startDateTime = rs.getObject("StartTime", LocalDateTime.class);
-//    LocalDateTime endDateTime = rs.getObject("EndTime", LocalDateTime.class);
-//    String location = rs.getString("Location");
-//    String venue = rs.getString("Venue");
-//    String guidance = rs.getString("LocationGuidance");
-//    String notes = rs.getString("Notes");
-//    int capacity = rs.getInt("Capacity");
-//    int count = rs.getInt("CoordinatorCount");
-//    int sold_amount = rs.getInt("sold_amount")
     public void sendTickets(Event event, String name, String secondName, String email, List<String> ticketIds) {
         try {
             List<BufferedImage> qrCodes = generateQRCodes(ticketIds);
@@ -516,30 +479,6 @@ public class Logic {
         return pdfFile;
     }
 
-//    private List<WritableImage> generateTickets(Event event, List<BufferedImage> qrCodes) throws MyException {
-//        String fileName = "ticket.fxml";
-//        List<WritableImage> ticketsImages = new ArrayList<>();
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/easv/easv_tickets_bar/gui/ticket.fxml"));
-//            Parent root = (Parent) loader.load();
-//            new Scene(root);
-//            TicketTemplateController controller = loader.getController();
-//            root.applyCss();
-//            root.layout();
-//            for (BufferedImage qrCode : qrCodes) {
-//                Image code = SwingFXUtils.toFXImage(qrCode, null );
-//                String endDate = (event.getEndDate() != null) ? event.getEndDate().toString() : "End date is not specified";
-//                controller.setData(event.getName(), event.getStartTime(), event.getEndTime(), event.getStartDate().toString(), endDate, event.getLocation(), event.getVenue(), event.getLocationGuidance(), event.getNotes(), code);
-//                WritableImage image = root.snapshot(new SnapshotParameters(), null);
-//                ticketsImages.add(image);
-//            }
-//            return ticketsImages;
-//        } catch (IOException e) {
-//            System.out.println("idi nahuy");
-//            throw new MyException("something went wrong while generating a ticket");
-//        }
-//    }
-
     private List<BufferedImage> generateQRCodes(List<String> ticketsIds) throws MyException {
         List<BufferedImage> qrCodes = new ArrayList<>();
         QRCodeWriter qrCodeWriter = new QRCodeWriter();//an object which can convert text into qr code
@@ -590,7 +529,6 @@ public class Logic {
                     userRepo.eraseAllAssignedEvents(user.getId());
                 }
             } catch (DataBaseConnectionException e) {
-                System.out.println("simulating some job");
                 throw new MyException("Connection failed");
             }
         }
@@ -629,7 +567,6 @@ public class Logic {
             userRepo.deleteSelectedUser(selectedUser);
         }
         catch (DataBaseConnectionException ex) {
-            System.out.println("simulating some job");
             throw new MyException(ex.getMessage());
         }
 

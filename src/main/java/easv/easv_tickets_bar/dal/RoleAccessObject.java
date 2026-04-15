@@ -3,7 +3,6 @@ package easv.easv_tickets_bar.dal;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Role;
-import easv.easv_tickets_bar.be.User;
 
 import java.io.IOException;
 import java.sql.Connection;

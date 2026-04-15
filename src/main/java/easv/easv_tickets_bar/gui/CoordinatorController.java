@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javafx.util.Duration;
-//import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -63,17 +61,11 @@ public class CoordinatorController implements IRefreshable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Events
-        //Stage stage = (Stage) welcomeUserLabel.getScene().getWindow();
-        //stage.setOnCloseRequest(event -> stopAutoRefresh());
         setUpEventManagementTableView();
         setUpTicketsManagementTable();
         this.timeLine = new Timeline(new KeyFrame(Duration.seconds(14), e -> refreshTable()));
         this.timeLine.setCycleCount(Timeline.INDEFINITE);
         restoreTimeLine();
-        //Tickets
-
-
     }
 
     private void stopAutoRefresh() {
@@ -95,8 +87,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
         ticketsTable.setItems(eventsObservableList);
 
         eventTName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        //ticketName.setCellValueFactory(new PropertyValueFactory<>("ticketType"));
-        //priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         quantityTColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
         soldColumn.setCellValueFactory(new PropertyValueFactory<>("soldAmount"));
         availableColumn.setCellValueFactory(new PropertyValueFactory<>("availableTickets"));
@@ -105,7 +95,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
     @Override
     public void refreshTable() {
         updateAllTables();
-        //updateTicketTable();
     }
 
     public CoordinatorController(){
@@ -123,7 +112,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
             else n.setVisible(false);
         }
     }
-    //comment
     private void updateAllTables() {
         int localCounter = ++this.eventsUpdateCounter;
         Task<List<Event>> getEvents = new Task<List<Event>>() {
@@ -139,7 +127,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
             List<Event> events = (List<Event>) getEvents.getValue();
             eventsObservableList.setAll(events);
             this.user.setEvents(events);
-            System.out.println(this.user.getEvents());
         });
         getEvents.setOnFailed(event -> {
             Throwable cause = getEvents.getException();
@@ -149,27 +136,12 @@ public class CoordinatorController implements IRefreshable, Initializable {
         new Thread(getEvents).start();
     }
 
-//    private void updateTicketTable(){
-//        try {
-//            List<TicketEvent> tickets = logic.getTicketsByCoordinator(user.getId());
-//
-//            ObservableList<TicketEvent> observableList = FXCollections.observableList(tickets);
-//
-//            ticketsTable.setItems(observableList);
-//        }
-//        catch (MyException ex){
-//            System.out.println("error label needs to be filled with this: " + ex.getMessage());
-//        }
-//    }
-
     public void onEventManClick() {
         switchTab("eventManagementBox");
-        //updateEventTable();
     }
 
     public void onTicketManClick() {
         switchTab("ticketManagementBox");
-        //updateTicketTable();
     }
 
     public void onCreateEvent(){
@@ -222,7 +194,6 @@ public class CoordinatorController implements IRefreshable, Initializable {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("hello");
     }
 
     public void setUser(EventCoordinator user){

@@ -1,6 +1,5 @@
 package easv.easv_tickets_bar.gui;
 
-import com.beust.jcommander.internal.Lists;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.Ticket;
 import easv.easv_tickets_bar.bll.Logic;
@@ -20,7 +19,6 @@ import java.util.ResourceBundle;
 public class SellTicketController implements Initializable, IPanel {
 
     @FXML private Label errorLabel;
-    @FXML private Label EventLabel;
 
     @FXML private TextField firstNameField;
     @FXML private TextField secondNameField;
@@ -133,12 +131,6 @@ public class SellTicketController implements Initializable, IPanel {
         };
         new Thread(sendEmailsTask).start();
     }
-
-//    public void setTicket(TicketEvent ticket) {
-//        this.ticket = ticket;
-//        EventLabel.setText("Sell Ticket - " + ticket.getTicketType());
-//    }
-
 
     public void setEvent(Event event){
         Task<List<Ticket>> getTickets = new Task<List<Ticket>>() {

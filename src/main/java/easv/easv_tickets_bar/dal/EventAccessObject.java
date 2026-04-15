@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,6 @@ public class EventAccessObject {
         }
         return id;
     }
-    //SELECT *, (SELECT COUNT(*) FROM event_to_coordinator WHERE EventID = Events.id) AS CoordinatorCount FROM Events
 
     public List<Event> getEvents(int userId) throws DataBaseConnectionException {
         List<Event> events = new ArrayList<>();

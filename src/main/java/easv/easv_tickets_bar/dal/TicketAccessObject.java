@@ -49,33 +49,6 @@ public class TicketAccessObject {
         }
     }
 
-//    public List<Ticket> getTicketsByCoordinator(int user_id) throws DataBaseConnectionException {
-//        List<Ticket> ticketEvents = new ArrayList<>();
-//        try (Connection con = connectionManager.getConnection()){
-//            try(PreparedStatement ps = con.prepareStatement("SELECT event_ticket.*, Events.Name AS EventName, (SELECT COUNT(*) FROM tickets WHERE tickets.typeId = event_ticket.id) AS SoldQuantity FROM event_ticket INNER JOIN Events ON Events.id = event_ticket.event_id INNER JOIN event_to_coordinator ON event_to_coordinator.EventID = Events.id WHERE event_to_coordinator.UserID = ?")){
-//                ps.setInt(1, user_id);
-//                ResultSet rs = ps.executeQuery();
-//                while (rs.next()) {
-//                    int id = rs.getInt("id");
-//                    String name = rs.getString("name");
-//                    String eventName = rs.getString("EventName");
-//                    double price = rs.getDouble("price");
-//                    int quantity = rs.getInt("quantity");
-//                    int soldQuantity = rs.getInt("SoldQuantity");
-//                    ticketEvents.add(new Ticket(id, eventName, name, price, quantity, soldQuantity));
-//                }
-//            }
-//            return ticketEvents;
-//
-//        } catch (SQLException e) {
-//            if (e.getSQLState().startsWith("08")) {
-//                throw new DataBaseConnectionException("Error");
-//            }else{
-//                throw new RuntimeException(e.getMessage());
-//            }
-//        }
-//    }
-
     public List<Ticket> getTicketsOfEvent(int event_id) throws DataBaseConnectionException {
         List<Ticket> ticketEvents = new ArrayList<>();
         try (Connection con = connectionManager.getConnection()){
@@ -102,8 +75,6 @@ public class TicketAccessObject {
     }
 
     public boolean sellTicket(int id, int ticketTypeId, String name, String secondName, String email, List<String> ticketIds) throws Exception {
-
-        //add small db check here for how much left just in case.
         Connection con = null;
         try {
             con = connectionManager.getConnection();
@@ -174,7 +145,6 @@ public class TicketAccessObject {
             }
 
         }
-        //return true;
     }
 
     public void markEmailSent(List<String> ticketIds) throws DataBaseConnectionException {
@@ -195,19 +165,4 @@ public class TicketAccessObject {
             }
         }
     }
-
-//            try(PreparedStatement ps = con.prepareStatement("INSERT INTO tickets(id, typeId, CustomerName, CustomerEmail) VALUES (?, ?, ?, ?)")){
-//                for(int i = 0; i < quantity; i++){
-//                    String UUID = java.util.UUID.randomUUID().toString();
-//                    ps.setString(1, UUID);
-//                    ps.setInt(2, id);
-//                    ps.setString(3, name);
-//                    ps.setString(4, email);
-//
-//                    ps.addBatch();
-//                }
-//                ps.executeBatch();
-//            }
-
-
 }

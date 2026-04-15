@@ -1,9 +1,7 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
-import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class TicketController implements IPanel, Initializable {
@@ -26,7 +23,6 @@ public class TicketController implements IPanel, Initializable {
     @FXML private TextField nameInput;
     @FXML private TextField priceInput;
     @FXML private TextField descriptionTextfield;
-    //@FXML private Spinner quantityInput;
 
     private EventCoordinator user;
     private Logic logic = new Logic();
@@ -36,7 +32,6 @@ public class TicketController implements IPanel, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         errorLabel.setStyle("-fx-text-fill: red");
         UIHelper.priceInputValidator(priceInput);
-        //UIHelper.numberInputValidator(quantityInput.getEditor());
     }
 
     @Override
@@ -67,7 +62,7 @@ public class TicketController implements IPanel, Initializable {
         String name = nameInput.getText();
         String price = priceInput.getText();
         String description = descriptionTextfield.getText();
-        if (chosenEvent == null) {//we do this because otherwise chosenEvent.getId() won't work out
+        if (chosenEvent == null) {
             return;
         }
         Button btn = (Button) actionEvent.getSource();

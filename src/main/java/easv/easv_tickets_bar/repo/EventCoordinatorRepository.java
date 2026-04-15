@@ -5,7 +5,6 @@ import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
 import easv.easv_tickets_bar.dal.EventCoordinatorAccessObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventCoordinatorRepository {

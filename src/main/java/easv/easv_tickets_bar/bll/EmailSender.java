@@ -1,12 +1,10 @@
 package easv.easv_tickets_bar.bll;
 
-import easv.easv_tickets_bar.CustomExceptions.MyException;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 

@@ -52,7 +52,7 @@
                         <TextField fx:id="revealField" maxWidth="400.0" prefHeight="32.0" prefWidth="370.0" styleClass="fields" visible="false" />
                      </children>
                   </StackPane>
-                  <Region id="open-eye-icon" fx:id="eyeIcon" maxHeight="15.0" minHeight="15.0" onMouseClicked="#toggleVisibility" prefHeight="7.0" prefWidth="23.0" styleClass="darken-c" />
+                  <Region id="closed-eye-icon" fx:id="eyeIcon" maxHeight="15.0" minHeight="15.0" onMouseClicked="#toggleVisibility" prefHeight="7.0" prefWidth="23.0" styleClass="darken-c" />
                </children>
                <padding>
                   <Insets right="5.0" />

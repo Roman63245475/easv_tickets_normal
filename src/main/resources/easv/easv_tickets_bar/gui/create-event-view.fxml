@@ -224,7 +224,7 @@
       </VBox>
       <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" styleClass="indigo-c-text" text="CANCEL" />
+            <Button mnemonicParsing="false" onAction="#onCancelClick" styleClass="indigo-c-text" text="CANCEL" />
             <Button fx:id="finishBtn" mnemonicParsing="false" onAction="#onCreateEvent" prefHeight="25.0" prefWidth="129.0" text="CREATE EVENT">
                <styleClass>
                   <String fx:value="gradient-light-indigo" />

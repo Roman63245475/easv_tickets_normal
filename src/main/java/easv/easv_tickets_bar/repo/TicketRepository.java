@@ -18,10 +18,6 @@ public class TicketRepository {
         tao.createTicket(id, name, priceDouble, description);
     }
 
-//    public List<Ticket> getTicketsByCoordinator(int id) throws DataBaseConnectionException {
-//        return ticketDAO.getTicketsByCoordinator(id);
-//    }
-
     public List<Ticket> getTicketsOfEvent(int id) throws DataBaseConnectionException {
         return tao.getTicketsOfEvent(id);
     }

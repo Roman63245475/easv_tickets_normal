@@ -1,19 +1,12 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
-import easv.easv_tickets_bar.CustomExceptions.LoginException;
 import easv.easv_tickets_bar.be.Admin;
 import easv.easv_tickets_bar.be.EventCoordinator;
-import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.fxml.LoadException;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -86,8 +79,6 @@ public class LoginController implements Initializable {
                 loginButton.setDisable(false);
                 this.errorLabel.setText("Page can't be rendered");
                 this.errorLabel.setOpacity(1.0);
-                return;
-                //or here needs to be an alert
             }
         });
 
@@ -103,11 +94,11 @@ public class LoginController implements Initializable {
     @FXML
     private void toggleVisibility() {
         if (passwordField.isVisible()) {
-            eyeIcon.setId("closed-eye-icon");
+            eyeIcon.setId("open-eye-icon");
             passwordField.setVisible(false);
             revealField.setVisible(true);
         }else{
-            eyeIcon.setId("open-eye-icon");
+            eyeIcon.setId("closed-eye-icon");
             passwordField.setVisible(true);
             revealField.setVisible(false);
         }

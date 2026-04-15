@@ -1,6 +1,5 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
@@ -13,9 +12,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class EventController implements Initializable, IUserPanel, IPanel {
@@ -43,8 +39,6 @@ public class EventController implements Initializable, IUserPanel, IPanel {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        startDateInput.getEditor().setDisable(true);
-        endDateInput.getEditor().setDisable(true);
         UIHelper.timeInputValidator(startTimeInput);
         UIHelper.timeInputValidator(endTimeInput);
         UIHelper.numberInputValidator(capacityInput);
@@ -65,6 +59,13 @@ public class EventController implements Initializable, IUserPanel, IPanel {
     @Override
     public void onClose() {
         controller.restoreTimeLine();
+    }
+
+    @FXML
+    private void onCancelClick(){
+        onClose();
+        Stage stage = (Stage) this.startDateInput.getScene().getWindow();
+        stage.close();
     }
 
     public void setEvent(Event selectedEvent) {

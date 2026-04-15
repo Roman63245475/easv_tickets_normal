@@ -2,8 +2,6 @@ package easv.easv_tickets_bar.gui;
 
 import easv.easv_tickets_bar.be.Event;
 import easv.easv_tickets_bar.be.EventCoordinator;
-import easv.easv_tickets_bar.be.User;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -19,7 +17,6 @@ public class OpenWindow {
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
-        //loader.getController()
         if (mod){
             stage.initModality(Modality.APPLICATION_MODAL);
         }

@@ -1,7 +1,5 @@
 package easv.easv_tickets_bar.be;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 public class User {
     protected int id;
     protected String username;

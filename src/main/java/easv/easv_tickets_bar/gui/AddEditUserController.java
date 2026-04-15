@@ -1,7 +1,5 @@
 package easv.easv_tickets_bar.gui;
 
-import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
-import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.be.Role;
 import easv.easv_tickets_bar.be.User;
 import easv.easv_tickets_bar.bll.Logic;
@@ -84,15 +82,6 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
             this.createUserButton.setDisable(false);
         });
         new Thread(createUserTask).start();
-//         catch (DataBaseConnectionException | DuplicateException e) {
-//            if (e instanceof DataBaseConnectionException){
-//                showAlert(Alert.AlertType.ERROR, "Error", "Something went wrong", "An unexpected error occurred.");
-//            }
-//            else {
-//                showAlert(Alert.AlertType.ERROR, "Error", "duplicate data", "User with the same username already exists");
-//            }
-//
-//        }
     }
     public void setController(IRefreshable controller) {
         this.controller = controller;
@@ -106,15 +95,6 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
     public void onClose() {
         controller.refreshTable();
     }
-
-    private void showAlert(Alert.AlertType type, String title, String header, String content){
-        Alert errorAlert = new Alert(type);
-        errorAlert.setTitle(title);
-        errorAlert.setHeaderText(header);
-        errorAlert.setContentText(content);
-        errorAlert.show();
-    }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -134,11 +114,6 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
         String changed_username = userNameField.getText();
         String changed_password = passwordField.getText();
         Role changed_role = userRoleBox.getValue();
-//        if (changed_username.equals(this.user.getUsername()) && changed_role == this.user.getRole()){
-//            this.errorLabel.setText("Data hasn't been changed!");
-//            errorLabel.setOpacity(1.0);
-//            return;
-//        }
 
         Task<Void> editUserTask = new Task() {
             @Override
@@ -164,11 +139,11 @@ public class AddEditUserController implements IUserPanel, Initializable, IPanel 
     @FXML
     private void toggleVisibility() {
         if (passwordField.isVisible()) {
-            eyeIcon.setId("closed-eye-icon");
+            eyeIcon.setId("open-eye-icon");
             passwordField.setVisible(false);
             revealField.setVisible(true);
         }else{
-            eyeIcon.setId("open-eye-icon");
+            eyeIcon.setId("closed-eye-icon");
             passwordField.setVisible(true);
             revealField.setVisible(false);
         }

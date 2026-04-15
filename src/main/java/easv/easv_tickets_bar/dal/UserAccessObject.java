@@ -1,6 +1,5 @@
 package easv.easv_tickets_bar.dal;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import easv.easv_tickets_bar.CustomExceptions.DataBaseConnectionException;
 import easv.easv_tickets_bar.CustomExceptions.DuplicateException;
 import easv.easv_tickets_bar.CustomExceptions.LoginException;

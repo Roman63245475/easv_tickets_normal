@@ -6,15 +6,6 @@ public class Ticket {
     private double price;
     private String description;
 
-//    public Ticket(int id, String eventName, String ticketType, double price, int totalQuantity, int soldQuantity) {
-//        this.id = id;
-//        this.eventName = eventName;
-//        this.ticketType = ticketType;
-//        this.price = price;
-//        this.totalQuantity = totalQuantity;
-//        this.soldQuantity = soldQuantity;
-//    }
-
     public Ticket(int id, String name, double price, String description) {
         this.id = id;
         this.name = name;
